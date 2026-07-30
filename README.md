@@ -1,9 +1,9 @@
 # sprezzature-cli-gui
 
-[![License](https://img.shields.io/badge/license-BSD--3--Clause-blue.svg)](LICENSE)
+[![License](https://img.shields.io/badge/license-BSD--3--Clause-blue.svg)](https://github.com/warith-harchaoui/sprezzature-cli-gui/blob/main/LICENSE)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)
 
-[![logo](assets/logo.png)](https://harchaoui.org/warith/sprezzature/)
+[![logo](https://raw.githubusercontent.com/warith-harchaoui/sprezzature-cli-gui/main/assets/logo.png)](https://harchaoui.org/warith/sprezzature/)
 
 Auto-generate a single-file HTML GUI from any Python command-line tool. Point it at an
 argparse, Click, or Typer parser and it emits a vanilla-JavaScript + Tailwind page that
