@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sprezzature-cli-gui"
+version = "1.0.0"
+description = "Auto-generate a single-file HTML GUI from any Python CLI (argparse, Click, Typer)."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "BSD-3-Clause"}
+authors = [{name = "Warith HARCHAOUI", email = "warith.harchaoui@gmail.com"}]
+keywords = ["cli", "gui", "argparse", "click", "typer", "html", "sprezzature"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: User Interfaces",
+    "Topic :: Utilities",
+]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "ruff"]
+click = ["click>=8.0"]
+typer = ["typer>=0.12"]
+
+[project.scripts]
+sprezzature-cli-gui = "sprezzature_cli_gui.cli:main"
+
+[project.urls]
+Homepage = "https://harchaoui.org/warith/sprezzature/"
+Repository = "https://github.com/warith-harchaoui/sprezzature-cli-gui"
+
+[tool.setuptools.packages.find]
+include = ["sprezzature_cli_gui*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
