@@ -1,5 +1,5 @@
 """
-sprezzature-cli-gui — auto-generate a single-file HTML GUI from any Python CLI.
+sprezzature-cli-gui -- auto-generate a single-file HTML GUI from any Python CLI.
 
 Introspects argparse, Click, or Typer parsers and emits a vanilla-JS +
 Tailwind page that maps every sub-command and flag to a form field.

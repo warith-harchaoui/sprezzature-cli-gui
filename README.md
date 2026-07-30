@@ -38,10 +38,10 @@ output, so it works even against a CLI it cannot introspect directly.
 
 `cli_to_gui.py` is a thin facade over the `sprezzature_cli_gui` package:
 
-- `adapters/` — introspect an argparse / Click parser, or parse `--help` text.
-- `schema.py` — the normalized command/flag schema every adapter produces.
-- `renderer.py` — schema → a self-contained HTML + Tailwind + vanilla-JS page.
-- `loader.py` — resolve a `module:factory` or `path.py:factory` spec to a parser.
+- `adapters/`: introspect an argparse / Click parser, or parse `--help` text.
+- `schema.py`: the normalized command/flag schema every adapter produces.
+- `renderer.py`: schema to a self-contained HTML + Tailwind + vanilla-JS page.
+- `loader.py`: resolve a `module:factory` or `path.py:factory` spec to a parser.
 
 ## License
 
