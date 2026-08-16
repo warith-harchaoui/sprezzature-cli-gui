@@ -1,4 +1,6 @@
-"""Tests for sprezzature-cli-gui."""
+"""End-to-end tests for sprezzature-cli-gui: that the package imports, that
+its command line actually runs and prints usable ``--help`` text, and that
+pointing it at a real argparse factory produces a working HTML page."""
 
 from __future__ import annotations
 

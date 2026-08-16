@@ -2,15 +2,25 @@
 sprezzature_cli_gui.renderer
 =====================
 
-The HTML emitter.
+The HTML emitter: the module that turns a parsed command-line tool into an
+actual web page.
 
-Composes a single-file vanilla-JS + Tailwind GUI from a walked parser
-tree (the canonical ``prog`` / ``description`` / ``actions`` /
-``sub_commands`` dict). Every action becomes a form field, every
-sub-command a collapsible ``<details>`` block, and a tiny inline module
-assembles the CLI line client-side for copy / Tauri-invoke. Output
-follows the sprezzature-ui stack rules — semantic HTML, Tailwind utilities,
-dark-mode peers, focus rings, reduced-motion guards.
+Its input is the canonical parser-tree dict (``prog`` / ``description`` /
+``actions`` / ``sub_commands``) that ``schema.walk`` already produced by
+reading the CLI's parser, whichever of the three supported frameworks built
+it. From that dict, this module writes one self-contained HTML file: every
+flag becomes a form field, every sub-command a collapsible ``<details>``
+block (a native HTML element for a section the visitor can expand or close,
+no JavaScript needed for that part), and a small inline script assembles the
+final command line as text once the visitor fills in the form, so it is
+ready to copy or to hand to a ``Tauri`` desktop wrapper.
+
+The output follows this project's own house rules for generated pages:
+semantic HTML tags (``<form>``, ``<label>``, not bare ``<div>``s), styling
+built only from Tailwind's utility classes, a working dark-mode variant on
+every styled element, a visible keyboard-focus ring, and respect for
+``prefers-reduced-motion`` (a browser setting that says "please skip
+animations").
 
 Author
 ------

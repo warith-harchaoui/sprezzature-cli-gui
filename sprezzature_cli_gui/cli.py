@@ -2,13 +2,20 @@
 sprezzature_cli_gui.cli
 ================
 
-The command-line driver.
+The command-line entry point: what actually runs when someone types
+``sprezzature-cli-gui`` in a terminal.
 
-Parses the ``SPEC`` / ``--from-help`` / ``--out`` / ``--title`` /
-``--json`` arguments, selects the introspection path (native adapter
-via :func:`load_parser_from_spec` + :func:`walk`, or the ``--from-help``
-subprocess fallback), and writes the emitted HTML (or JSON) to a file
-or stdout.
+It reads the ``SPEC`` / ``--from-help`` / ``--out`` / ``--title`` / ``--json``
+flags, then picks how to read the target CLI's parser. When ``SPEC`` names a
+reachable Python factory (for example ``mypkg.cli:build_parser``), it loads
+the parser directly with :func:`load_parser_from_spec` and reads it in
+memory with :func:`walk`. When ``--from-help`` is given instead, it runs the
+target tool as a subprocess, captures its printed ``--help`` text, and parses
+that text as a fallback, lower-fidelity source (see
+``sprezzature_cli_gui.adapters.help_text`` for why this path exists). Either
+way, the result is the emitted HTML page, or the raw parser-tree as JSON when
+``--json`` is passed, written to the path given by ``--out`` or, if none is
+given, printed to standard output.
 
 Author
 ------

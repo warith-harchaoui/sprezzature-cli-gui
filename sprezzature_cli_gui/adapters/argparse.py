@@ -2,17 +2,23 @@
 sprezzature_cli_gui.adapters.argparse
 ==============================
 
-The stdlib-argparse adapter.
+The `argparse` adapter, for Python's own built-in way of building
+command-line tools.
 
-Walks an :class:`argparse.ArgumentParser` into the canonical
-parser-tree dict, filtering help / version actions (they exist only on
-the CLI surface, not in a GUI). This is the always-available adapter —
-argparse ships with Python — and the one :func:`walk` dispatches to
-when the factory returns an argparse parser.
+It reads an :class:`argparse.ArgumentParser` and reduces it to the shared
+parser-tree dict, dropping the ``--help`` and ``--version`` actions along
+the way: they make sense on a terminal, where a person types commands one
+at a time, but not on a generated form, which shows every option to fill
+in at once. Since argparse ships with every Python installation, this
+adapter needs no extra dependency and is always available; :func:`walk`
+reaches for it whenever the target factory returns an argparse parser.
 
-Note the module is named ``argparse.py`` but still reaches the stdlib
-:mod:`argparse` via ``import argparse``: Python 3 absolute imports make
-the name unambiguous, so there is no shadowing.
+One naming detail worth flagging: this file is itself named
+``argparse.py``, yet its own ``import argparse`` line still reaches
+Python's standard-library module of the same name, not itself. Python 3
+resolves that import from the top-level package search path first (an
+"absolute import"), so a file's own name never shadows the standard
+library, and no special handling was needed to make this work.
 
 Author
 ------

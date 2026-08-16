@@ -1,19 +1,26 @@
 """
-_argparse — shared argparse parser factory for a sprezzature-* skill's scripts.
+_argparse
+=========
 
-``make_parser(prog, description, epilog=None)`` returns an
-``ArgumentParser`` pre-configured the way every script in this skill
-expects:
+A shared factory for this skill's command-line parsers.
 
-- ``prog`` set explicitly so ``--help`` shows a clean name (no path).
-- ``RawDescriptionHelpFormatter`` so multi-line descriptions and the
-  optional ``epilog`` are not reflowed.
-- A standard ``-V`` / ``--version`` option.
+``make_parser(prog, description, epilog=None)`` returns an ``ArgumentParser``
+(the standard-library object that reads a command's flags and arguments),
+already set up the way every script in this skill expects:
 
-Duplicated (intentionally) across every sprezzature-* skill so each stays
-self-contained; keep this file in sync with the copies in
-sprezzature-colors/scripts/_argparse.py etc. Bump ``SKILL_VERSION`` in every
-copy at release time (release.sh checks the drift).
+- ``prog`` is set explicitly, so ``--help`` prints a clean tool name instead
+  of the full script path.
+- ``RawDescriptionHelpFormatter`` is used, so a multi-line description or
+  ``epilog`` is printed exactly as written instead of being rewrapped.
+- A standard ``-V`` / ``--version`` flag is added automatically.
+
+This file is deliberately duplicated, byte for byte, across every
+``sprezzature-*`` skill (for example ``sprezzature-colors/scripts/_argparse.py``)
+so that each skill stays self-contained and installable on its own, with no
+shared dependency between skills. Because it is a duplicate, not a shared
+import, a change here has to be copied by hand into every sibling copy, and
+``SKILL_VERSION`` bumped in each one at release time; ``release.sh`` checks
+that the copies have not drifted apart.
 
 Author
 ------

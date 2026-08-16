@@ -2,16 +2,27 @@
 sprezzature_cli_gui.adapters.help_text
 ===============================
 
-The framework-agnostic ``--from-help`` adapter.
+The fallback adapter: reads a CLI's printed ``--help`` text instead of its
+parser object, so it works even when no parser object is reachable at all.
 
-Runs ``<command> --help`` and parses its output into the canonical
-parser-tree dict. Works on any CLI that emits a conventional help
-block — argparse, Click, Typer, clap (Rust), cobra (Go), commander
-(Node), even hand-rolled shell scripts — at lower fidelity than native
-introspection (everything maps to ``"text"`` unless a ``[default: …]``,
-``[choices]`` or recognised METAVAR is visible). The regexes below
-recognise the section headers and line shapes those frameworks
-converge on.
+The other adapters need a live Python object to read (an
+``ArgumentParser`` or a ``Click`` command); this one needs only a command
+that can be run and that prints a normal help screen when given
+``--help``. That covers Python tools built with argparse, Click, or Typer,
+but also non-Python ones (Rust's `clap`, Go's `cobra`, Node's
+`commander`), and even a hand-written shell script, as long as it follows
+the usual help-text conventions.
+
+The trade-off is precision: help text is meant for a person to read, not a
+program to parse, so this adapter recovers less detail than reading a real
+parser object would. Every flag becomes a plain text field by default;
+only when the help line spells out a default value (``[default: …]``), a
+fixed set of choices (``[choices]``), or a recognisable placeholder name
+(a METAVAR, the capitalised word standing in for the argument's value, such
+as ``FILE`` in ``--input FILE``) does the adapter recover that extra
+structure. The regular expressions in this module exist to recognise the
+section headings and line shapes that argparse, Click, and their peers
+converge on in practice.
 
 Author
 ------

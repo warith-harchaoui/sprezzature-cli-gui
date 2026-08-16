@@ -2,14 +2,20 @@
 sprezzature_cli_gui.adapters.click
 ===========================
 
-The Click adapter (optional dependency).
+The `Click` adapter. `Click` is a popular third-party library for building
+command-line tools, an alternative to Python's built-in `argparse`; this
+adapter is only needed by callers who chose `Click`, so it is an optional
+dependency, not installed by default.
 
-Walks a :class:`click.Command` — leaf ``Command`` or nested ``Group`` —
-into the canonical parser-tree dict, mirroring the argparse adapter's
-output schema exactly so the renderer never branches on framework.
-Typer apps work through their underlying Click group (``app.cli``).
-Click is only touched by callers who already produced a Click object,
-so argparse-only users keep their stdlib-only run.
+It walks a :class:`click.Command`, whether it is a single leaf command or a
+``Group`` nesting sub-commands, into the same parser-tree dict shape the
+argparse adapter produces, so the HTML renderer downstream never has to
+branch on which framework built the CLI. `Typer` apps are supported too,
+through the `Click` group Typer builds internally (``app.cli``): from this
+adapter's point of view a Typer app just is a Click group. Because this
+module is only imported when a caller has actually handed it a Click
+object, someone using nothing but plain `argparse` never needs Click
+installed at all.
 
 Author
 ------

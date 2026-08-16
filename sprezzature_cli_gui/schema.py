@@ -2,15 +2,24 @@
 sprezzature_cli_gui.schema
 ===================
 
-The canonical action / parser-tree schema and its framework dispatch.
+The one shape every CLI framework gets flattened into, and the function
+that does the flattening.
 
-Every supported source framework normalises into one dict shape
-(``prog`` / ``description`` / ``actions`` / ``sub_commands``). This
-module owns the sentinel and default-serialisation helper shared by
-all adapters, plus :func:`walk` — the single, framework-agnostic entry
-point the HTML renderer calls. ``walk`` imports the concrete adapters
-lazily (function-locally) so this module has no import-time dependency
-on :mod:`sprezzature_cli_gui.adapters`, keeping the import graph acyclic.
+Whichever of the three supported frameworks built the target CLI, this
+module reduces it to the same plain dict shape (``prog`` / ``description`` /
+``actions`` / ``sub_commands``), so the renderer that builds the HTML page
+never has to know or care which framework it came from. This module holds
+the pieces every adapter shares (a sentinel value marking "no default was
+given", and a helper that makes a default JSON-serialisable), plus
+:func:`walk`, the single entry point the rest of the package calls.
+
+:func:`walk` imports the actual per-framework adapters only when it runs,
+inside the function body rather than at the top of this file. That keeps
+this module's own imports free of any dependency on
+:mod:`sprezzature_cli_gui.adapters`, which avoids a circular import: the
+adapters need this module's shared helpers, and if this module imported
+them back at load time, the two would need each other before either had
+finished loading.
 
 Author
 ------

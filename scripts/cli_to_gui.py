@@ -3,93 +3,116 @@
 cli_to_gui
 ==========
 
-Introspect an :mod:`argparse` parser belonging to a Python CLI and
-emit a single-page vanilla-JS + Tailwind GUI that maps every
-sub-command and flag to a form field. Output follows the
-``sprezzature-ui`` stack rules so the emitted file drops onto an internal
-box, into Tauri's web view, or into a static-asset bucket without
-modification.
+Read a Python command-line tool's own parser object and emit a single-page
+web form (plain JavaScript, styled with Tailwind's utility classes) that
+maps every sub-command and flag to a field. The output follows this
+project's own house rules for generated pages, so the emitted file can be
+dropped as is into an internal tool, into a `Tauri` desktop app's embedded
+browser view, or onto a plain static-file host.
 
-This is the make-side primary of the ``sprezzature-cli-gui`` skill — the
-counterpart to ``audit_laws_of_ux.py`` / ``palette_to_tailwind.py``
-elsewhere in the sprezzature-* ecosystem. It is **not** a runtime: the
-emitted page builds the command string locally and shows it for the
-user to copy / paste / submit through the host adapter of their
-choice (FastAPI SSE, Tauri ``invoke()``, Express, plain shell).
+This is the generating half of the ``sprezzature-cli-gui`` skill, alongside
+sibling skills elsewhere in the ``sprezzature-*`` collection such as
+``audit_laws_of_ux.py`` and ``palette_to_tailwind.py``. It is not a runtime
+that executes the target command: the emitted page only builds the command
+line as text, locally, in the visitor's browser, and displays it ready to
+copy, paste, or hand to whatever actually runs it (a FastAPI server over
+SSE, meaning Server-Sent Events, a plain one-way stream a server uses to
+push output back to a page; a `Tauri` app through its ``invoke()`` bridge;
+an Express server; or a plain shell).
 
 Supported source frameworks
 ---------------------------
 
-The emitter is **framework-agnostic** at the renderer boundary: a
-small adapter protocol normalises every supported framework into a
-canonical parser-tree dict (``prog`` / ``description`` / ``actions``
-/ ``sub_commands``). Two adapters ship today:
+The emitter itself never has to know which framework built the target CLI:
+a small adapter, one per framework, reduces each to the same plain
+parser-tree dict (``prog`` / ``description`` / ``actions`` /
+``sub_commands``), and everything downstream reads only that shape. Three
+adapters ship today:
 
-- **argparse** (stdlib, always available). Walks
-  :class:`argparse.ArgumentParser` via :func:`walk_parser`. Used
-  when the factory returns an argparse parser.
-- **Click** (optional dep). Walks :class:`click.Command` via
-  :func:`walk_click`. Typer apps work via their underlying Click
-  group (``app.cli``). Click is imported lazily so argparse-only
-  users keep their stdlib-only run.
+- **argparse** (in Python's standard library, so always available). Reads
+  an :class:`argparse.ArgumentParser` with :func:`walk_parser`, used
+  whenever the target factory returns one.
+- **Click** (an optional third-party dependency, only imported when
+  actually needed). Reads a :class:`click.Command` with :func:`walk_click`.
+  `Typer` apps are covered too, through the Click group Typer builds
+  internally (``app.cli``).
+- **``--from-help``** (framework-agnostic). Runs the target command with
+  ``--help`` and parses the printed text instead of a live parser object,
+  with :func:`walk_from_help`. This is the fallback for a CLI written in
+  another language entirely (Rust's `clap`, Go's `cobra`, Node's
+  `commander`) or one whose Python parser cannot be imported for some
+  reason.
 
-The renderer never branches on framework — :func:`walk` dispatches
-by type and the HTML side sees a single shape. Adding a third
-framework (Cobra via ``--from-help``, clap, …) is a new adapter +
-the same dict; the renderer never moves.
+Adding a fourth framework later only means writing one more adapter that
+produces the same dict; the renderer that turns the dict into HTML never
+has to change.
 
-Why introspect, not parse ``--help``?
--------------------------------------
+Why read the parser object, not just its ``--help`` text?
+-----------------------------------------------------------
 
-``--help`` text is a presentation format — fragile under
-formatter / line-wrap / locale variation. An in-memory parser
-carries the **structured** truth (choice lists, ``type=`` callables,
-``required`` flags, defaults). When the framework is reachable,
-prefer introspection. For non-Python binaries (clap / cobra /
-commander) or when the parser cannot be imported, the planned
-``--from-help`` adapter parses the help text as a low-fidelity
-fallback (everything maps to ``"text"`` unless ``[default: …]`` or
-similar is visible).
+``--help`` text is meant for a person to read, not a program to parse: its
+exact wording shifts with the formatter, the terminal width, and the
+locale, so parsing it is inherently best-effort. A live parser object, by
+contrast, carries the tool's actual structured truth: its real choice
+lists, its ``type=`` conversion functions, which flags are required, and
+their real default values. Reading the object directly is preferred
+whenever it is reachable; the ``--from-help`` adapter above exists
+precisely for the cases where it is not, and it recovers correspondingly
+less: every option becomes a plain text field unless the help line spells
+out a default value (``[default: …]``) or something similar.
 
 Inputs
 ------
 
-The caller names a parser factory as ``SPEC``:
+The caller names a parser factory with a ``SPEC`` string, in one of two
+forms:
 
-- ``path/to/file.py:make_parser`` — load the file as an anonymous
-  module, call ``make_parser()`` to obtain the parser.
-- ``my_pkg.my_cli:build_parser`` — import the dotted module path,
-  call the named factory.
+- ``path/to/file.py:make_parser``: load that file as a standalone module,
+  then call its ``make_parser()`` function.
+- ``my_pkg.my_cli:build_parser``: import the dotted module path instead,
+  then call the named factory function inside it.
 
-The factory must be a zero-argument callable returning EITHER an
-:class:`argparse.ArgumentParser` OR a :class:`click.Command`
-(Click Group or Command). Adapter selection is automatic.
+Either way, the factory must take no arguments and return either an
+:class:`argparse.ArgumentParser` or a :class:`click.Command`. Which adapter
+reads the result is then chosen automatically, from the returned object's
+own type.
 
 Outputs
 -------
 
-A single HTML file (stdout by default; ``--out PATH`` to write to
-disk) containing:
+A single HTML file: printed to standard output by default, or written to
+disk when ``--out PATH`` is given. It contains:
 
-- Tailwind Play CDN bootstrap + the three-Roboto webfont fallback.
-- A sticky header with the parser's prog name + description.
-- One collapsed ``<details>`` per sub-command (or a single form
-  when no sub-command exists), with form fields mapped per action.
-- A "Build command" button that constructs the CLI line and
-  displays it in a ``<pre>`` block ready for copy / Tauri-invoke.
-- Dark-mode peers on every styled element + focus rings + reduced
-  motion guards (per the sprezzature-ui hard rules).
+- Tailwind loaded from its "Play" CDN build (a version meant for quick
+  prototypes, fetched straight from a public URL with no local build step),
+  plus a fallback to the three Roboto typefaces this project's pages use
+  when no network connection is available.
+- A sticky header showing the parser's program name and description.
+- One collapsed ``<details>`` block per sub-command, or a single form when
+  the CLI has none, with a field for every flag.
+- A "Build command" button that assembles the full command line from the
+  filled-in form and prints it into a ``<pre>`` block, ready to copy or to
+  hand to a `Tauri` ``invoke()`` call.
+- A working dark-mode variant on every styled element, a visible focus
+  ring, and respect for ``prefers-reduced-motion``, all required by this
+  project's own house rules for generated pages.
 
 Stack rules respected
 ---------------------
 
-- Vanilla JS only (ES module, no React / Vue / Svelte).
-- Tailwind utility classes only; no raw hex in markup.
-- Semantic HTML (``<form>``, ``<label for>``, ``<button>``,
-  ``<details>``).
-- Visible focus ring everywhere; ``prefers-reduced-motion`` honoured.
-- No third-party CDN fonts — fallback to ``system-ui`` /
-  ``ui-monospace`` when Roboto is not installed.
+- Plain JavaScript only, as an ES module (the standard, import/export-based
+  module format modern browsers support natively); no React, Vue, or
+  Svelte.
+- Styling built only from Tailwind's utility classes; no raw hex color
+  codes written directly in the markup.
+- Semantic HTML tags throughout (``<form>``, ``<label for>``, ``<button>``,
+  ``<details>``), not generic ``<div>``s standing in for them.
+- A visible focus ring on every interactive element, and
+  ``prefers-reduced-motion`` (the browser setting that asks pages to skip
+  animations) honoured.
+- No fonts loaded from a third-party CDN: the page falls back to
+  ``system-ui`` and ``ui-monospace`` (the browser's own default fonts) when
+  Roboto is not installed locally.
 
 Usage
 -----
@@ -105,10 +128,12 @@ Usage
 Refactor note
 -------------
 
-The implementation now lives in the :mod:`sprezzature_cli_gui` package
-alongside this file; this module is a thin facade that re-exports the
-full public API so every consumer — ``python scripts/cli_to_gui.py``
-and ``from cli_to_gui import …`` alike — keeps working unchanged.
+The real implementation now lives in the :mod:`sprezzature_cli_gui`
+package, next to this file. This module itself is a thin facade: it
+re-exports that package's full public API, so both ways of using it, as
+``python scripts/cli_to_gui.py`` on the command line and as
+``from cli_to_gui import ...`` in Python code, keep working exactly as
+before.
 
 Author
 ------

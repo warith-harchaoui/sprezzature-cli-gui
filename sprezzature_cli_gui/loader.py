@@ -2,14 +2,18 @@
 sprezzature_cli_gui.loader
 ====================
 
-Load a parser factory from a ``module:callable`` spec.
+Turns a ``"module:factory"`` string into the actual parser object it names.
 
-Given a ``"<module>:<factory>"`` string, resolve the module (either a
-filesystem path or a dotted import path), call the zero-argument
-factory, and hand back the CLI object it returns — an
-:class:`argparse.ArgumentParser` or a :class:`click.Command`. The
-loader consumes the parser by introspection only; it never calls
-``parse_args``.
+The caller writes something like ``"mypkg.cli:build_parser"``: the part
+before the colon locates the module, either as a dotted import path or as a
+plain filesystem path to a ``.py`` file; the part after the colon names a
+zero-argument function inside it. This module resolves that string, imports
+or loads the file, calls the named function, and returns whatever it hands
+back: an :class:`argparse.ArgumentParser` or a :class:`click.Command`.
+
+The loader only reads the parser's own structure (flags, sub-commands,
+defaults); it never calls ``parse_args`` or otherwise runs the target tool,
+so pointing it at a real CLI is always safe.
 
 Author
 ------
