@@ -24,7 +24,11 @@ def test_cli_to_gui_help() -> None:
         text=True,
     )
     assert result.returncode == 0
-    assert "spec" in result.stdout.lower() or "parser" in result.stdout.lower() or "gui" in result.stdout.lower()
+    assert (
+        "spec" in result.stdout.lower()
+        or "parser" in result.stdout.lower()
+        or "gui" in result.stdout.lower()
+    )
 
 
 def test_generate_gui_from_argparse_spec() -> None:

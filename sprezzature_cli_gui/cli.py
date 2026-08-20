@@ -48,26 +48,24 @@ def main(argv: list[str] | None = None) -> int:
         argparse usage error (delegated to the parser).
     """
     parser: argparse.ArgumentParser = make_parser(
-        prog="sprezzature-cli-gui-to-html",
+        prog="sprezzature-cli-gui",
         description=(
-            "Introspect a Python CLI (argparse OR Click — autodetected) "
+            "Introspect a Python CLI (argparse OR Click, autodetected) "
             "and emit a single-page vanilla-JS + Tailwind GUI mapping "
-            "every sub-command and flag to a form field. Make-side "
-            "primary of the sprezzature-cli-gui skill — counterpart to the "
-            "static scaffold in assets/examples/cli-gui-demo/."
+            "every sub-command and flag to a form field."
         ),
     )
     parser.add_argument(
         "spec",
         help=(
-            "Parser factory spec — 'path/to/cli.py:factory' OR "
+            "Parser factory spec: 'path/to/cli.py:factory' OR "
             "'pkg.mod:factory'. The factory is a zero-argument "
             "callable returning EITHER an argparse.ArgumentParser "
             "OR a click.Command (Group or Command). Adapter is "
             "auto-selected from the returned type. With "
             "``--from-help``, this argument is a shell command line "
             "instead; its '--help' output is parsed. Works on any "
-            "CLI — Python or not, framework-agnostic — at lower "
+            "CLI, Python or not, framework-agnostic, at lower "
             "fidelity than native introspection."
         ),
     )
@@ -80,7 +78,7 @@ def main(argv: list[str] | None = None) -> int:
             "'<command> --help' via subprocess and parse the output "
             "into the canonical parser tree. Works on non-Python "
             "CLIs (clap / cobra / commander) and on Python CLIs "
-            "whose factory cannot be imported. Lower fidelity — "
+            "whose factory cannot be imported. Lower fidelity: "
             "everything maps to 'text' unless [default: …], "
             "[choices] or a recognised METAVAR is visible."
         ),

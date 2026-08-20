@@ -52,7 +52,7 @@ def walk(obj: Any) -> dict[str, Any]:
     """
     Walk a CLI object (argparse or Click) into the canonical tree.
 
-    Single entry point for the HTML renderer — it does not need to
+    Single entry point for the HTML renderer: it does not need to
     know which framework produced the input.
 
     Parameters
@@ -89,6 +89,5 @@ def walk(obj: Any) -> dict[str, Any]:
 
         return walk_click(obj)
     raise TypeError(
-        f"walk() expected argparse.ArgumentParser or click.Command, "
-        f"got {type(obj).__name__}"
+        f"walk() expected argparse.ArgumentParser or click.Command, got {type(obj).__name__}"
     )

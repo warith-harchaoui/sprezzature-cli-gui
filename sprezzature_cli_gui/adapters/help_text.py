@@ -42,7 +42,7 @@ HELP_TIMEOUT_S: float = 10.0
 
 
 #: Section headers we recognise. Most CLI conventions converge on
-#: these — argparse, Click, clap (Rust), cobra (Go), commander (Node)
+#: these: argparse, Click, clap (Rust), cobra (Go), commander (Node)
 #: all use some variation. We match case-insensitively + tolerate the
 #: trailing-colon-and-optional-newline shape.
 RE_OPTIONS_HEADER: re.Pattern[str] = re.compile(
@@ -66,7 +66,7 @@ RE_POSITIONAL_HEADER: re.Pattern[str] = re.compile(
 #: ``-flag`` tokens (optionally with a comma-list and an inline
 #: METAVAR), then 2+ whitespace and the help text.
 #:
-#: Permissive on purpose — argparse, Click, clap, cobra, commander
+#: Permissive on purpose: argparse, Click, clap, cobra, commander
 #: each format option lines slightly differently and we want all of
 #: them to land in the same parse. The flag-token split happens
 #: after the match, in :func:`_parse_option_line`.
@@ -88,7 +88,7 @@ RE_COMMAND_LINE: re.Pattern[str] = re.compile(
     re.IGNORECASE,
 )
 
-#: ``[default: 128]`` / ``[default=128]`` / ``(default: 128)`` —
+#: ``[default: 128]`` / ``[default=128]`` / ``(default: 128)``:
 #: extracts the literal default the help text advertised.
 RE_DEFAULT_HINT: re.Pattern[str] = re.compile(
     r"[\[\(]default[:= ]\s*([^\]\)]+)[\]\)]",
@@ -98,10 +98,8 @@ RE_REQUIRED_HINT: re.Pattern[str] = re.compile(
     r"\[required\]|\(required\)",
     re.IGNORECASE,
 )
-#: ``[mp3|ogg|flac]`` or ``{mp3,ogg,flac}`` — Click vs argparse styles.
-RE_CHOICE_HINT: re.Pattern[str] = re.compile(
-    r"\[([^\[\]]+\|[^\[\]]+)\]|\{([^{}]+,[^{}]+)\}"
-)
+#: ``[mp3|ogg|flac]`` or ``{mp3,ogg,flac}``: Click vs argparse styles.
+RE_CHOICE_HINT: re.Pattern[str] = re.compile(r"\[([^\[\]]+\|[^\[\]]+)\]|\{([^{}]+,[^{}]+)\}")
 
 
 def _run_help(cmdline: str) -> str:
@@ -164,19 +162,34 @@ def _extract_prog(cmdline: str, help_text: str = "") -> str:
             if first_token:
                 return first_token
     import shlex
+
     parts: list[str] = shlex.split(cmdline) if cmdline else []
     # Skip leading interpreter / wrapper tokens to land on the real
     # script name when invoked as ``python3 path/to/script.py``.
     for token in parts:
         name: str = Path(token).name
-        if name and not name.startswith("-") and name not in {
-            "python", "python3", "python2", "uvx", "uv", "npx", "node",
-            "ruby", "perl", "bash", "sh",
-        }:
+        if (
+            name
+            and not name.startswith("-")
+            and name
+            not in {
+                "python",
+                "python3",
+                "python2",
+                "uvx",
+                "uv",
+                "npx",
+                "node",
+                "ruby",
+                "perl",
+                "bash",
+                "sh",
+            }
+        ):
             # Strip a ``.py`` / ``.js`` / ``.rb`` extension so the GUI
             # title is the conventional command name.
             return Path(name).stem or name
-    return (parts[0] if parts else "cli")
+    return parts[0] if parts else "cli"
 
 
 #: argparse-style sub-command list: ``{cmd1,cmd2,cmd3}`` on a single
@@ -193,7 +206,7 @@ def _section(text: str, header_re: re.Pattern[str]) -> str | None:
 
     Returns ``None`` if the section is not present in ``text``.
     The slice ends at the first line that does not start with two
-    or more spaces — that is how argparse / Click visually delimit
+    or more spaces; that is how argparse / Click visually delimit
     one section from the next.
     """
     m = header_re.search(text)
@@ -215,9 +228,7 @@ def _section(text: str, header_re: re.Pattern[str]) -> str | None:
     return "\n".join(out)
 
 
-def _parse_option_line(
-    line: str, help_continuation: str = ""
-) -> dict[str, Any] | None:
+def _parse_option_line(line: str, help_continuation: str = "") -> dict[str, Any] | None:
     """Project one help-text option line into the canonical action dict."""
     m = RE_OPTION_LINE.match(line)
     if not m:
@@ -242,11 +253,7 @@ def _parse_option_line(
     # longest flag with its leading dashes stripped.
     metavar: str | None = None
     after_flags: str = flags_fragment.split()[-1] if " " in flags_fragment else ""
-    if (
-        after_flags
-        and not after_flags.startswith("-")
-        and after_flags not in flag_tokens
-    ):
+    if after_flags and not after_flags.startswith("-") and after_flags not in flag_tokens:
         metavar = after_flags.rstrip("]").lstrip("[<(")
 
     longest: str = max(flag_tokens, key=len)
@@ -304,38 +311,43 @@ def _parse_option_line(
 
 
 def _parse_options_section(section: str | None) -> list[dict[str, Any]]:
-    """Walk an options section and produce one action dict per entry."""
+    """Walk an options section and produce one action dict per entry.
+
+    A help line that wraps onto more than one following indented line
+    (help text several sentences long) accumulates every continuation
+    line, not just the first: the previous shape here dropped every
+    continuation past the first one silently.
+    """
     if not section:
         return []
     out: list[dict[str, Any]] = []
     pending_line: str | None = None
-    for line in section.splitlines():
-        if not line.strip():
-            if pending_line is not None:
-                parsed = _parse_option_line(pending_line)
-                if parsed:
-                    out.append(parsed)
-                pending_line = None
-            continue
-        # An indented line that does NOT start with ``-`` (under deep
-        # indent) is a help-text continuation for the previous option.
-        stripped: str = line.lstrip()
-        if pending_line is not None and not stripped.startswith("-"):
-            # Fold continuation into the previous parse.
-            parsed_prev = _parse_option_line(pending_line, stripped)
-            if parsed_prev:
-                out.append(parsed_prev)
-            pending_line = None
-            continue
+    pending_continuation: list[str] = []
+
+    def flush() -> None:
+        """Parse and emit the buffered option line plus its continuation, if any."""
+        nonlocal pending_line, pending_continuation
         if pending_line is not None:
-            parsed = _parse_option_line(pending_line)
+            parsed = _parse_option_line(pending_line, " ".join(pending_continuation))
             if parsed:
                 out.append(parsed)
+        pending_line = None
+        pending_continuation = []
+
+    for line in section.splitlines():
+        if not line.strip():
+            flush()
+            continue
+        # An indented line that does NOT start with ``-`` (under deep
+        # indent) is a help-text continuation for the previous option;
+        # it accumulates rather than replacing what came before.
+        stripped: str = line.lstrip()
+        if pending_line is not None and not stripped.startswith("-"):
+            pending_continuation.append(stripped)
+            continue
+        flush()
         pending_line = line
-    if pending_line is not None:
-        parsed = _parse_option_line(pending_line)
-        if parsed:
-            out.append(parsed)
+    flush()
     return out
 
 
@@ -377,11 +389,11 @@ def walk_from_help(
     ----------
     cmdline : str
         The command to introspect (passed through :mod:`shlex.split`
-        — never via the shell, to keep the injection surface narrow).
+        (never via the shell, to keep the injection surface narrow).
     _depth : int, default 0
-        Internal — current recursion depth into sub-commands.
+        Internal: current recursion depth into sub-commands.
     _max_depth : int, default 3
-        Internal — stop recursing into sub-commands past this many
+        Internal: stop recursing into sub-commands past this many
         levels. Defends against pathological CLIs whose sub-command
         list includes itself.
 
@@ -398,18 +410,20 @@ def walk_from_help(
         # ``Options:`` / ``Commands:`` header as the description.
         after_usage: int = usage_match.end()
         next_header = min(
-            (m.start() for m in [
-                RE_OPTIONS_HEADER.search(help_text, after_usage),
-                RE_COMMANDS_HEADER.search(help_text, after_usage),
-                RE_POSITIONAL_HEADER.search(help_text, after_usage),
-            ] if m is not None),
+            (
+                m.start()
+                for m in [
+                    RE_OPTIONS_HEADER.search(help_text, after_usage),
+                    RE_COMMANDS_HEADER.search(help_text, after_usage),
+                    RE_POSITIONAL_HEADER.search(help_text, after_usage),
+                ]
+                if m is not None
+            ),
             default=len(help_text),
         )
         description = help_text[after_usage:next_header].strip()
 
-    options: list[dict[str, Any]] = _parse_options_section(
-        _section(help_text, RE_OPTIONS_HEADER)
-    )
+    options: list[dict[str, Any]] = _parse_options_section(_section(help_text, RE_OPTIONS_HEADER))
     positionals: list[dict[str, Any]] = _parse_options_section(
         _section(help_text, RE_POSITIONAL_HEADER)
     )
@@ -438,7 +452,7 @@ def walk_from_help(
                 # The sub-command exists in the help text but cannot
                 # be invoked. Skip rather than abort the whole walk.
                 continue
-            except Exception:  # noqa: BLE001 — best-effort.
+            except Exception:  # noqa: BLE001 (best-effort)
                 continue
 
     return {

@@ -84,9 +84,9 @@ A single HTML file: printed to standard output by default, or written to
 disk when ``--out PATH`` is given. It contains:
 
 - Tailwind loaded from its "Play" CDN build (a version meant for quick
-  prototypes, fetched straight from a public URL with no local build step),
-  plus a fallback to the three Roboto typefaces this project's pages use
-  when no network connection is available.
+  prototypes, fetched straight from a public URL with no local build step).
+  This is the page's one runtime network dependency; the form fields still
+  work, unstyled, if that request fails.
 - A sticky header showing the parser's program name and description.
 - One collapsed ``<details>`` block per sub-command, or a single form when
   the CLI has none, with a field for every flag.
@@ -110,9 +110,10 @@ Stack rules respected
 - A visible focus ring on every interactive element, and
   ``prefers-reduced-motion`` (the browser setting that asks pages to skip
   animations) honoured.
-- No fonts loaded from a third-party CDN: the page falls back to
-  ``system-ui`` and ``ui-monospace`` (the browser's own default fonts) when
-  Roboto is not installed locally.
+- No custom font loaded at all: text uses the browser's own default fonts
+  (``ui-sans-serif`` / ``system-ui`` for prose, Tailwind's ``font-mono``
+  stack for the built-command block), so nothing else has to download or
+  render before the page is legible.
 
 Usage
 -----

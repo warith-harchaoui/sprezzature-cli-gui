@@ -53,7 +53,7 @@ def _click_param_kind(param: Any) -> str:
     if getattr(param, "is_flag", False):
         return "bool"
     # ``count=True`` increments an int per repetition (``-vvv``). We
-    # render it as an integer field — the GUI cannot reasonably ask
+    # render it as an integer field; the GUI cannot reasonably ask
     # the user to "click v three times".
     if getattr(param, "count", False):
         return "int"
@@ -89,9 +89,9 @@ def _serialize_click_param(param: Any) -> dict[str, Any]:
     """
     Project one :class:`click.Parameter` into the canonical action dict.
 
-    The output schema is identical to :func:`serialize_action` —
+    The output schema is identical to :func:`serialize_action`:
     ``dest``, ``flags``, ``kind``, ``choices``, ``required``,
-    ``default``, ``help``, ``nargs``, ``metavar`` — so the HTML
+    ``default``, ``help``, ``nargs``, ``metavar``, so the HTML
     renderer never has to branch on the source framework.
     """
     # ``opts`` is the list of ``--flag`` strings for Options;
@@ -104,7 +104,7 @@ def _serialize_click_param(param: Any) -> dict[str, Any]:
     if callable(default):
         try:
             default = default()
-        except Exception:  # noqa: BLE001 — best-effort; fall back to None.
+        except Exception:  # noqa: BLE001 (best-effort; fall back to None)
             default = None
     # Click 8.2+ uses a sentinel value (``click.core.Sentinel.UNSET``
     # or similar) for parameters with no explicit default; treat it
@@ -131,7 +131,7 @@ def walk_click(cmd: Any, prog: str | None = None) -> dict[str, Any]:
     """
     Walk a :class:`click.Command` into the canonical parser tree.
 
-    Mirrors :func:`walk_parser` exactly — same dict shape — so the
+    Mirrors :func:`walk_parser` exactly, same dict shape, so the
     HTML renderer never branches on the source framework. Handles
     both leaf ``Command`` and nested ``Group`` trees; ``--help`` is
     filtered (Click adds it automatically and it has no GUI value).
@@ -140,7 +140,7 @@ def walk_click(cmd: Any, prog: str | None = None) -> dict[str, Any]:
     ----------
     cmd : click.Command
         A Click command or group. Typer apps expose their underlying
-        Click group via ``app.cli`` — pass that.
+        Click group via ``app.cli``; pass that.
     prog : str or None, optional
         Override the ``prog`` field. Defaults to the command's own
         ``name`` (Click sets this from the function name).

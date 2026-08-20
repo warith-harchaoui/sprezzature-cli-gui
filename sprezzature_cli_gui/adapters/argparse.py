@@ -57,7 +57,7 @@ def _action_kind(a: argparse.Action) -> str:
         return "float"
     if isinstance(a.type, argparse.FileType):
         return "file"
-    # ``type=open`` or callable — render as text and let the user paste a path.
+    # ``type=open`` or callable: render as text and let the user paste a path.
     return "text"
 
 
@@ -88,7 +88,7 @@ def walk_parser(parser: argparse.ArgumentParser) -> dict[str, Any]:
     pair, a list of leaf actions, and a (possibly empty)
     ``sub_commands`` dict for any nested sub-parsers.
 
-    Help / version actions are filtered out — they exist only on the
+    Help / version actions are filtered out; they exist only on the
     CLI surface, not in a GUI.
 
     See also :func:`walk` for the framework-agnostic entry point that
@@ -103,7 +103,7 @@ def walk_parser(parser: argparse.ArgumentParser) -> dict[str, Any]:
         elif isinstance(a, (argparse._HelpAction,)) or a.dest == argparse.SUPPRESS:
             continue
         elif getattr(a, "version", None) is not None:
-            # ``action="version"`` — version banner, not a user input.
+            # ``action="version"``: version banner, not a user input.
             continue
         else:
             actions.append(serialize_action(a))

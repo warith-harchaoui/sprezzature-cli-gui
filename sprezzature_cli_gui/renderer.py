@@ -74,9 +74,7 @@ def _field_html(action: dict[str, Any], prefix: str) -> str:
     kind: str = action["kind"]
     default: Any = action.get("default")
     default_attr: str = (
-        f' value="{_e(str(default))}"'
-        if default not in (None, "", []) and kind != "bool"
-        else ""
+        f' value="{_e(str(default))}"' if default not in (None, "", []) and kind != "bool" else ""
     )
     common_classes: str = (
         "mt-1 block w-full min-h-11 rounded-xl border border-separator "
@@ -88,7 +86,7 @@ def _field_html(action: dict[str, Any], prefix: str) -> str:
     )
 
     if kind == "bool":
-        checked: str = ' checked' if default is True else ""
+        checked: str = " checked" if default is True else ""
         # ``min-h-11`` on the checkbox satisfies the sprezzature-ux-laws Fitts
         # heuristic (44 px hit area); ``focus-visible:ring-2`` satisfies
         # the Aesthetic-Usability heuristic. The visible checkbox stays
@@ -99,21 +97,19 @@ def _field_html(action: dict[str, Any], prefix: str) -> str:
             f'<input id="{_e(field_id)}" name="{_e(field_name)}" '
             f'type="checkbox" data-cli-flag="{_e(flag)}" '
             f'class="mt-1 h-5 w-5 min-h-11 rounded border-separator '
-            f'text-brand-blue focus:outline-none '
-            f'focus-visible:ring-2 focus-visible:ring-brand-blue '
+            f"text-brand-blue focus:outline-none "
+            f"focus-visible:ring-2 focus-visible:ring-brand-blue "
             f'focus-visible:ring-offset-2"{checked}>'
         )
     elif kind == "choice":
         opts: list[str] = []
         for c in action.get("choices") or []:
-            sel: str = ' selected' if c == default else ""
-            opts.append(
-                f'<option value="{_e(str(c))}"{sel}>{_e(str(c))}</option>'
-            )
+            sel: str = " selected" if c == default else ""
+            opts.append(f'<option value="{_e(str(c))}"{sel}>{_e(str(c))}</option>')
         body = (
             f'<select id="{_e(field_id)}" name="{_e(field_name)}" '
             f'data-cli-flag="{_e(flag)}" class="{common_classes}">'
-            f'{"".join(opts)}</select>'
+            f"{''.join(opts)}</select>"
         )
     elif kind in ("int", "float"):
         step: str = "1" if kind == "int" else "any"
@@ -143,25 +139,21 @@ def _field_html(action: dict[str, Any], prefix: str) -> str:
         '<div class="mb-4">'
         f'<label for="{_e(field_id)}" class="block text-[14px] '
         'font-medium text-label-primary dark:text-label-primary-dark">'
-        f'{_e(label_text)}{required_marker}{flag_block}</label>'
-        f'{body}{help_block}</div>'
+        f"{_e(label_text)}{required_marker}{flag_block}</label>"
+        f"{body}{help_block}</div>"
     )
 
 
 def _form_html(node: dict[str, Any], path: list[str]) -> str:
     """Render one sub-command form (or the root form when path is empty)."""
     prefix: str = "_".join(path) if path else ""
-    sub_command_id: str = (
-        ".".join(path) if path else ""
-    )
-    fields: str = "\n".join(
-        _field_html(a, prefix) for a in node["actions"]
-    )
+    sub_command_id: str = ".".join(path) if path else ""
+    fields: str = "\n".join(_field_html(a, prefix) for a in node["actions"])
     if not fields:
         fields = (
             '<p class="text-[14px] text-label-secondary '
             'dark:text-label-secondary-dark">This sub-command takes '
-            'no arguments.</p>'
+            "no arguments.</p>"
         )
     desc: str = (
         f'<p class="mb-3 text-[14px] text-label-secondary '
@@ -171,15 +163,15 @@ def _form_html(node: dict[str, Any], path: list[str]) -> str:
     )
     return (
         f'<form data-cli-form data-subcommand="{_e(sub_command_id)}">'
-        f'{desc}{fields}'
+        f"{desc}{fields}"
         f'<button type="button" data-cli-build class="mt-4 inline-flex '
-        'min-h-11 items-center justify-center gap-2 rounded-full '
-        'bg-brand-blue px-5 py-3 text-[15px] font-semibold text-white '
-        'hover:opacity-90 active:scale-[0.97] '
-        'focus:outline-none focus-visible:ring-2 '
-        'focus-visible:ring-brand-blue focus-visible:ring-offset-2 '
+        "min-h-11 items-center justify-center gap-2 rounded-full "
+        "bg-brand-blue px-5 py-3 text-[15px] font-semibold text-white "
+        "hover:opacity-90 active:scale-[0.97] "
+        "focus:outline-none focus-visible:ring-2 "
+        "focus-visible:ring-brand-blue focus-visible:ring-offset-2 "
         'motion-reduce:active:scale-100">Build command</button>'
-        '</form>'
+        "</form>"
     )
 
 
@@ -194,16 +186,16 @@ def _children_html(node: dict[str, Any], path: list[str]) -> str:
             'dark:bg-surface-secondary-dark">'
             # ``min-h-11`` + ``focus-visible:ring-*`` keep sprezzature-ux-laws
             # happy on the disclosure-control element. ``cursor-pointer``
-            # is intentional here — the agent's anti-pattern refusal
+            # is intentional here: the agent's anti-pattern refusal
             # targets clickable ``<div>``/``<span>``, not real ``<summary>``.
             f'<summary class="flex min-h-11 cursor-pointer items-center '
-            'text-[16px] font-semibold text-label-primary '
-            'focus:outline-none focus-visible:ring-2 '
-            'focus-visible:ring-brand-blue focus-visible:ring-offset-2 '
+            "text-[16px] font-semibold text-label-primary "
+            "focus:outline-none focus-visible:ring-2 "
+            "focus-visible:ring-brand-blue focus-visible:ring-offset-2 "
             'rounded-lg dark:text-label-primary-dark">'
-            f'{_e(name)}</summary>'
+            f"{_e(name)}</summary>"
             f'<div class="mt-3">{body}{inner_sub}</div>'
-            '</details>'
+            "</details>"
         )
     return "".join(parts)
 
@@ -225,11 +217,7 @@ def render_html(tree: dict[str, Any], title: str = "CLI GUI") -> str:
     str
         A complete, single-file HTML document. ``\n``-terminated.
     """
-    root_form: str = (
-        _form_html(tree, [])
-        if tree["actions"]
-        else ""
-    )
+    root_form: str = _form_html(tree, []) if tree["actions"] else ""
     sub_html: str = _children_html(tree, [])
     desc: str = (
         f'<p class="text-[14px] text-label-secondary '
@@ -279,45 +267,45 @@ document.querySelectorAll('[data-cli-build]').forEach((btn) => {
 """.replace("<<PROG>>", tree["prog"])
 
     return (
-        '<!doctype html>\n'
+        "<!doctype html>\n"
         '<html lang="en" data-color-scheme="auto">\n'
-        '<head>\n'
+        "<head>\n"
         '<meta charset="utf-8">\n'
         '<meta name="viewport" content="width=device-width, initial-scale=1">\n'
-        f'<title>{_e(title)}</title>\n'
+        f"<title>{_e(title)}</title>\n"
         '<script src="https://cdn.tailwindcss.com"></script>\n'
-        '<style>\n'
-        '  :root { color-scheme: light dark; }\n'
-        '  html, body { font-family: ui-sans-serif, system-ui, sans-serif; '
-        'background-color: #FFFFFF; color: #000000; }\n'
+        "<style>\n"
+        "  :root { color-scheme: light dark; }\n"
+        "  html, body { font-family: ui-sans-serif, system-ui, sans-serif; "
+        "background-color: #FFFFFF; color: #000000; }\n"
         '  html.dark, html[data-color-scheme="dark"], '
         'html[data-color-scheme="dark"] body { background-color: #000000; '
-        'color: #FFFFFF; }\n'
-        '  *:focus { outline: none; }\n'
-        '</style>\n'
-        '</head>\n'
+        "color: #FFFFFF; }\n"
+        "  *:focus { outline: none; }\n"
+        "</style>\n"
+        "</head>\n"
         '<body class="min-h-screen bg-white text-black dark:bg-black dark:text-white">\n'
         '<main class="mx-auto max-w-3xl px-4 py-8">\n'
         f'<header class="mb-6"><h1 class="text-[28px] font-semibold">{_e(tree["prog"])}</h1>{desc}</header>\n'
-        f'{root_form}\n'
-        f'{sub_html}\n'
+        f"{root_form}\n"
+        f"{sub_html}\n"
         '<section class="mt-8">\n'
         '  <h2 class="text-[16px] font-semibold mb-2">Built command</h2>\n'
         '  <pre id="cli-out" class="rounded-2xl bg-surface-secondary p-4 '
-        'font-mono text-[13px] text-label-primary dark:bg-surface-secondary-dark '
+        "font-mono text-[13px] text-label-primary dark:bg-surface-secondary-dark "
         'dark:text-label-primary-dark overflow-x-auto">'
-        '(press Build command above)</pre>\n'
-        '</section>\n'
+        "(press Build command above)</pre>\n"
+        "</section>\n"
         '<footer class="mt-8 text-[12px] text-label-secondary '
         'dark:text-label-secondary-dark">\n'
-        '  Generated by sprezzature-cli-gui/scripts/cli_to_gui.py. '
-        'Wire the Build command output to your host '
-        '(Tauri invoke / FastAPI SSE / Express / shell).\n'
-        '</footer>\n'
-        '</main>\n'
+        "  Generated by sprezzature-cli-gui/scripts/cli_to_gui.py. "
+        "Wire the Build command output to your host "
+        "(Tauri invoke / FastAPI SSE / Express / shell).\n"
+        "</footer>\n"
+        "</main>\n"
         '<script type="module">\n'
-        f'{js_payload}\n'
-        '</script>\n'
-        '</body>\n'
-        '</html>\n'
+        f"{js_payload}\n"
+        "</script>\n"
+        "</body>\n"
+        "</html>\n"
     )
