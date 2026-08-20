@@ -1,0 +1,3 @@
+# Base runtime: none. The argparse adapter needs only the standard library,
+# so `pip install sprezzature-cli-gui` with no extras is already fully usable
+# for any CLI built with argparse, or introspected via --from-help.

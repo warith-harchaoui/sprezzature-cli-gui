@@ -1,0 +1,10 @@
+# Requirements to build and test against a Typer-based target CLI.
+#
+# Install:
+#   pip install -r requirements-typer.txt
+#
+# Typer apps are read through the Click adapter (see requirements-click.txt):
+# this file only pulls in Typer itself, for writing or running the target
+# CLI being wrapped, not for sprezzature-cli-gui's own adapter code.
+
+typer>=0.12

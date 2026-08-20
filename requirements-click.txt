@@ -1,0 +1,10 @@
+# Requirements for the Click adapter (sprezzature_cli_gui/adapters/click.py).
+#
+# Install:
+#   pip install -r requirements-click.txt
+#
+# Typer apps need this too: Typer builds a Click group internally
+# (`app.cli`), so the Click adapter reads Typer apps as well; there is no
+# separate Typer-specific adapter.
+
+click>=8.0

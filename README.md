@@ -19,7 +19,7 @@ Tailwind (a CSS framework, meaning it ships pre-made style classes instead of ha
 written CSS). Every sub-command becomes a section, every flag a field. The page never
 runs the command itself: it assembles the exact command line as text, in the visitor's
 own browser, ready to copy and paste, to hand to a desktop app through a `Tauri`
-`invoke` call (`Tauri` wraps a web page as a native desktop app, and `invoke` is how
+`invoke` call (`Tauri` wraps a web page as a native desktop app; `invoke` is how
 that wrapper lets the page call back into it), or to send to a FastAPI endpoint (a small
 Python web server) that runs it for real.
 
@@ -28,8 +28,10 @@ becomes a page with a checkbox for `--verbose` and two text fields for `INPUT` a
 `OUTPUT`; filling them in and pressing "Build command" prints the exact line
 `mytool convert in.csv out.json --verbose` for the visitor to copy.
 
-No framework, no build step, no network call at runtime: the emitted page is one static
-HTML file that works by itself once generated.
+No framework, no build step: the emitted page is one static HTML file. It does load
+Tailwind's "Play" build from a CDN (`cdn.tailwindcss.com`) to turn the utility classes
+into real CSS in the visitor's browser, so opening the file needs an internet
+connection the first time; the form fields themselves still work, unstyled, without one.
 
 ## Install
 
