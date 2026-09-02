@@ -81,8 +81,13 @@ def _field_html(action: dict[str, Any], prefix: str) -> str:
         "bg-surface-secondary px-3 py-2 text-[15px] text-label-primary "
         "focus:outline-none focus-visible:ring-2 "
         "focus-visible:ring-brand-blue focus-visible:ring-offset-2 "
-        "dark:border-separator-dark dark:bg-surface-secondary-dark "
-        "dark:text-label-primary-dark"
+        # ``separator`` is a single alpha-channel token in the sprezzature-ui
+        # design system (rgba, no dedicated dark twin: see
+        # stack-tailwind.md), so it is intentionally not repeated under
+        # ``dark:`` here; a prior ``dark:border-separator-dark`` reference
+        # named a token that plugin config never defines, which silently
+        # dropped the border color in dark mode.
+        "dark:bg-surface-secondary-dark dark:text-label-primary-dark"
     )
 
     if kind == "bool":
@@ -274,6 +279,39 @@ document.querySelectorAll('[data-cli-build]').forEach((btn) => {
         '<meta name="viewport" content="width=device-width, initial-scale=1">\n'
         f"<title>{_e(title)}</title>\n"
         '<script src="https://cdn.tailwindcss.com"></script>\n'
+        "<script>\n"
+        "  // The markup below uses the sprezzature-ui semantic color tokens\n"
+        "  // (brand-blue, label-primary/secondary, surface-secondary,\n"
+        "  // separator). Tailwind's Play CDN only knows its own default\n"
+        "  // palette until told otherwise, so without this block every one\n"
+        "  // of those utility classes compiles to nothing: no card\n"
+        "  // background, no border, and critically, a 'Build command'\n"
+        "  // button rendered as white text on a transparent background\n"
+        "  // (invisible, though still present and clickable in the DOM).\n"
+        "  // Values match sprezzature-ui's stack-tailwind.md so a page\n"
+        "  // generated here looks consistent with the rest of the stack.\n"
+        "  tailwind.config = {\n"
+        "    theme: {\n"
+        "      extend: {\n"
+        "        colors: {\n"
+        "          brand: {\n"
+        "            blue: { DEFAULT: '#007AFF', dark: '#0A84FF' },\n"
+        "            red: { DEFAULT: '#FF3B30', dark: '#FF453A' },\n"
+        "          },\n"
+        "          label: {\n"
+        "            primary: '#000000', 'primary-dark': '#FFFFFF',\n"
+        "            secondary: 'rgba(60,60,67,0.6)', "
+        "'secondary-dark': 'rgba(235,235,245,0.6)',\n"
+        "          },\n"
+        "          surface: {\n"
+        "            secondary: '#F2F2F7', 'secondary-dark': '#1C1C1E',\n"
+        "          },\n"
+        "          separator: 'rgba(60,60,67,0.36)',\n"
+        "        },\n"
+        "      },\n"
+        "    },\n"
+        "  };\n"
+        "</script>\n"
         "<style>\n"
         "  :root { color-scheme: light dark; }\n"
         "  html, body { font-family: ui-sans-serif, system-ui, sans-serif; "

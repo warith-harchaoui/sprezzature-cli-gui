@@ -62,6 +62,30 @@ def test_walk_rejects_unknown_object() -> None:
         schema.walk(object())
 
 
+def test_walk_prog_override_replaces_argparse_own_prog() -> None:
+    """walk(..., prog=...) overrides even an explicitly-set ArgumentParser.prog."""
+    p = argparse.ArgumentParser(prog="demo")
+    p.add_argument("--name", default="world")
+    tree = schema.walk(p, prog="installed-name")
+    assert tree["prog"] == "installed-name"
+
+
+def test_walk_prog_override_replaces_click_group_function_name() -> None:
+    """walk(..., prog=...) fixes the Click case where Group.name is the
+    decorated function's name, not the installed console-script name."""
+    click = pytest.importorskip("click")
+
+    @click.group()
+    def main() -> None:
+        """Root group named after its Python function, not its console script."""
+
+    tree = schema.walk(main)
+    assert tree["prog"] == "main"  # unfixed: Click's own default is wrong here
+
+    tree = schema.walk(main, prog="my-tool")
+    assert tree["prog"] == "my-tool"
+
+
 # ── adapters.argparse ────────────────────────────────────────────────────────
 
 
@@ -281,6 +305,43 @@ def test_render_html_includes_prog_title_and_fields() -> None:
     assert "demo" in html
     assert 'data-cli-flag="--name"' in html
     assert "'demo'" in html  # <<PROG>> substitution in the JS payload
+
+
+def test_render_html_defines_every_custom_color_token_it_uses() -> None:
+    """Every semantic Tailwind color class the page emits (brand-blue,
+    label-primary/secondary, surface-secondary, separator) must be defined
+    in an inline tailwind.config block, or the Play CDN silently drops the
+    utility and the field renders unstyled. Concretely this was the
+    'Build command' button rendering as invisible white-on-white: it uses
+    bg-brand-blue and text-white, and an undefined bg-brand-blue produced no
+    background at all."""
+    tree = {"prog": "demo", "description": "", "actions": [], "sub_commands": {}}
+    html = renderer.render_html(tree)
+    assert "tailwind.config" in html
+    for token in ("brand", "label", "surface", "separator"):
+        assert f"{token}:" in html or f"'{token}'" in html
+    # tailwind.config must appear after the CDN <script> tag loads the
+    # `tailwind` global; setting it before that point would throw.
+    assert html.index("cdn.tailwindcss.com") < html.index("tailwind.config")
+
+
+def test_field_html_never_references_the_undefined_separator_dark_token() -> None:
+    """border-separator has one alpha-channel value in the sprezzature-ui
+    design system with no dedicated dark twin (see stack-tailwind.md); a
+    'separator-dark' class name was never defined anywhere, so
+    dark:border-separator-dark silently dropped the border color in dark
+    mode."""
+    action = {
+        "dest": "name",
+        "flags": ["--name"],
+        "kind": "text",
+        "default": None,
+        "required": False,
+        "help": "",
+        "choices": None,
+    }
+    html = renderer._field_html(action, prefix="")
+    assert "separator-dark" not in html
 
 
 # ── loader ───────────────────────────────────────────────────────────────────

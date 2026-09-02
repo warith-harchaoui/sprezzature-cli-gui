@@ -99,6 +99,22 @@ def main(argv: list[str] | None = None) -> int:
         help="Page <title>. Defaults to the parser's prog name.",
     )
     parser.add_argument(
+        "--prog",
+        type=str,
+        default=None,
+        help=(
+            "Override the program name embedded in the page header and "
+            "in the 'Build command' output. Defaults to the target "
+            "parser's own name: accurate for argparse (whose ArgumentParser "
+            "usually names 'prog' explicitly), but often wrong for a Click "
+            "Group, whose name defaults to the decorated function's name "
+            "(e.g. 'main'), not the installed console-script name (e.g. "
+            "'my-tool'). Pass the real command name here when they differ, "
+            "or the built command line will name a command that does not "
+            "exist."
+        ),
+    )
+    parser.add_argument(
         "--json",
         action="store_true",
         help=(
@@ -125,7 +141,7 @@ def main(argv: list[str] | None = None) -> int:
             print(f"cli_to_gui: {exc}", file=sys.stderr)
             return 1
         try:
-            tree = walk(cli_obj)
+            tree = walk(cli_obj, prog=args.prog)
         except TypeError as exc:
             print(f"cli_to_gui: {exc}", file=sys.stderr)
             return 1

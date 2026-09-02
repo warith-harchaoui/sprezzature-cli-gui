@@ -48,7 +48,7 @@ def _safe_default(default: Any) -> Any:
     return str(default)
 
 
-def walk(obj: Any) -> dict[str, Any]:
+def walk(obj: Any, *, prog: str | None = None) -> dict[str, Any]:
     """
     Walk a CLI object (argparse or Click) into the canonical tree.
 
@@ -59,6 +59,17 @@ def walk(obj: Any) -> dict[str, Any]:
     ----------
     obj : argparse.ArgumentParser or click.Command
         The CLI to introspect.
+    prog : str or None, optional
+        Override the top-level ``prog`` field, which both the page
+        header and the built command line are seeded from. Needed
+        because a Click ``Group`` has no equivalent of argparse's
+        explicit ``prog=`` kwarg: its own ``name`` defaults to the
+        decorated function's name (e.g. ``main``), which is usually
+        not the installed console-script name (e.g.
+        ``sprezzature-maps``). Left unset, that mismatch means the
+        page's "Build command" output assembles a command line that
+        does not exist. Only affects the root of the tree; a
+        sub-command's own name is unaffected.
 
     Returns
     -------
@@ -76,7 +87,10 @@ def walk(obj: Any) -> dict[str, Any]:
         # on the adapters package (which imports back from here).
         from sprezzature_cli_gui.adapters.argparse import walk_parser
 
-        return walk_parser(obj)
+        tree = walk_parser(obj)
+        if prog is not None:
+            tree["prog"] = prog
+        return tree
     # Click is optional; only attempt the isinstance check after a
     # successful lazy import. Skipping the import on argparse-only
     # users keeps the script stdlib-only at run time.
@@ -87,7 +101,7 @@ def walk(obj: Any) -> dict[str, Any]:
     if click is not None and isinstance(obj, click.Command):
         from sprezzature_cli_gui.adapters.click import walk_click
 
-        return walk_click(obj)
+        return walk_click(obj, prog=prog)
     raise TypeError(
         f"walk() expected argparse.ArgumentParser or click.Command, got {type(obj).__name__}"
     )
