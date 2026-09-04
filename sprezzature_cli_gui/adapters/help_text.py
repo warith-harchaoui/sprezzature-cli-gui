@@ -43,18 +43,22 @@ HELP_TIMEOUT_S: float = 10.0
 
 #: Section headers we recognise. Most CLI conventions converge on
 #: these: argparse, Click, clap (Rust), cobra (Go), commander (Node)
-#: all use some variation. We match case-insensitively + tolerate the
-#: trailing-colon-and-optional-newline shape.
+#: all use some variation. We match case-insensitively, tolerate a
+#: missing trailing colon (cobra favors bare all-caps headers, e.g.
+#: GitHub's own ``gh`` prints ``USAGE`` and ``FLAGS`` with none), and
+#: tolerate a qualifier word in front (``Global Options``, ``Common
+#: Commands``, ``GitHub Actions Commands`` all show up in real cobra
+#: output, not just the bare word).
 RE_OPTIONS_HEADER: re.Pattern[str] = re.compile(
-    r"^\s*(options|optional arguments|flags):\s*$",
+    r"^\s*(?:[a-z]+\s+)*?(options|optional arguments|flags)\s*:?\s*$",
     re.IGNORECASE | re.MULTILINE,
 )
 RE_COMMANDS_HEADER: re.Pattern[str] = re.compile(
-    r"^\s*(commands|sub-?commands|available commands):\s*$",
+    r"^\s*(?:[a-z]+\s+)*?(commands|sub-?commands|available commands)\s*:?\s*$",
     re.IGNORECASE | re.MULTILINE,
 )
 RE_USAGE_HEADER: re.Pattern[str] = re.compile(
-    r"^\s*usage:\s*(.+)$",
+    r"^\s*usage\s*:?[ \t]*(.*)$",
     re.IGNORECASE | re.MULTILINE,
 )
 RE_POSITIONAL_HEADER: re.Pattern[str] = re.compile(
@@ -81,10 +85,11 @@ RE_OPTION_LINE: re.Pattern[str] = re.compile(
     r"(?:\s{2,}(.*))?$"
 )
 
-#: One sub-command row: leading whitespace, the slug, two-or-more
-#: spaces, the help fragment.
+#: One sub-command row: leading whitespace, the slug (cobra often
+#: suffixes it with a colon, e.g. ``auth:``), two-or-more spaces, the
+#: help fragment.
 RE_COMMAND_LINE: re.Pattern[str] = re.compile(
-    r"^\s{2,}([a-z0-9][a-z0-9_-]*)(?:\s{2,}(.*))?$",
+    r"^\s{2,}([a-z0-9][a-z0-9_-]*):?(?:\s{2,}(.*))?$",
     re.IGNORECASE,
 )
 
@@ -144,6 +149,42 @@ def _run_help(cmdline: str) -> str:
     return proc.stdout + ("\n" + proc.stderr if proc.stderr else "")
 
 
+def _usage_synopsis(help_text: str, usage_match: re.Match[str]) -> str:
+    """
+    Return the actual usage line's text, wherever it lives.
+
+    Most conventions (argparse, Click, clap) put it right after the
+    ``usage:`` token on the same line. Cobra's own help (``gh``, most
+    Go CLIs built on it) instead prints a bare ``USAGE`` header and puts
+    the real synopsis on the next line indented underneath it. Both
+    shapes end up here as one string.
+    """
+    inline: str = usage_match.group(1).strip()
+    if inline:
+        return inline
+    following: list[str] = help_text[usage_match.end() :].splitlines()
+    return following[0].strip() if following else ""
+
+
+def _usage_block_end(help_text: str, usage_match: re.Match[str]) -> int:
+    """
+    Return the offset just past the whole usage block.
+
+    A usage block can span more than one physical line: a header-only
+    style (``USAGE`` on its own line, synopsis on the next) needs one
+    extra line consumed, and some CLIs (``cargo``) print several
+    alternate invocations stacked under one ``Usage:`` line. Either
+    way, the block ends at the first blank line.
+    """
+    start: int = usage_match.end()
+    consumed = 0
+    for line in help_text[start:].splitlines(keepends=True):
+        if not line.strip():
+            break
+        consumed += len(line)
+    return start + consumed
+
+
 def _extract_prog(cmdline: str, help_text: str = "") -> str:
     """
     Best-effort program name.
@@ -157,7 +198,7 @@ def _extract_prog(cmdline: str, help_text: str = "") -> str:
     if help_text:
         m = RE_USAGE_HEADER.search(help_text)
         if m:
-            usage_line: str = m.group(1).strip()
+            usage_line: str = _usage_synopsis(help_text, m)
             first_token: str = usage_line.split()[0] if usage_line else ""
             if first_token:
                 return first_token
@@ -202,30 +243,36 @@ RE_ARGPARSE_SUBS: re.Pattern[str] = re.compile(
 
 def _section(text: str, header_re: re.Pattern[str]) -> str | None:
     """
-    Return the lines between ``header_re`` and the next blank line.
+    Return the lines under every occurrence of ``header_re``, joined.
 
-    Returns ``None`` if the section is not present in ``text``.
-    The slice ends at the first line that does not start with two
-    or more spaces; that is how argparse / Click visually delimit
-    one section from the next.
+    Returns ``None`` if the header never appears in ``text``. Cobra
+    CLIs routinely split one logical section across several named
+    groups (``gh --help`` prints ``CORE COMMANDS``, ``GITHUB ACTIONS
+    COMMANDS``, ``ALIAS COMMANDS`` and ``ADDITIONAL COMMANDS`` as four
+    separate blocks, none of them called just "commands"); collecting
+    every match, not only the first, is what makes those CLIs' full
+    sub-command list show up instead of just the first group.
+
+    Each individual block ends at the first line that does not start
+    with two or more spaces; that is how argparse / Click / cobra all
+    visually delimit one section from the next.
     """
-    m = header_re.search(text)
-    if not m:
-        return None
-    start: int = m.end()
-    # Walk forward line by line until we hit a non-indented line.
-    lines: list[str] = text[start:].splitlines()
-    out: list[str] = []
-    for line in lines:
-        if not line.strip():
-            # A blank line is permitted *between* entries; we keep
-            # going until two consecutive blanks OR an outdented line.
+    blocks: list[str] = []
+    for m in header_re.finditer(text):
+        start: int = m.end()
+        lines: list[str] = text[start:].splitlines()
+        out: list[str] = []
+        for line in lines:
+            if not line.strip():
+                # A blank line is permitted *between* entries; we keep
+                # going until two consecutive blanks OR an outdented line.
+                out.append(line)
+                continue
+            if not line.startswith(" "):
+                break
             out.append(line)
-            continue
-        if not line.startswith(" "):
-            break
-        out.append(line)
-    return "\n".join(out)
+        blocks.append("\n".join(out))
+    return "\n".join(blocks) if blocks else None
 
 
 def _parse_option_line(line: str, help_continuation: str = "") -> dict[str, Any] | None:
@@ -237,10 +284,14 @@ def _parse_option_line(line: str, help_continuation: str = "") -> dict[str, Any]
     inline_help: str = (m.group(2) or "").strip()
     full_help: str = (inline_help + " " + help_continuation).strip()
 
-    # Split ``"-V, --version"`` → ``["-V", "--version"]``.
+    # Split ``"-V, --version"`` → ``["-V", "--version"]``. clap marks a
+    # repeatable flag with a trailing ellipsis (``-v, --verbose...``);
+    # strip it so it doesn't end up baked into the dest/flag name.
     flag_tokens: list[str] = []
     for piece in flags_fragment.split(","):
         token: str = piece.strip().split()[0] if piece.strip() else ""
+        if token.endswith("..."):
+            token = token[:-3]
         if token.startswith("-"):
             flag_tokens.append(token)
     if not flag_tokens:
@@ -254,7 +305,11 @@ def _parse_option_line(line: str, help_continuation: str = "") -> dict[str, Any]
     metavar: str | None = None
     after_flags: str = flags_fragment.split()[-1] if " " in flags_fragment else ""
     if after_flags and not after_flags.startswith("-") and after_flags not in flag_tokens:
-        metavar = after_flags.rstrip("]").lstrip("[<(")
+        # Strip whichever bracket style wraps it: "<CODE>" (clap),
+        # "[FILE]" (argparse optionals), "(PATH)". strip() removes any
+        # of these characters from both ends, so a mismatched pair
+        # (the "<" without its ">" showing up alone) is handled too.
+        metavar = after_flags.strip("[]<>()")
 
     longest: str = max(flag_tokens, key=len)
     dest: str = longest.lstrip("-").replace("-", "_")
@@ -352,10 +407,20 @@ def _parse_options_section(section: str | None) -> list[dict[str, Any]]:
 
 
 def _parse_commands_section(section: str | None) -> list[tuple[str, str]]:
-    """Yield (sub_command_name, short_help) from a Commands section."""
+    """Yield (sub_command_name, short_help) from a Commands section.
+
+    ``section`` may be several command-group blocks concatenated (see
+    :func:`_section`): cobra CLIs list the same command family under
+    more than one heading (e.g. one curated "Common Commands" summary
+    plus the exhaustive "Commands" list further down), so the same
+    name can legitimately appear twice. Kept to the first sighting
+    only, both to avoid a duplicate recursive ``--help`` call per
+    repeat and to keep whichever short-help text showed up first.
+    """
     if not section:
         return []
     out: list[tuple[str, str]] = []
+    seen: set[str] = set()
     for line in section.splitlines():
         m = RE_COMMAND_LINE.match(line)
         if not m:
@@ -363,8 +428,9 @@ def _parse_commands_section(section: str | None) -> list[tuple[str, str]]:
         name: str = m.group(1)
         help_text: str = (m.group(2) or "").strip()
         # Reject false matches that look like option lines.
-        if name.startswith("-"):
+        if name.startswith("-") or name in seen:
             continue
+        seen.add(name)
         out.append((name, help_text))
     return out
 
@@ -406,9 +472,16 @@ def walk_from_help(
     description: str = ""
     usage_match = RE_USAGE_HEADER.search(help_text)
     if usage_match:
+        # Two conventions show up in practice: argparse/Click print the
+        # one-line synopsis *after* the usage block; clap prints it
+        # *before* (e.g. "Rust's package manager" ahead of cargo's own
+        # "Usage: cargo ..."). Prefer whatever prose precedes the usage
+        # block when there is any, since that is never itself part of
+        # the block; fall back to the prose that follows it otherwise.
+        before_usage: str = help_text[: usage_match.start()].strip()
+        after_usage: int = _usage_block_end(help_text, usage_match)
         # Treat any prose between the Usage block and the first
-        # ``Options:`` / ``Commands:`` header as the description.
-        after_usage: int = usage_match.end()
+        # ``Options:`` / ``Commands:`` header as the fallback description.
         next_header = min(
             (
                 m.start()
@@ -421,7 +494,8 @@ def walk_from_help(
             ),
             default=len(help_text),
         )
-        description = help_text[after_usage:next_header].strip()
+        after_text: str = help_text[after_usage:next_header].strip()
+        description = before_usage or after_text
 
     options: list[dict[str, Any]] = _parse_options_section(_section(help_text, RE_OPTIONS_HEADER))
     positionals: list[dict[str, Any]] = _parse_options_section(

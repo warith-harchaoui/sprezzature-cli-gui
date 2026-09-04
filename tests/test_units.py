@@ -241,6 +241,103 @@ def test_walk_from_help_uses_the_injected_help_text(monkeypatch: pytest.MonkeyPa
     assert tree["sub_commands"] == {}
 
 
+def test_parse_option_line_strips_claps_repeatable_flag_ellipsis() -> None:
+    """clap marks a repeatable flag with a trailing "...": ``-v, --verbose...``.
+
+    Verified against real ``cargo --help`` output, which produced this exact
+    line; before the fix the dots leaked into both the dest and the flag,
+    building an unrunnable ``--verbose...`` on the generated command line.
+    """
+    action = help_text._parse_option_line(
+        "  -v, --verbose...               Use verbose output (-vv very verbose/build.rs output)"
+    )
+    assert action is not None
+    assert action["flags"] == ["-v", "--verbose"]
+    assert action["dest"] == "verbose"
+
+
+def test_parse_option_line_strips_the_closing_bracket_from_a_clap_metavar() -> None:
+    """A clap-style ``<CODE>`` metavar must not keep its closing ``>``.
+
+    Verified against real ``cargo --help``: ``--explain <CODE>`` used to
+    produce metavar ``"CODE>"`` because only the leading bracket was
+    stripped.
+    """
+    action = help_text._parse_option_line(
+        "      --explain <CODE>           Provide a detailed explanation of a rustc error message"
+    )
+    assert action is not None
+    assert action["metavar"] == "CODE"
+
+
+def test_usage_synopsis_reads_the_next_line_when_the_header_is_bare(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """cobra's own CLIs (``gh``) print a bare ``USAGE`` header with the real
+    command line indented on the following line, not inline after a colon.
+    """
+    canned = "USAGE\n  gh <command> <subcommand> [flags]\n\nFLAGS\n  --version   Show gh version\n"
+    monkeypatch.setattr(help_text, "_run_help", lambda cmdline: canned)
+    tree = help_text.walk_from_help("gh")
+    assert tree["prog"] == "gh"
+
+
+def test_walk_from_help_prefers_prose_before_a_clap_style_usage_block(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """clap prints the one-line synopsis *before* ``Usage:``, and often
+    stacks a second alternate invocation line under it. Verified against
+    real ``cargo --help``: before the fix, the description became the
+    second usage line instead of the real synopsis.
+    """
+    canned = (
+        "Rust's package manager\n\n"
+        "Usage: cargo [OPTIONS] [COMMAND]\n"
+        "       cargo [OPTIONS] -Zscript <MANIFEST_RS> [ARGS]...\n\n"
+        "Options:\n"
+        "  -V, --version  Print version info and exit\n"
+    )
+    monkeypatch.setattr(help_text, "_run_help", lambda cmdline: canned)
+    tree = help_text.walk_from_help("cargo")
+    assert tree["description"] == "Rust's package manager"
+
+
+def test_walk_from_help_merges_every_cobra_command_group(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """cobra CLIs like ``gh`` split sub-commands across several named
+    groups (``CORE COMMANDS``, ``ALIAS COMMANDS``, ...), none of them
+    spelled just "commands"; every group must still be recursed into, and
+    a colon-suffixed name (``auth:``) must still be recognised.
+    """
+    canned = textwrap.dedent("""\
+        Work seamlessly with GitHub from the command line.
+
+        USAGE
+          gh <command> <subcommand> [flags]
+
+        CORE COMMANDS
+          auth:          Authenticate gh and git with GitHub
+
+        ALIAS COMMANDS
+          co:            Alias for "pr checkout"
+
+        FLAGS
+          --version   Show gh version
+    """)
+
+    def fake_run_help(cmdline: str) -> str:
+        if cmdline == "gh":
+            return canned
+        # Sub-command recursion: any concrete leaf help is fine here.
+        return "usage: gh " + cmdline.split()[-1] + " [flags]\n"
+
+    monkeypatch.setattr(help_text, "_run_help", fake_run_help)
+    tree = help_text.walk_from_help("gh")
+    assert set(tree["sub_commands"]) == {"auth", "co"}
+    assert any(a["flags"] == ["--version"] for a in tree["actions"])
+
+
 # ── renderer ─────────────────────────────────────────────────────────────────
 
 
