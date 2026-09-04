@@ -40,9 +40,11 @@ import typer
 
 app = typer.Typer()
 
+
 @app.command()
 def greet(name: str = "world"):
     print(f"Hello {name}")
+
 
 def get_click_group():
     # Typer builds a Click group internally and exposes it as app.cli; the

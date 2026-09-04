@@ -52,7 +52,8 @@ sprezzature-cli-gui ./my_cli.py:make_parser > gui.html
 ```
 
 When the parser cannot be imported, the tool falls back to parsing the tool's `--help`
-output, so it works even against a CLI it cannot introspect directly.
+output, so it works even against a CLI it cannot introspect directly, including one
+that is not written in Python at all.
 
 ## How it works
 
