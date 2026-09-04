@@ -4,6 +4,7 @@ pointing it at a real argparse factory produces a working HTML page."""
 
 from __future__ import annotations
 
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -29,6 +30,23 @@ def test_cli_to_gui_help() -> None:
         or "parser" in result.stdout.lower()
         or "gui" in result.stdout.lower()
     )
+
+
+def test_installed_console_script_actually_resolves() -> None:
+    """The ``sprezzature-cli-gui`` console script pyproject.toml declares
+    must resolve and run on its own, not only through the legacy
+    ``scripts/cli_to_gui.py`` facade every other test in this file drives.
+
+    A typo in ``[project.scripts]`` (wrong module path or attribute) would
+    still let ``pip install`` succeed, since setuptools does not import the
+    target at install time; it only breaks the moment someone actually
+    types the command. Nothing else in this suite would have caught that.
+    """
+    exe = shutil.which("sprezzature-cli-gui")
+    assert exe, "the 'sprezzature-cli-gui' console script is not on PATH; is the package installed?"
+    result = subprocess.run([exe, "--help"], capture_output=True, text=True)
+    assert result.returncode == 0
+    assert "spec" in result.stdout.lower()
 
 
 def test_generate_gui_from_argparse_spec() -> None:

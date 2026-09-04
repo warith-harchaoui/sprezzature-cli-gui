@@ -20,6 +20,7 @@
 
 - `tests/test_units.py`: unit tests for the pure functions behind the package (`schema.walk` dispatch, both adapters, the help-text fallback parser, the HTML field renderer, `loader.load_parser_from_spec`), on top of the existing end-to-end suite in `tests/test_cli_gui.py`, plus regression tests for every `--from-help` fix listed above.
 - LISEZMOI.md, CODING.md, CONTRIBUTING.md, EXAMPLES.md, LANDSCAPE.md/PAYSAGE.md, TRIGGERS.md, Dockerfile, requirements\*.txt, and the `references/` pointer files, matching the structure already in place for sibling `sprezzature-*` packages.
+- `tests/test_cli_gui.py::test_installed_console_script_actually_resolves`: runs the installed `sprezzature-cli-gui` console script directly. Every other CLI-level test in the suite drove the legacy, unpackaged `scripts/cli_to_gui.py` facade instead, so a typo in `pyproject.toml`'s `[project.scripts]` entry would have passed CI (setuptools does not import the target at install time) and only broken the moment a real user typed the command.
 
 ## v1.0.0 (2026-07-29)
 
