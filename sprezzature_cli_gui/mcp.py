@@ -49,54 +49,68 @@ Author
 
 from __future__ import annotations
 
+import sys
+
 try:
     from fastapi_mcp import FastApiMCP
-except ImportError as exc:  # pragma: no cover - dependency guard
-    raise ImportError(
-        "The MCP surface requires the [mcp] extra. "
-        "Install with: pip install 'sprezzature-cli-gui[api,mcp]'"
-    ) from exc
+except ImportError:  # pragma: no cover - dependency guard
 
-# Reuse the exact same FastAPI app -- MCP is a thin wrapper on top.
-from sprezzature_cli_gui.api import app
+    def main() -> None:
+        """
+        Entry point when the MCP extra is not installed.
 
-# FastApiMCP mounts an MCP endpoint on the existing FastAPI app; the wrapped
-# instance is kept at module scope so downstream code (tests, ASGI runners)
-# can reach both the FastAPI app and the MCP handler.
-mcp = FastApiMCP(
-    app,
-    name="sprezzature-cli-gui",
-    description=(
-        "Sprezzature CLI-GUI MCP tools: turn a command-line parser schema "
-        "into a working web form. Schema in, HTML out — never a module path."
-    ),
-    include_tags=["meta", "actions"],
-)
-# Newer fastapi-mcp releases split mount() into transport-specific
-# mount_http() (recommended) and mount_sse(); fall back to the legacy
-# mount() on older versions so a range of fastapi-mcp versions still work.
-if hasattr(mcp, "mount_http"):
-    mcp.mount_http()
-else:  # pragma: no cover - legacy fastapi-mcp
-    mcp.mount()
+        Says which extra is missing and stops. Reaching an MCP
+        command without the ``[mcp]`` extra needs a one-line fix,
+        not a stack trace.
+        """
+        print(
+            "sprezzature-cli-gui MCP surface requires fastapi-mcp. "
+            "Install with: pip install 'sprezzature-cli-gui[api,mcp]'",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+else:
+
+    # Reuse the exact same FastAPI app -- MCP is a thin wrapper on top.
+    from sprezzature_cli_gui.api import app
+
+    # FastApiMCP mounts an MCP endpoint on the existing FastAPI app; the wrapped
+    # instance is kept at module scope so downstream code (tests, ASGI runners)
+    # can reach both the FastAPI app and the MCP handler.
+    mcp = FastApiMCP(
+        app,
+        name="sprezzature-cli-gui",
+        description=(
+            "Sprezzature CLI-GUI MCP tools: turn a command-line parser schema "
+            "into a working web form. Schema in, HTML out — never a module path."
+        ),
+        include_tags=["meta", "actions"],
+    )
+    # Newer fastapi-mcp releases split mount() into transport-specific
+    # mount_http() (recommended) and mount_sse(); fall back to the legacy
+    # mount() on older versions so a range of fastapi-mcp versions still work.
+    if hasattr(mcp, "mount_http"):
+        mcp.mount_http()
+    else:  # pragma: no cover - legacy fastapi-mcp
+        mcp.mount()
 
 
-def main() -> None:
-    """
-    Entry point for the ``sprezzature-cli-gui-mcp`` console script.
+    def main() -> None:
+        """
+        Entry point for the ``sprezzature-cli-gui-mcp`` console script.
 
-    Boots the FastAPI app — which now serves both the HTTP routes and the
-    MCP endpoint — with ``uvicorn``. Meant for local or container usage;
-    behind a real load balancer, run ``uvicorn``/``gunicorn`` directly.
-    """
-    import os
+        Boots the FastAPI app — which now serves both the HTTP routes and the
+        MCP endpoint — with ``uvicorn``. Meant for local or container usage;
+        behind a real load balancer, run ``uvicorn``/``gunicorn`` directly.
+        """
+        import os
 
-    import uvicorn
+        import uvicorn
 
-    host = os.environ.get("SPREZZATURE_COLORS_HOST", "0.0.0.0")
-    port = int(os.environ.get("SPREZZATURE_COLORS_PORT", "8000"))
-    uvicorn.run(app, host=host, port=port, workers=1)
-
+        host = os.environ.get("SPREZZATURE_CLI_GUI_HOST", "0.0.0.0")
+        port = int(os.environ.get("SPREZZATURE_CLI_GUI_PORT", "8000"))
+        uvicorn.run(app, host=host, port=port, workers=1)
 
 if __name__ == "__main__":  # pragma: no cover
     main()
