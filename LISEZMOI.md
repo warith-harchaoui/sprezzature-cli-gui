@@ -44,4 +44,4 @@ Quand le parseur ne peut pas être importé, l'outil se rabat sur l'analyse de l
 
 ## Licence
 
-BSD à 3 clauses © Warith Harchaoui. Fait partie de la boîte à outils [sprezzature](https://harchaoui.org/warith/sprezzature/).
+BSD à 3 clauses © Warith HARCHAOUI. Fait partie de la boîte à outils [sprezzature](https://harchaoui.org/warith/sprezzature/).

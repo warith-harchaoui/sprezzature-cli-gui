@@ -72,4 +72,4 @@ in the `sprezzature_cli_gui` package:
 
 ## License
 
-BSD-3-Clause © Warith Harchaoui. Part of the [sprezzature](https://harchaoui.org/warith/sprezzature/) toolkit.
+BSD-3-Clause © Warith HARCHAOUI. Part of the [sprezzature](https://harchaoui.org/warith/sprezzature/) toolkit.
