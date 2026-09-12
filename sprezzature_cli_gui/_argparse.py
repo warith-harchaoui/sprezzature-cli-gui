@@ -1,26 +1,27 @@
 """
-_argparse
-=========
+_argparse: one factory function for every script's command-line parser.
 
-A shared factory for this skill's command-line parsers.
+Python's standard library builds a command-line interface around an
+``argparse.ArgumentParser`` object: you create one, register each flag
+(``--lang``, ``--out``, and so on) on it, then call ``.parse_args()`` to
+turn the words the user typed into a plain object with one attribute per
+flag. Every script in this project needs the same handful of small
+conveniences on top of that (a clean program name in ``--help``, instead
+of a long file path; multi-line help text kept exactly as written instead
+of being auto-reflowed; a ``-V``/``--version`` flag). Rather than
+repeating that setup in every script, ``make_parser(prog, description,
+epilog=None)`` builds one parser already configured that way, and each
+script starts from it.
 
-``make_parser(prog, description, epilog=None)`` returns an ``ArgumentParser``
-(the standard-library object that reads a command's flags and arguments),
-already set up the way every script in this skill expects:
-
-- ``prog`` is set explicitly, so ``--help`` prints a clean tool name instead
-  of the full script path.
-- ``RawDescriptionHelpFormatter`` is used, so a multi-line description or
-  ``epilog`` is printed exactly as written instead of being rewrapped.
-- A standard ``-V`` / ``--version`` flag is added automatically.
-
-This file is deliberately duplicated, byte for byte, across every
-``sprezzature-*`` skill (for example ``sprezzature-colors/scripts/_argparse.py``)
-so that each skill stays self-contained and installable on its own, with no
-shared dependency between skills. Because it is a duplicate, not a shared
-import, a change here has to be copied by hand into every sibling copy, and
-``SKILL_VERSION`` bumped in each one at release time; ``release.sh`` checks
-that the copies have not drifted apart.
+This file is duplicated on purpose into every sprezzature-* repository,
+one copy each, so a skill stays self-contained and runs on its own:
+including from a downloaded zip, with nothing available but Python's
+standard library. The copies are meant to stay byte-for-byte identical
+apart from ``SKILL_VERSION``, which each repository sets to its own
+released version. So edit the canonical copy rather than this one, unless
+this is it: ``scripts/sync_helpers.py``, in the sprezzature monorepo,
+names the canonical copy, reports the ones that have drifted, and
+propagates the change with ``--apply``.
 
 Author
 ------
