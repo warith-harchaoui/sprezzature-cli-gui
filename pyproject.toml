@@ -27,7 +27,20 @@ dev = ["pytest>=8.0", "ruff"]
 click = ["click>=8.0"]
 typer = ["typer>=0.12"]
 
+# HTTP surface (sprezzature_cli_gui/api.py): schema tree in, GUI HTML out.
+# Deliberately does NOT expose loader.load_parser_from_spec — importing an
+# arbitrary module behind an HTTP endpoint is remote code execution.
+api = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+]
+# MCP surface: the same routes republished as agent tools, via fastapi-mcp.
+mcp = [
+    "sprezzature-cli-gui[api]",
+    "fastapi-mcp>=0.3",
+]
 [project.scripts]
+sprezzature-cli-gui-mcp = "sprezzature_cli_gui.mcp:main"
 sprezzature-cli-gui = "sprezzature_cli_gui.cli:main"
 
 [project.urls]
