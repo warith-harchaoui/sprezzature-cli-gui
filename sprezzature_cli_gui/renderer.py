@@ -160,10 +160,14 @@ def _form_html(node: dict[str, Any], path: list[str]) -> str:
             'dark:text-label-secondary-dark">This sub-command takes '
             "no arguments.</p>"
         )
+    # The root form's description is already the page's standfirst, printed
+    # in the <header> a few lines above it. Repeating it reads as a mistake,
+    # because it is one. A sub-command's description is genuinely new
+    # information at that point, so it stays.
     desc: str = (
         f'<p class="mb-3 text-[14px] text-label-secondary '
         f'dark:text-label-secondary-dark">{_e(node["description"])}</p>'
-        if node.get("description")
+        if node.get("description") and path
         else ""
     )
     return (
