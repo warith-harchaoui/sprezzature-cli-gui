@@ -26,7 +26,9 @@ jobs:
       - name: Install
         run: |
           python -m pip install --upgrade pip
-          pip install -e ".[dev,click,typer]"
+          # [api,mcp] too: without them every test of api.py and mcp.py
+          # skipped, and CI was green on code nobody ran.
+          pip install -e ".[dev,click,typer,api,mcp]"
       - name: Ruff
         run: ruff check .
       - name: Pytest

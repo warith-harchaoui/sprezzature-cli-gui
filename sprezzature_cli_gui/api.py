@@ -113,10 +113,17 @@ def _example_tree() -> dict[str, Any]:
     return walk(parser)
 
 
-@app.get("/health", tags=["meta"], operation_id="health")
+@app.get(
+    "/health",
+    tags=["meta"],
+    operation_id="health",
+    summary="Check that this GUI-builder server is up",
+)
 def health() -> dict:
     """
     Liveness probe — no dependency check, just proves the app is up.
+
+    Call this only to diagnose a connection problem.
 
     Returns
     -------
@@ -126,10 +133,20 @@ def health() -> dict:
     return {"status": "ok"}
 
 
-@app.get("/v1/example", tags=["meta"], operation_id="get_example_schema")
+@app.get(
+    "/v1/example",
+    tags=["meta"],
+    operation_id="get_example_schema",
+    summary="Show the schema shape the renderer expects",
+)
 def example() -> dict:
     """
     A small schema tree, so a caller can see the shape ``/v1/render`` wants.
+
+    Call this FIRST, before `render_gui`, unless you already know the tree
+    format. It returns a worked two-flag example: copy its shape, swap in the
+    real command's sub-commands and flags. Reading one example beats guessing
+    at a nested schema and getting a 422.
 
     Returns
     -------
@@ -139,10 +156,29 @@ def example() -> dict:
     return {"tree": _example_tree()}
 
 
-@app.post("/v1/render", tags=["actions"], operation_id="render_gui", response_class=HTMLResponse)
+@app.post(
+    "/v1/render",
+    tags=["actions"],
+    operation_id="render_gui",
+    summary="Turn a command-line tool into a web form",
+    response_class=HTMLResponse,
+)
 def render(request: RenderRequest) -> HTMLResponse:
     """
     Render a parser schema as a self-contained GUI page.
+
+    This is the tool for "wrap my CLI in a GUI", "build a UI for this
+    script", "a web form for my command", « une interface pour mon script ».
+    Returns one self-contained HTML page: sub-commands become tabs, flags
+    become inputs, file arguments become pickers.
+
+    It takes a SCHEMA TREE, not source code -- it does not read a Python file
+    and work out the argparse calls. Describe the command's sub-commands and
+    flags in the shape `get_example_schema` returns, and send that.
+
+    The page is markup only: it builds the command line, it does not run it.
+    Nothing here executes a user's CLI, which is why this can be an ordinary
+    HTTP tool at all.
 
     Parameters
     ----------
