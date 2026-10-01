@@ -53,7 +53,7 @@ sprezzature-cli-gui-mcp = "sprezzature_cli_gui.mcp:main"
 sprezzature-cli-gui = "sprezzature_cli_gui.cli:main"
 
 [project.urls]
-Homepage = "https://harchaoui.org/warith/sprezzature/"
+Homepage = "https://sprezzature.ai/"
 Repository = "https://github.com/warith-harchaoui/sprezzature-cli-gui"
 
 [tool.setuptools.packages.find]

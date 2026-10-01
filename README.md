@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/license-BSD--3--Clause-blue.svg)](https://github.com/warith-harchaoui/sprezzature-cli-gui/blob/main/LICENSE)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)
 
-[![logo](https://raw.githubusercontent.com/warith-harchaoui/sprezzature-cli-gui/main/assets/logo.png)](https://harchaoui.org/warith/sprezzature/)
+[![logo](https://raw.githubusercontent.com/warith-harchaoui/sprezzature-cli-gui/main/assets/logo.png)](https://sprezzature.ai/)
 
 Turn any Python command-line tool into a clickable form, automatically. A command-line
 tool takes typed text ("do this, with these options") instead of buttons and fields;
@@ -72,4 +72,4 @@ in the `sprezzature_cli_gui` package:
 
 ## License
 
-BSD-3-Clause © Warith HARCHAOUI. Part of the [sprezzature](https://harchaoui.org/warith/sprezzature/) toolkit.
+BSD-3-Clause © Warith HARCHAOUI. Part of the [sprezzature](https://sprezzature.ai/) toolkit.

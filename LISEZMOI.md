@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/license-BSD--3--Clause-blue.svg)](https://github.com/warith-harchaoui/sprezzature-cli-gui/blob/main/LICENSE)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)
 
-[![logo](https://raw.githubusercontent.com/warith-harchaoui/sprezzature-cli-gui/main/assets/logo.png)](https://harchaoui.org/warith/sprezzature/)
+[![logo](https://raw.githubusercontent.com/warith-harchaoui/sprezzature-cli-gui/main/assets/logo.png)](https://sprezzature.ai/)
 
 Transformer n'importe quel outil en ligne de commande Python en formulaire cliquable, automatiquement. Un outil en ligne de commande se pilote en tapant du texte (« fais ceci, avec ces options ») plutôt qu'en cliquant sur des boutons et des champs ; ce paquet lit la définition que l'outil se donne déjà de ses commandes et de ses options et construit à partir de là une page web avec un bouton et un champ pour chacune, pour qu'une personne qui n'a jamais ouvert de terminal puisse quand même s'en servir.
 
@@ -44,4 +44,4 @@ Quand le parseur ne peut pas être importé, l'outil se rabat sur l'analyse de l
 
 ## Licence
 
-BSD à 3 clauses © Warith HARCHAOUI. Fait partie de la boîte à outils [sprezzature](https://harchaoui.org/warith/sprezzature/).
+BSD à 3 clauses © Warith HARCHAOUI. Fait partie de la boîte à outils [sprezzature](https://sprezzature.ai/).
