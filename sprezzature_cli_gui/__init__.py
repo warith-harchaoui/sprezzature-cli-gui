@@ -11,7 +11,7 @@ to a FastAPI server over SSE (Server-Sent Events, a simple one-way stream a serv
 to push live output back to the page).
 """
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 __author__ = "Warith HARCHAOUI"
 __email__ = "warith.harchaoui@gmail.com"
 __license__ = "BSD-3-Clause"

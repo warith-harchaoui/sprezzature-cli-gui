@@ -1,9 +1,20 @@
 # Changelog: sprezzature-cli-gui
 
-## Unreleased
+## v1.1.0 (2026-10-02): a backlog of fixes, and the half of the dependency guard nobody runs
 
 ### Fixed
 
+- **`mcp.py` defined `main` twice, and the two took different arguments.** One
+  definition sits in the `except ImportError` branch reached when the `[mcp]`
+  extra is absent, the other in the `else` branch that serves the real
+  endpoint. A single console script reaches both, so to a caller they are one
+  function. They were not: the fallback took nothing while the real one took
+  `argv`, so `main(["--host", "127.0.0.1"])` answered on a machine with the
+  extra and raised `TypeError` on a machine without it. The broken half is the
+  one a reader who skipped the extra meets first.
+- **The declared homepage named a host that no longer answers.**
+  `project.urls` pointed at `harchaoui.org`, now returning 503, and PyPI prints
+  that link on the package page. It points at `sprezzature.ai`.
 - `adapters/help_text.py`, `_parse_options_section`: a help entry wrapped onto more than one indented continuation line only kept the first line; every line after that was silently dropped. Continuation lines now accumulate and are joined before the option is emitted.
 - `loader.py`, `load_parser_from_spec`: pointing the spec directly at an already-built `click.Command`/`Group` (instead of a zero-argument factory function) called it, which runs the target CLI for real (a `click.Command` is itself callable). The loader now detects an already-built `argparse.ArgumentParser` or `click.Command` and uses it as is.
 - `cli.py`: `--help`'s own usage line named the parser `sprezzature-cli-gui-to-html`, which is not the installed console script (`sprezzature-cli-gui`). Also dropped a description clause pointing at `assets/examples/cli-gui-demo/`, a path that does not exist in this repo.
@@ -22,6 +33,20 @@
 
 ### Added
 
+- **A type gate**, `mypy.ini` plus one CI step. The monorepo carried one while
+  the skills lived there; at the split ruff came with the package and mypy did
+  not, so no standalone package checked its own annotations. Run by hand, it
+  found the `main` defect above in six packages at once. The step runs once, on
+  3.12: this is a gate, not a test matrix.
+- **`test_mcp_fallback_signature.py`**, which reads the source as a syntax tree
+  and so needs neither mypy nor an install, and a case in
+  `test_console_scripts_exist.py` ruling out the state where its scan finds no
+  candidates and the file reports green while testing nothing. This package has
+  one script and advertises no suite command, so that empty result is the right
+  answer here and was indistinguishable from a scan that had stopped working.
+- **A versioned `.githooks/pre-push`** running the same lint, type and test
+  steps as the workflow, in the same order, so a red state cannot reach the
+  remote.
 - `tests/test_units.py`: unit tests for the pure functions behind the package (`schema.walk` dispatch, both adapters, the help-text fallback parser, the HTML field renderer, `loader.load_parser_from_spec`), on top of the existing end-to-end suite in `tests/test_cli_gui.py`, plus regression tests for every `--from-help` fix listed above.
 - LISEZMOI.md, CODING.md, CONTRIBUTING.md, EXAMPLES.md, LANDSCAPE.md/PAYSAGE.md, TRIGGERS.md, Dockerfile, requirements\*.txt, and the `references/` pointer files, matching the structure already in place for sibling `sprezzature-*` packages.
 - `tests/test_cli_gui.py::test_installed_console_script_actually_resolves`: runs the installed `sprezzature-cli-gui` console script directly. Every other CLI-level test in the suite drove the legacy, unpackaged `scripts/cli_to_gui.py` facade instead, so a typo in `pyproject.toml`'s `[project.scripts]` entry would have passed CI (setuptools does not import the target at install time) and only broken the moment a real user typed the command.
