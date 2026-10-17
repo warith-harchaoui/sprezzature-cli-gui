@@ -1,6 +1,6 @@
 FROM python:3.11-slim
 
-LABEL maintainer="warith.harchaoui@gmail.com"
+LABEL maintainer="warithmetics@deraison.ai"
 LABEL description="sprezzature-cli-gui: turn a Python CLI (argparse/Click/Typer) into a single-file HTML GUI"
 
 WORKDIR /app

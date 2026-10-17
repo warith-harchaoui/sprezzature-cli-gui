@@ -13,5 +13,5 @@ to push live output back to the page).
 
 __version__ = "1.1.0"
 __author__ = "Warith HARCHAOUI"
-__email__ = "warith.harchaoui@gmail.com"
+__email__ = "warithmetics@deraison.ai"
 __license__ = "BSD-3-Clause"
