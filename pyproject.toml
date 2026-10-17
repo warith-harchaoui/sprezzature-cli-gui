@@ -54,6 +54,9 @@ mcp = [
 [project.scripts]
 sprezzature-cli-gui-mcp = "sprezzature_cli_gui.mcp:main"
 sprezzature-cli-gui = "sprezzature_cli_gui.cli:main"
+# The audit half. This brick promises the page covers the CLI; this is what
+# checks it, and it gates a build the way every other brick's lint does.
+sprezzature-cli-gui-audit = "sprezzature_cli_gui.audit_cli:main"
 
 [project.urls]
 Homepage = "https://sprezzature.ai/"

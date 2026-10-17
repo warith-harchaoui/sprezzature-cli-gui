@@ -210,3 +210,43 @@ def render(request: RenderRequest) -> HTMLResponse:
 def docs_redirect() -> RedirectResponse:
     """Convenience redirect to the interactive API docs."""
     return RedirectResponse(url="/docs")
+
+
+# ── The audit half ───────────────────────────────────────────────────────
+
+class AuditRequest(BaseModel):
+    """A generated page, and the tool it claims to cover."""
+
+    schema_: dict = Field(
+        alias="schema",
+        description="The canonical parser tree the page was rendered from.",
+    )
+    page: str = Field(description="The generated HTML to check.")
+
+    model_config = {"populate_by_name": True}
+
+
+@app.post(
+    "/v1/audit",
+    tags=["actions"],
+    operation_id="audit_gui",
+    summary="Check that a generated form still covers its command-line tool",
+)
+def audit_gui(request: AuditRequest) -> dict:
+    """Report where a generated page and its parser have drifted apart.
+
+    The make side of this brick turns a CLI into a form; this is the side
+    that asks whether the form still matches. A page that lost a flag renders
+    and behaves perfectly — the option is simply unreachable — so the
+    disagreement has to be looked for rather than noticed.
+    """
+    from sprezzature_cli_gui.audit import audit as run_audit
+
+    findings = run_audit(request.schema_, request.page)
+    return {
+        "findings_total": len(findings),
+        "findings": [
+            {"rule": f.rule, "subject": f.subject, "message": f.message}
+            for f in findings
+        ],
+    }
