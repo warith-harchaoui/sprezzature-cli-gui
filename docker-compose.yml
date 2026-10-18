@@ -1,0 +1,35 @@
+# `docker compose up` is the whole onboarding. The Dockerfile beside this file
+# is a recipe; this is the way in — the port, the volume, the environment and
+# the command, declared rather than reconstructed by the next reader from a
+# `docker run` line in somebody's shell history.
+#
+#   docker compose up -d
+#   curl -s localhost:8000/health
+#   curl -s localhost:8000/v1/example        # the schema shape, to post back
+#   docker compose run --rm api sprezzature-cli-gui mytool.cli:build_parser --out /work/gui.html
+#
+# Two ways in, and they are not the same way. The command line imports your
+# parser — `module:factory` — and that is why PYTHONPATH and the mount below
+# exist. The HTTP route deliberately refuses a spec and takes the schema tree
+# instead: importing an arbitrary module named by an unauthenticated caller is
+# remote code execution, so the dangerous step never crosses the network.
+#
+# No model, no state: one service, no profile.
+
+services:
+  api:
+    build: .
+    image: sprezzature-cli-gui:local
+    ports:
+      - "8000:8000"
+    environment:
+      # The CLI you point this at lives in the mount, not in the image. With
+      # no PYTHONPATH the import fails with ModuleNotFoundError naming *your*
+      # module, which reads like a typo in the spec rather than a missing
+      # search path.
+      PYTHONPATH: /work
+    volumes:
+      # The CLI to introspect, and the single-file GUI written beside it.
+      - ./work:/work
+    working_dir: /work
+    restart: unless-stopped
