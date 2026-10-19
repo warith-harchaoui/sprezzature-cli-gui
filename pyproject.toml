@@ -54,6 +54,10 @@ mcp = [
 [project.scripts]
 sprezzature-cli-gui-mcp = "sprezzature_cli_gui.mcp:main"
 sprezzature-cli-gui = "sprezzature_cli_gui.cli:main"
+# The Click twin. Both front doors build the same namespace and call the same
+# handler, so a flag cannot exist on one and be missing from the other — and
+# a package that reads Click commands for a living ought to offer one.
+sprezzature-cli-gui-click = "sprezzature_cli_gui.cli_click:main"
 # The audit half. This brick promises the page covers the CLI; this is what
 # checks it, and it gates a build the way every other brick's lint does.
 sprezzature-cli-gui-audit = "sprezzature_cli_gui.audit_cli:main"
