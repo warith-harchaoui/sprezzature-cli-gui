@@ -1,4 +1,39 @@
-# Changelog: sprezzature-cli-gui
+# Changelog
+
+## [1.2.0] — 2026-10-19
+
+The refusal finally points at something.
+
+This package's best decision is that `POST /v1/render` takes a schema tree and
+**refuses** a `module:factory` spec: importing an arbitrary module named by an
+unauthenticated caller is remote code execution, and no allow-list makes it
+safe enough to be worth it. The refusal sends the caller to the library —
+"introspect your own parser, in your own process, with `walk(parser)`".
+
+That was sound advice pointing at nothing. `import sprezzature_cli_gui`
+exported a version string.
+
+### Added
+
+- **A library surface**: `walk`, `render_html`, `audit`, `Finding`. The split
+  between the first two *is* the security boundary — `walk` imports your
+  module and calls your factory, `render_html` does not — so they are the
+  package's first-class interface rather than an implementation detail. A test
+  runs exactly the round trip the API's refusal describes, and another checks
+  it needs no extra: the caller is being asked to run this inside their own
+  process, beside their own CLI, and a library that dragged click and typer in
+  would be a bigger ask than the thing it replaces.
+- **`sprezzature-cli-gui-click`**, the Click twin. There is a joke in shipping
+  it, and that is the point: a tool whose job is reading Click commands did
+  not offer one. Both front doors build the same namespace and call the same
+  handler — checked on the **output**, not on the flag lists, because two
+  parsers can declare the same options and disagree about what one means.
+  Guarded, so a bare install answers which extra to add rather than a
+  traceback about a package the reader never asked for.
+
+The package now holds all ten columns of the suite's surface audit.
+
+ sprezzature-cli-gui
 
 ## v1.1.0 (2026-10-02): a backlog of fixes, and the half of the dependency guard nobody runs
 
