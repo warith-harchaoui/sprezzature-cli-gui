@@ -27,7 +27,12 @@ dependencies = []
 # mypy belongs here and not only in requirements-dev.txt: this package's
 # workflow installs the `dev` extra and never reads that file, so the type
 # step it added failed with "mypy: command not found" on the first push.
-dev = ["pytest>=8.0", "ruff", "mypy"]
+# starlette 1.9.0 moved its TestClient onto httpx2, and this repository's CI
+# installs `.[dev,click,typer,api,mcp]` without ever reading
+# requirements-dev.txt — so the declaration has to be here, where the install
+# actually looks. It is a *test* dependency: putting it in `api` would make
+# every user of the HTTP surface install it.
+dev = ["pytest>=8.0", "ruff", "mypy", "httpx2>=2.0.0"]
 click = ["click>=8.0"]
 typer = ["typer>=0.12"]
 
