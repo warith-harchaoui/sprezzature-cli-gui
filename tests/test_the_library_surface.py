@@ -125,12 +125,23 @@ def test_both_front_doors_are_installed() -> None:
     Click front door of its own, is a gap a reader notices before the README
     does.
     """
+    import re
     from pathlib import Path
 
-    import tomllib
-
+    # Read with a regex, not `tomllib`: that module is in the standard library
+    # only from 3.11, and this package supports 3.10 — where the import alone
+    # failed this test in CI while passing on every developer machine. Two
+    # sibling packages already read pyproject this way and say so in their own
+    # comments; this file was written without checking.
     root = Path(__file__).resolve().parent.parent
-    scripts = tomllib.loads((root / "pyproject.toml").read_text())["project"]["scripts"]
+    pyproject = (root / "pyproject.toml").read_text(encoding="utf-8")
+    section = re.search(
+        r"^\[project\.scripts\]\s*$(.*?)(?=^\[|\Z)", pyproject, re.M | re.S
+    )
+    assert section, "pyproject.toml declares no console scripts at all"
+    scripts = dict(
+        re.findall(r'^([A-Za-z0-9._-]+)\s*=\s*"([^"]+)"', section.group(1), re.M)
+    )
     assert "sprezzature-cli-gui" in scripts
     assert "sprezzature-cli-gui-click" in scripts
 
