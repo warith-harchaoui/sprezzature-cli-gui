@@ -28,7 +28,7 @@ jobs:
           python -m pip install --upgrade pip
           # [api,mcp] too: without them every test of api.py and mcp.py
           # skipped, and CI was green on code nobody ran.
-          pip install -e ".[dev,click,typer,api,mcp]"
+          pip install -e ".[dev,click,typer,api,mcp]" -r requirements-dev.txt
       - name: Ruff
         run: ruff check .
       # The type half of the gate. Added after running mypy by hand found
