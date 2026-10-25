@@ -214,6 +214,7 @@ def docs_redirect() -> RedirectResponse:
 
 # ── The audit half ───────────────────────────────────────────────────────
 
+
 class AuditRequest(BaseModel):
     """A generated page, and the tool it claims to cover."""
 
@@ -246,7 +247,6 @@ def audit_gui(request: AuditRequest) -> dict:
     return {
         "findings_total": len(findings),
         "findings": [
-            {"rule": f.rule, "subject": f.subject, "message": f.message}
-            for f in findings
+            {"rule": f.rule, "subject": f.subject, "message": f.message} for f in findings
         ],
     }

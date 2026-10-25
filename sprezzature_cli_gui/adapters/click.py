@@ -10,9 +10,12 @@ dependency, not installed by default.
 It walks a :class:`click.Command`, whether it is a single leaf command or a
 ``Group`` nesting sub-commands, into the same parser-tree dict shape the
 argparse adapter produces, so the HTML renderer downstream never has to
-branch on which framework built the CLI. `Typer` apps are supported too,
-through the `Click` group Typer builds internally (``app.cli``): from this
-adapter's point of view a Typer app just is a Click group. Because this
+branch on which framework built the CLI. `Typer` apps arrive here too, but
+not by themselves: a `Typer` app is not a `click.Command` and exposes no
+`.cli` attribute (that route was written here and does not exist on typer
+0.20). `schema.walk` converts it with typer's own ``get_command`` first, and
+what comes out is a Click command -- so from this adapter's point of view a
+Typer app just is a Click group, once somebody has converted it. Because this
 module is only imported when a caller has actually handed it a Click
 object, someone using nothing but plain `argparse` never needs Click
 installed at all.

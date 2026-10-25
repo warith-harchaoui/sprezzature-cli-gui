@@ -9,7 +9,8 @@ before the colon locates the module, either as a dotted import path or as a
 plain filesystem path to a ``.py`` file; the part after the colon names a
 zero-argument function inside it. This module resolves that string, imports
 or loads the file, calls the named function, and returns whatever it hands
-back: an :class:`argparse.ArgumentParser` or a :class:`click.Command`.
+back: an :class:`argparse.ArgumentParser`, a :class:`click.Command` or a
+:class:`typer.Typer`.
 
 The loader only reads the parser's own structure (flags, sub-commands,
 defaults); it never calls ``parse_args`` or otherwise runs the target tool,
@@ -105,6 +106,10 @@ def load_parser_from_spec(spec: str) -> Any:
         import click  # noqa: WPS433  (lazy by design)
     except ImportError:
         click = None  # type: ignore[assignment]
+    try:
+        import typer  # noqa: WPS433  (lazy by design)
+    except ImportError:
+        typer = None  # type: ignore[assignment]
 
     # The documented contract is a zero-argument factory that RETURNS a
     # parser/command. But naming an already-built parser or command
@@ -115,8 +120,16 @@ def load_parser_from_spec(spec: str) -> Any:
     # CLI's own logic against whatever is in sys.argv). So an object
     # that already looks like a parser is used as is; only something
     # else gets called as a factory.
-    if isinstance(factory, argparse.ArgumentParser) or (
-        click is not None and isinstance(factory, click.Command)
+    #
+    # ``typer.Typer`` carries the identical footgun and was missing from this
+    # list: it is callable too, and `sprezzature-cli-gui mod:app` on a Typer
+    # app *ran the app*, which answered "No such command 'mod:app'" in Typer's
+    # own rich box -- an error that looks like the user's CLI rejecting their
+    # spec, when in fact this loader had just invoked it.
+    if (
+        isinstance(factory, argparse.ArgumentParser)
+        or (click is not None and isinstance(factory, click.Command))
+        or (typer is not None and isinstance(factory, typer.Typer))
     ):
         parser_obj = factory
     else:
@@ -130,9 +143,14 @@ def load_parser_from_spec(spec: str) -> Any:
         return parser_obj
     if click is not None and isinstance(parser_obj, click.Command):
         return parser_obj
+    # A Typer app is returned as is; `schema.walk` converts it with typer's own
+    # `get_command`. Converting here instead would hide from the caller what
+    # they actually handed over.
+    if typer is not None and isinstance(parser_obj, typer.Typer):
+        return parser_obj
     raise ValueError(
         f"Factory '{spec}' returned a "
-        f"{type(parser_obj).__name__}; expected argparse.ArgumentParser "
-        f"or click.Command (install click if your factory returns "
-        f"a Click app)."
+        f"{type(parser_obj).__name__}; expected argparse.ArgumentParser, "
+        f"click.Command or typer.Typer (install the matching extra if your "
+        f"factory returns a Click or Typer app)."
     )

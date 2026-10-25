@@ -13,7 +13,11 @@ terminal can still use it.
 
 Point this tool at a parser: the object inside a Python CLI that reads and validates
 the typed command. `argparse` (in Python's standard library), `Click`, and `Typer` are
-the three common ways to build one; all three are supported. Given that parser, this
+the three common ways to build one; all three are imported and walked directly.
+A CLI written in anything else — Go's `cobra`, Rust's `clap` — is covered by
+`--from-help`, which runs the tool's own `--help` in a subprocess and reads the
+text. That works on any CLI at all, and is lower fidelity: help text says less
+than a parser knows. Given that parser, this
 package emits a single self-contained page written in plain JavaScript and styled with
 Tailwind (a CSS framework, meaning it ships pre-made style classes instead of hand-
 written CSS). Every sub-command becomes a section, every flag a field. The page never

@@ -50,15 +50,17 @@ def _safe_default(default: Any) -> Any:
 
 def walk(obj: Any, *, prog: str | None = None) -> dict[str, Any]:
     """
-    Walk a CLI object (argparse or Click) into the canonical tree.
+    Walk a CLI object (argparse, Click or Typer) into the canonical tree.
 
     Single entry point for the HTML renderer: it does not need to
     know which framework produced the input.
 
     Parameters
     ----------
-    obj : argparse.ArgumentParser or click.Command
-        The CLI to introspect.
+    obj : argparse.ArgumentParser, click.Command or typer.Typer
+        The CLI to introspect. A ``typer.Typer`` is converted with typer's own
+        ``get_command`` and then walked as Click, because that is what it
+        becomes; there is no third adapter.
     prog : str or None, optional
         Override the top-level ``prog`` field, which both the page
         header and the built command line are seeded from. Needed
@@ -80,7 +82,9 @@ def walk(obj: Any, *, prog: str | None = None) -> dict[str, Any]:
     Raises
     ------
     TypeError
-        If ``obj`` is neither an argparse parser nor a Click command.
+        If ``obj`` is none of the three. The message names what was passed,
+        because the common mistake is handing over the *module* or the
+        *function* rather than the parser.
     """
     if isinstance(obj, argparse.ArgumentParser):
         # Lazy import keeps this module free of a top-level dependency
@@ -102,6 +106,26 @@ def walk(obj: Any, *, prog: str | None = None) -> dict[str, Any]:
         from sprezzature_cli_gui.adapters.click import walk_click
 
         return walk_click(obj, prog=prog)
+    # A Typer app is NOT a click.Command -- typer builds one on demand -- so it
+    # reached the refusal below and the documented support was a claim only.
+    #
+    # The route this adapter's own docstring named, ``app.cli``, does not exist
+    # on typer 0.20: checked, not assumed. ``typer.main.get_command`` is the
+    # supported conversion and returns a ``TyperCommand``, which *is* a
+    # ``click.Command`` -- so the result goes through the Click adapter rather
+    # than growing a third one for a framework that is Click underneath.
+    try:
+        import typer  # noqa: WPS433
+    except ImportError:
+        typer = None  # type: ignore[assignment]
+    if typer is not None and isinstance(obj, typer.Typer):
+        from typer.main import get_command
+
+        from sprezzature_cli_gui.adapters.click import walk_click
+
+        return walk_click(get_command(obj), prog=prog)
+
     raise TypeError(
-        f"walk() expected argparse.ArgumentParser or click.Command, got {type(obj).__name__}"
+        "walk() expected argparse.ArgumentParser, click.Command or typer.Typer, "
+        f"got {type(obj).__name__}"
     )

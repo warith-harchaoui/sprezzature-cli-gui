@@ -111,71 +111,79 @@ def audit(tree: dict[str, Any], page: str) -> list[Finding]:
             continue
         if identity not in emitted:
             where = f"{path}{identity}".strip()
-            findings.append(Finding(
-                rule="flag-not-in-page",
-                subject=where,
-                message=(
-                    "the parser accepts it and the page offers no field for "
-                    "it, so a user of the GUI cannot reach this option at all"
-                ),
-            ))
+            findings.append(
+                Finding(
+                    rule="flag-not-in-page",
+                    subject=where,
+                    message=(
+                        "the parser accepts it and the page offers no field for "
+                        "it, so a user of the GUI cannot reach this option at all"
+                    ),
+                )
+            )
 
     # ── no phantoms ─────────────────────────────────────────────────────
     known = {_identity(a) for _, a in _actions(tree)} - {""}
     for flag in sorted(emitted - known):
-        findings.append(Finding(
-            rule="field-has-no-flag",
-            subject=flag,
-            message=(
-                "the page builds this into the command line and the parser "
-                "does not accept it; the command it assembles will fail"
-            ),
-        ))
+        findings.append(
+            Finding(
+                rule="field-has-no-flag",
+                subject=flag,
+                message=(
+                    "the page builds this into the command line and the parser "
+                    "does not accept it; the command it assembles will fail"
+                ),
+            )
+        )
 
     # ── choices survive ─────────────────────────────────────────────────
-    options_in_page = set(
-        html_module.unescape(value) for value in _OPTION_RE.findall(page)
-    )
+    options_in_page = set(html_module.unescape(value) for value in _OPTION_RE.findall(page))
     for path, action in _actions(tree):
         choices = action.get("choices") or []
         if not choices:
             continue
         missing = [str(c) for c in choices if str(c) not in options_in_page]
         if missing:
-            findings.append(Finding(
-                rule="choice-dropped",
-                subject=f"{path}{_identity(action)}".strip(),
-                message=(
-                    f"the parser allows {sorted(str(c) for c in choices)} and "
-                    f"the page omits {missing}, which narrows what a user can "
-                    f"pick without saying so"
-                ),
-            ))
+            findings.append(
+                Finding(
+                    rule="choice-dropped",
+                    subject=f"{path}{_identity(action)}".strip(),
+                    message=(
+                        f"the parser allows {sorted(str(c) for c in choices)} and "
+                        f"the page omits {missing}, which narrows what a user can "
+                        f"pick without saying so"
+                    ),
+                )
+            )
 
     # ── the command line it builds is the one that exists ───────────────
     prog = str(tree.get("prog") or "")
     if prog:
         stamped = _PROG_RE.findall(page)
         if not stamped:
-            findings.append(Finding(
-                rule="prog-missing",
-                subject=prog,
-                message=(
-                    "the page carries no seed for the command line it builds, "
-                    "so the copy button would hand the user a bare flag list"
-                ),
-            ))
+            findings.append(
+                Finding(
+                    rule="prog-missing",
+                    subject=prog,
+                    message=(
+                        "the page carries no seed for the command line it builds, "
+                        "so the copy button would hand the user a bare flag list"
+                    ),
+                )
+            )
         elif prog not in stamped:
-            findings.append(Finding(
-                rule="prog-mismatch",
-                subject=prog,
-                message=(
-                    f"the page builds a command line starting with "
-                    f"{stamped[0]!r}; a Click group's name defaults to the "
-                    f"decorated function (often `main`), which is rarely the "
-                    f"installed console-script name, so the page would hand "
-                    f"the user a command that does not exist"
-                ),
-            ))
+            findings.append(
+                Finding(
+                    rule="prog-mismatch",
+                    subject=prog,
+                    message=(
+                        f"the page builds a command line starting with "
+                        f"{stamped[0]!r}; a Click group's name defaults to the "
+                        f"decorated function (often `main`), which is rarely the "
+                        f"installed console-script name, so the page would hand "
+                        f"the user a command that does not exist"
+                    ),
+                )
+            )
 
     return findings
