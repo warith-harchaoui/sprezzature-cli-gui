@@ -13,7 +13,7 @@ COPY . .
 # fastapi and uvicorn live behind the `api` extra so that nobody installing
 # the library pays for them. The previous `.[click,typer]` build could not
 # serve the API this image exists to serve.
-RUN pip install --no-cache-dir ".[click,typer,api,mcp]"
+RUN pip install --no-cache-dir ".[typer,api,mcp]"
 
 EXPOSE 8000
 

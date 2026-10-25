@@ -17,78 +17,78 @@ import json
 import sys
 from pathlib import Path
 
-from sprezzature_cli_gui._argparse import make_parser
+import click
+
 from sprezzature_cli_gui.audit import audit
 from sprezzature_cli_gui.loader import load_parser_from_spec
 from sprezzature_cli_gui.schema import walk
 
 
-def main(argv: list[str] | None = None) -> int:
+@click.command(
+    context_settings={"help_option_names": ["-h", "--help"]},
+    help=(
+        "Check that a generated GUI still covers the command-line tool it was "
+        "generated from: every flag reachable, no field building an option the "
+        "parser rejects, no choice quietly dropped."
+    ),
+    epilog=(
+        "Examples:\n\n"
+        "  \b\n"
+        "  sprezzature-cli-gui-audit mytool.cli:build_parser gui.html\n"
+        "  sprezzature-cli-gui-audit pkg.mod:factory gui.html --format json\n\n"
+        "Exits 1 when the page and the parser disagree, so it gates a build "
+        "the way the lint half of every other brick does."
+    ),
+)
+@click.version_option(package_name="sprezzature-cli-gui")
+@click.argument("spec")
+@click.argument("page", type=click.Path(path_type=Path))
+@click.option(
+    "--prog",
+    default=None,
+    help=(
+        "Override the program name, as the generator's --prog does. A Click "
+        "group reports its function name, which is rarely the installed "
+        "console-script name."
+    ),
+)
+@click.option(
+    "--format",
+    "fmt",
+    type=click.Choice(["text", "json"]),
+    default="text",
+    show_default=True,
+    help="Output shape.",
+)
+def main(spec: str, page: Path, prog: str | None, fmt: str) -> None:
     """Report where a generated page no longer matches its CLI."""
-    parser = make_parser(
-        prog="sprezzature-cli-gui-audit",
-        description=(
-            "Check that a generated GUI still covers the command-line tool "
-            "it was generated from: every flag reachable, no field building "
-            "an option the parser rejects, no choice quietly dropped."
-        ),
-        epilog=(
-            "Examples:\n"
-            "  sprezzature-cli-gui-audit mytool.cli:build_parser gui.html\n"
-            "  sprezzature-cli-gui-audit pkg.mod:factory gui.html --format json\n"
-            "\n"
-            "Exits 1 when the page and the parser disagree, so it gates a "
-            "build the way the lint half of every other brick does.\n"
-        ),
-    )
-    parser.add_argument(
-        "spec",
-        help="Parser factory, as 'path/to/cli.py:factory' or 'pkg.mod:factory'.",
-    )
-    parser.add_argument("page", type=Path, help="The generated HTML to check.")
-    parser.add_argument(
-        "--prog",
-        default=None,
-        help=(
-            "Override the program name, as the generator's --prog does. A "
-            "Click group reports its function name, which is rarely the "
-            "installed console-script name."
-        ),
-    )
-    parser.add_argument(
-        "--format", choices=("text", "json"), default="text",
-        help="Output shape (default: text).",
-    )
-    args = parser.parse_args(argv)
+    if not page.is_file():
+        # 2, not 1: "you pointed me at nothing" is not "the page disagrees".
+        raise SystemExit(f"{page}: no such file")
 
-    if not args.page.is_file():
-        sys.stderr.write(f"{args.page}: no such file\n")
-        return 2
+    tree = walk(load_parser_from_spec(spec), prog=prog)
+    findings = audit(tree, page.read_text(encoding="utf-8"))
 
-    tree = walk(load_parser_from_spec(args.spec), prog=args.prog)
-    findings = audit(tree, args.page.read_text(encoding="utf-8"))
-
-    if args.format == "json":
+    if fmt == "json":
         json.dump(
             {
                 "findings_total": len(findings),
                 "findings": [
-                    {"rule": f.rule, "subject": f.subject, "message": f.message}
-                    for f in findings
+                    {"rule": f.rule, "subject": f.subject, "message": f.message} for f in findings
                 ],
             },
-            sys.stdout, indent=2, ensure_ascii=False,
+            sys.stdout,
+            indent=2,
+            ensure_ascii=False,
         )
         sys.stdout.write("\n")
     else:
         for finding in findings:
-            print(finding)
-        print(
-            f"{len(findings)} finding(s)." if findings
-            else "The page covers the CLI."
-        )
-    return 1 if findings else 0
+            click.echo(str(finding))
+        click.echo(f"{len(findings)} finding(s)." if findings else "The page covers the CLI.")
+    if findings:
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()

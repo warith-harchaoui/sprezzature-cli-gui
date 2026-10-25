@@ -118,44 +118,69 @@ def test_an_unknown_name_is_an_attribute_error() -> None:
 # ── The two front doors ────────────────────────────────────────────────────
 
 
-def test_both_front_doors_are_installed() -> None:
-    """argparse because it is always there, Click because this package reads it.
+# ── One front door ─────────────────────────────────────────────────────────
 
-    A tool whose job is turning Click commands into forms, not offering a
-    Click front door of its own, is a gap a reader notices before the README
-    does.
+
+def test_the_command_is_installed_and_the_twin_name_is_gone() -> None:
+    """
+    One console script, not two.
+
+    There were two until 2026-10-25 — ``sprezzature-cli-gui`` (argparse) and
+    ``sprezzature-cli-gui-click`` — and the second existed only to distinguish
+    a twin that wrapped the first. The suffixed name goes with it: a command
+    whose whole meaning was "the other parser" names nothing now.
+
+    Read with a regex, not ``tomllib``: that module is standard library only
+    from 3.11, and this package supports 3.10.
     """
     import re
     from pathlib import Path
 
-    # Read with a regex, not `tomllib`: that module is in the standard library
-    # only from 3.11, and this package supports 3.10 — where the import alone
-    # failed this test in CI while passing on every developer machine. Two
-    # sibling packages already read pyproject this way and say so in their own
-    # comments; this file was written without checking.
     root = Path(__file__).resolve().parent.parent
     pyproject = (root / "pyproject.toml").read_text(encoding="utf-8")
-    section = re.search(
-        r"^\[project\.scripts\]\s*$(.*?)(?=^\[|\Z)", pyproject, re.M | re.S
-    )
+    section = re.search(r"^\[project\.scripts\]\s*$(.*?)(?=^\[|\Z)", pyproject, re.M | re.S)
     assert section, "pyproject.toml declares no console scripts at all"
-    scripts = dict(
-        re.findall(r'^([A-Za-z0-9._-]+)\s*=\s*"([^"]+)"', section.group(1), re.M)
-    )
-    assert "sprezzature-cli-gui" in scripts
-    assert "sprezzature-cli-gui-click" in scripts
+    scripts = dict(re.findall(r'^([A-Za-z0-9._-]+)\s*=\s*"([^"]+)"', section.group(1), re.M))
+    assert scripts["sprezzature-cli-gui"] == "sprezzature_cli_gui.cli:main"
+    assert "sprezzature-cli-gui-click" not in scripts
 
 
-def test_the_two_front_doors_emit_the_same_page(tmp_path) -> None:
-    """Same flags, same handler — so the output cannot differ.
-
-    Checked on the output rather than on the flag lists: two parsers can
-    declare the same options and still disagree about what one of them means,
-    and that disagreement only shows in what comes out.
+def test_click_is_a_base_dependency_and_no_second_parser_grows_back() -> None:
     """
-    import json
+    With argparse gone, nothing ships with Python that can parse a command
+    line, so click cannot be optional.
+
+    And the work now lives in `_generate`, reachable without a parser at all —
+    which is what stops a second front door from being written as a wrapper
+    around the first, the way the removed one was.
+    """
+    import re
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parent.parent
+    pyproject = (root / "pyproject.toml").read_text(encoding="utf-8")
+    base = re.search(r"^dependencies\s*=\s*\[(.*?)\]", pyproject, re.M | re.S)
+    assert base and "click" in base.group(1)
+    assert not re.search(r"^click\s*=\s*\[", pyproject, re.M)
+
+    pkg = root / "sprezzature_cli_gui"
+    assert not (pkg / "cli_click.py").exists()
+    assert "import argparse" not in (pkg / "cli.py").read_text(encoding="utf-8")
+    assert (pkg / "_generate.py").is_file()
+
+
+def test_the_page_is_the_same_whichever_way_it_is_asked_for(tmp_path) -> None:
+    """
+    The command and the library path must agree.
+
+    This replaces a test that compared two front doors. There is one now, so
+    the comparison that still means something is between the command and
+    calling `_generate` directly — which is what the HTTP and MCP surfaces do.
+    """
     import subprocess
     import sys
+
+    from sprezzature_cli_gui._generate import build_tree, render
 
     cli = tmp_path / "tiny_cli.py"
     cli.write_text(
@@ -167,57 +192,11 @@ def test_the_two_front_doors_emit_the_same_page(tmp_path) -> None:
     )
     spec = f"{cli}:build"
 
-    from sprezzature_cli_gui import cli as argparse_cli
-
-    def capture(module, argv):
-        import contextlib
-        import io
-
-        buffer = io.StringIO()
-        with contextlib.redirect_stdout(buffer):
-            module.main(argv)
-        return buffer.getvalue()
-
-    first = capture(argparse_cli, [spec, "--json"])
-    second = subprocess.run(
-        [sys.executable, "-m", "sprezzature_cli_gui.cli_click", spec, "--json"],
-        capture_output=True,
-        text=True,
-    )
-    if second.returncode == 1 and "Click" in second.stderr:
-        pytest.skip("the click extra is not installed here")
-    assert json.loads(first) == json.loads(second.stdout)
-
-
-def test_the_click_twin_names_its_extra_when_click_is_absent() -> None:
-    """A command on PATH that cannot start has its message as its interface."""
-    import subprocess
-    import sys
-    import textwrap
-
+    direct = render(build_tree(spec), title=None)
     done = subprocess.run(
-        [
-            sys.executable,
-            "-c",
-            textwrap.dedent(
-                """
-                import sys
-                class Blocker:
-                    def find_spec(self, name, path=None, target=None):
-                        if name.split(".")[0] == "click":
-                            raise ImportError("blocked")
-                        return None
-                sys.meta_path.insert(0, Blocker())
-                from sprezzature_cli_gui.cli_click import main
-                try:
-                    main()
-                except SystemExit as exit_code:
-                    print("exit", exit_code.code)
-                """
-            ),
-        ],
+        [sys.executable, "-m", "sprezzature_cli_gui.cli", spec],
         capture_output=True,
         text=True,
+        check=True,
     )
-    assert "sprezzature-cli-gui[click]" in done.stderr, done.stderr[-400:]
-    assert "argparse front door" in done.stderr
+    assert done.stdout == direct

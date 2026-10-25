@@ -21,7 +21,13 @@ classifiers = [
     "Topic :: Software Development :: User Interfaces",
     "Topic :: Utilities",
 ]
-dependencies = []
+dependencies = [
+    # The command line, and the only parser since 2026-10-25. This package
+    # carried no base dependencies; click is the one bought on purpose,
+    # because with argparse gone nothing ships with Python that can parse a
+    # command line.
+    "click>=8.1",
+]
 
 [project.optional-dependencies]
 # mypy belongs here and not only in requirements-dev.txt: this package's
@@ -33,7 +39,6 @@ dependencies = []
 # actually looks. It is a *test* dependency: putting it in `api` would make
 # every user of the HTTP surface install it.
 dev = ["pytest>=8.0", "ruff", "mypy", "httpx2>=2.0.0"]
-click = ["click>=8.0"]
 typer = ["typer>=0.12"]
 
 # HTTP surface (sprezzature_cli_gui/api.py): schema tree in, GUI HTML out.
@@ -62,7 +67,6 @@ sprezzature-cli-gui = "sprezzature_cli_gui.cli:main"
 # The Click twin. Both front doors build the same namespace and call the same
 # handler, so a flag cannot exist on one and be missing from the other — and
 # a package that reads Click commands for a living ought to offer one.
-sprezzature-cli-gui-click = "sprezzature_cli_gui.cli_click:main"
 # The audit half. This brick promises the page covers the CLI; this is what
 # checks it, and it gates a build the way every other brick's lint does.
 sprezzature-cli-gui-audit = "sprezzature_cli_gui.audit_cli:main"

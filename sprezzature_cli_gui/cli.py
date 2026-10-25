@@ -1,21 +1,16 @@
+#!/usr/bin/env python3
 """
-sprezzature_cli_gui.cli
-================
+``sprezzature-cli-gui`` — a command-line tool in, a single-page web GUI out.
 
-The command-line entry point: what actually runs when someone types
-``sprezzature-cli-gui`` in a terminal.
+One front door. There were two until 2026-10-25: an argparse one that did the
+work, and a click one that rebuilt an argument vector and called it — a wrapper
+around a parser around the work, so every option existed three times and a flag
+added to one could be missing from the other. The work moved to
+:mod:`sprezzature_cli_gui._generate`, and this calls it directly.
 
-It reads the ``SPEC`` / ``--from-help`` / ``--out`` / ``--title`` / ``--json``
-flags, then picks how to read the target CLI's parser. When ``SPEC`` names a
-reachable Python factory (for example ``mypkg.cli:build_parser``), it loads
-the parser directly with :func:`load_parser_from_spec` and reads it in
-memory with :func:`walk`. When ``--from-help`` is given instead, it runs the
-target tool as a subprocess, captures its printed ``--help`` text, and parses
-that text as a fallback, lower-fidelity source (see
-``sprezzature_cli_gui.adapters.help_text`` for why this path exists). Either
-way, the result is the emitted HTML page, or the raw parser-tree as JSON when
-``--json`` is passed, written to the path given by ``--out`` or, if none is
-given, printed to standard output.
+Click is the only parser now, and a base dependency rather than an extra: with
+argparse gone nothing ships with Python that can parse a command line, so an
+optional click would mean an install whose own command does not run.
 
 Author
 ------
@@ -24,140 +19,100 @@ Author
 
 from __future__ import annotations
 
-import argparse
-import json
 import sys
 from pathlib import Path
-from typing import Any
 
-from sprezzature_cli_gui._argparse import make_parser
-from sprezzature_cli_gui.adapters.help_text import walk_from_help
-from sprezzature_cli_gui.loader import load_parser_from_spec
-from sprezzature_cli_gui.renderer import render_html
-from sprezzature_cli_gui.schema import walk
+import click
+
+from sprezzature_cli_gui._generate import GenerationError, build_tree, render, write
+
+#: Shown under the options. Completion is click's, and nobody finds it by
+#: guessing.
+_EPILOG = """\
+Shell completion:
+
+  \b
+  eval "$(_SPREZZATURE_CLI_GUI_COMPLETE=bash_source sprezzature-cli-gui)"   # bash
+  eval "$(_SPREZZATURE_CLI_GUI_COMPLETE=zsh_source sprezzature-cli-gui)"    # zsh
+
+Examples:
+
+  \b
+  sprezzature-cli-gui mytool.cli:build_parser --out gui.html
+  sprezzature-cli-gui --from-help 'ffmpeg -h' --out ffmpeg.html
+"""
 
 
-def main(argv: list[str] | None = None) -> int:
-    """
-    CLI entry point.
-
-    Returns
-    -------
-    int
-        ``0`` on success, ``1`` on a load failure, ``2`` on an
-        argparse usage error (delegated to the parser).
-    """
-    parser: argparse.ArgumentParser = make_parser(
-        prog="sprezzature-cli-gui",
-        description=(
-            "Introspect a Python CLI (argparse OR Click, autodetected) "
-            "and emit a single-page vanilla-JS + Tailwind GUI mapping "
-            "every sub-command and flag to a form field."
-        ),
-    )
-    parser.add_argument(
-        "spec",
-        help=(
-            "Parser factory spec: 'path/to/cli.py:factory' OR "
-            "'pkg.mod:factory'. The factory is a zero-argument "
-            "callable returning EITHER an argparse.ArgumentParser "
-            "OR a click.Command (Group or Command). Adapter is "
-            "auto-selected from the returned type. With "
-            "``--from-help``, this argument is a shell command line "
-            "instead; its '--help' output is parsed. Works on any "
-            "CLI, Python or not, framework-agnostic, at lower "
-            "fidelity than native introspection."
-        ),
-    )
-    parser.add_argument(
-        "--from-help",
-        action="store_true",
-        dest="from_help",
-        help=(
-            "Treat 'spec' as a shell command line; run "
-            "'<command> --help' via subprocess and parse the output "
-            "into the canonical parser tree. Works on non-Python "
-            "CLIs (clap / cobra / commander) and on Python CLIs "
-            "whose factory cannot be imported. Lower fidelity: "
-            "everything maps to 'text' unless [default: …], "
-            "[choices] or a recognised METAVAR is visible."
-        ),
-    )
-    parser.add_argument(
-        "--out",
-        type=Path,
-        default=None,
-        help=(
-            "Write the emitted HTML to this file instead of stdout. "
-            "The parent directory must already exist."
-        ),
-    )
-    parser.add_argument(
-        "--title",
-        type=str,
-        default=None,
-        help="Page <title>. Defaults to the parser's prog name.",
-    )
-    parser.add_argument(
-        "--prog",
-        type=str,
-        default=None,
-        help=(
-            "Override the program name embedded in the page header and "
-            "in the 'Build command' output. Defaults to the target "
-            "parser's own name: accurate for argparse (whose ArgumentParser "
-            "usually names 'prog' explicitly), but often wrong for a Click "
-            "Group, whose name defaults to the decorated function's name "
-            "(e.g. 'main'), not the installed console-script name (e.g. "
-            "'my-tool'). Pass the real command name here when they differ, "
-            "or the built command line will name a command that does not "
-            "exist."
-        ),
-    )
-    parser.add_argument(
-        "--json",
-        action="store_true",
-        help=(
-            "Emit the walked parser as JSON instead of HTML. Useful "
-            "when debugging the introspection step or when piping "
-            "into a different renderer (e.g. a Tauri app)."
-        ),
-    )
-    args: argparse.Namespace = parser.parse_args(argv)
-
-    tree: dict[str, Any]
-    if args.from_help:
-        # ``--from-help``: subprocess-based path. ``spec`` is a shell
-        # command line, not a module:factory string.
-        try:
-            tree = walk_from_help(args.spec)
-        except (FileNotFoundError, OSError) as exc:
-            print(f"cli_to_gui: --from-help failed: {exc}", file=sys.stderr)
-            return 1
-    else:
-        try:
-            cli_obj: Any = load_parser_from_spec(args.spec)
-        except (ValueError, FileNotFoundError, ImportError, AttributeError) as exc:
-            print(f"cli_to_gui: {exc}", file=sys.stderr)
-            return 1
-        try:
-            tree = walk(cli_obj, prog=args.prog)
-        except TypeError as exc:
-            print(f"cli_to_gui: {exc}", file=sys.stderr)
-            return 1
-    output: str = (
-        json.dumps(tree, indent=2, ensure_ascii=False) + "\n"
-        if args.json
-        else render_html(tree, title=args.title or tree["prog"])
-    )
-
-    if args.out is None:
-        sys.stdout.write(output)
-        return 0
+@click.command(
+    context_settings={"help_option_names": ["-h", "--help"]},
+    epilog=_EPILOG,
+    help=(
+        "Introspect a Python CLI (argparse OR Click, autodetected) and emit a "
+        "self-contained single-page GUI for it. SPEC is module:factory, or a "
+        "shell command line with --from-help."
+    ),
+)
+@click.version_option(package_name="sprezzature-cli-gui")
+@click.argument("spec")
+@click.option(
+    "--from-help",
+    "from_help",
+    is_flag=True,
+    default=False,
+    help=(
+        "Treat SPEC as a shell command line and parse its --help output. "
+        "Works on non-Python CLIs; lower fidelity than introspection."
+    ),
+)
+@click.option(
+    "--out",
+    type=click.Path(path_type=Path),
+    default=None,
+    help="Write the HTML here instead of stdout.",
+)
+@click.option("--title", default=None, help="Page <title>.")
+@click.option(
+    "--prog",
+    default=None,
+    help=(
+        "Override the program name in the page and the built command line. A "
+        "Click group's name defaults to the decorated function's name, not the "
+        "installed console script — pass the real one when they differ, or the "
+        "page names a command that does not exist."
+    ),
+)
+@click.option(
+    "--json",
+    "json_",
+    is_flag=True,
+    default=False,
+    help="Emit the walked parser as JSON instead of HTML.",
+)
+def main(
+    spec: str,
+    from_help: bool,
+    out: Path | None,
+    title: str | None,
+    prog: str | None,
+    json_: bool,
+) -> None:
+    """Walk SPEC and write its GUI."""
     try:
-        args.out.write_text(output, encoding="utf-8")
-    except OSError as exc:
-        print(f"cli_to_gui: write failed: {exc}", file=sys.stderr)
-        return 1
-    print(f"cli_to_gui: wrote {args.out}", file=sys.stderr)
-    return 0
+        tree = build_tree(spec, from_help=from_help, prog=prog)
+        output = render(tree, as_json=json_, title=title)
+        written = write(output, out)
+    except GenerationError as exc:
+        # One sentence and stop. The four exception types the two front doors
+        # used to catch separately all mean the same thing to the person who
+        # typed the command: the spec did not work.
+        raise SystemExit(f"cli_to_gui: {exc}") from exc
+
+    if written is None:
+        sys.stdout.write(output)
+    else:
+        # stderr, so `--out -` style piping and shell redirection stay clean.
+        print(f"cli_to_gui: wrote {written}", file=sys.stderr)
+
+
+if __name__ == "__main__":
+    main()
