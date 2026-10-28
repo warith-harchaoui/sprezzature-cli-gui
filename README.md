@@ -37,6 +37,10 @@ Tailwind's "Play" build from a CDN (`cdn.tailwindcss.com`) to turn the utility c
 into real CSS in the visitor's browser, so opening the file needs an internet
 connection the first time; the form fields themselves still work, unstyled, without one.
 
+## How it works
+
+![Flow diagram. At the top, a command-line tool feeds two lanes, which are two ways of reading it. The left lane imports the module and walks the parser object's own fields, at high fidelity. The right lane runs the tool's own help in a subprocess and reads the printed text, at lower fidelity and saying so. Both meet in one outcome, a single normalised description that the renderer turns into one self-contained HTML page.](https://raw.githubusercontent.com/warith-harchaoui/sprezzature-cli-gui/main/assets/how-it-works.svg)
+
 ## Install
 
 ```bash
@@ -59,7 +63,7 @@ When the parser cannot be imported, the tool falls back to parsing the tool's `-
 output, so it works even against a CLI it cannot introspect directly, including one
 that is not written in Python at all.
 
-## How it works
+## Inside the package
 
 `cli_to_gui.py` is a thin wrapper that re-exports the real implementation, which lives
 in the `sprezzature_cli_gui` package:

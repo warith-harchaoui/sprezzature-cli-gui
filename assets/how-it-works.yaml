@@ -1,0 +1,81 @@
+# How this brick works, as drawn in README.md and LISEZMOI.md.
+#
+# The renderer lives in the hub, at sprezzature/scripts/make_brick_diagram.py,
+# because the ten bricks share one drawing and ten generators would have become
+# ten dialects of it. The content lives here, because the brick is what knows
+# what is true about itself.
+#
+# Redraw after any edit:
+#   python ~/sprezzature/scripts/make_brick_diagram.py sprezzature-cli-gui
+package: sprezzature-cli-gui
+
+en:
+  title: How sprezzature-cli-gui works
+  subtitle: A tool somebody will not type, read from its own declarations and handed back as a form.
+  alt: >-
+    Flow diagram. At the top, a command-line tool feeds two lanes, which are two
+    ways of reading it. The left lane imports the module and walks the parser
+    object's own fields, at high fidelity. The right lane runs the tool's own help
+    in a subprocess and reads the printed text, at lower fidelity and saying so.
+    Both meet in one outcome, a single normalised description that the renderer
+    turns into one self-contained HTML page.
+  input:
+    label: A command-line tool
+    note: argparse, Click or Typer in Python. Anything else, cobra in Go, clap in Rust, through its own help text.
+  lanes:
+    - title: "Read the parser object"
+      steps:
+        - label: Resolve module:factory down to the parser
+          note: "an importable module, or a path to a script, plus the name of the function that builds the parser"
+        - label: Walk the fields it already declares
+          note: sub-commands, flags, types, defaults, allowed values, help strings. Nothing is guessed from printed text.
+      result:
+        label: High fidelity
+        note: a parser knows what a help text only hints at, which is why this path is tried first
+    - title: "Or read the help text"
+      steps:
+        - label: Run the tool's own help in a subprocess
+          note: "which works against a command line written in any language at all, including one that is not Python"
+      result:
+        label: Lower fidelity, and it says so
+        note: "the fallback for when no parser object can be reached. A help text says less than a parser knows, and that difference shows up in the form."
+  outcome:
+    label: One normalised description, then one self-contained page
+    note: "Both lanes produce the same schema, so the renderer never learns which framework it came from. Every sub-command becomes a section and every flag a field, in semantic HTML, Tailwind utilities and plain JavaScript modules. No framework runtime, no build step, one file."
+  footer: The page assembles the exact command line as text, in the visitor's browser, and stops there. Running it stays a copy and paste, a Tauri invoke, or a FastAPI endpoint, which is somebody else's decision.
+
+fr:
+  title: Comment fonctionne sprezzature-cli-gui
+  subtitle: Un outil que personne ne tapera, lu dans ses propres déclarations et rendu sous forme de formulaire.
+  alt: >-
+    Schéma de flux. En haut, un outil en ligne de commande alimente deux voies, qui
+    sont deux façons de le lire. La voie de gauche importe le module et parcourt
+    les champs internes de l'objet parseur, avec une grande fidélité. La voie de
+    droite lance l'aide de l'outil dans un sous-processus et en lit le texte
+    imprimé, avec une fidélité moindre, et le dit. Les deux se rejoignent en un
+    seul résultat, une description normalisée que le moteur de rendu transforme en
+    une page HTML autonome.
+  input:
+    label: Un outil en ligne de commande
+    note: argparse, Click ou Typer en Python. Tout le reste, cobra en Go, clap en Rust, par son propre texte d'aide.
+  lanes:
+    - title: "Lire l'objet parseur"
+      steps:
+        - label: Résoudre module:fabrique jusqu'au parseur
+          note: "un module importable, ou un chemin de script, plus le nom de la fonction qui construit le parseur"
+        - label: Parcourir les champs déjà déclarés
+          note: sous-commandes, drapeaux, types, valeurs par défaut, valeurs admises, textes d'aide. Rien n'est deviné depuis du texte imprimé.
+      result:
+        label: Grande fidélité
+        note: un parseur sait ce qu'un texte d'aide se contente de suggérer, d'où l'ordre de priorité
+    - title: "Ou lire le texte d'aide"
+      steps:
+        - label: Lancer l'aide de l'outil dans un sous-processus
+          note: "ce qui fonctionne contre une ligne de commande écrite dans n'importe quel langage, y compris autre que Python"
+      result:
+        label: Fidélité moindre, et elle le dit
+        note: "le repli pour quand aucun objet parseur n'est accessible. Un texte d'aide en dit moins qu'un parseur, et cet écart se voit dans le formulaire."
+  outcome:
+    label: Une description normalisée, puis une page autonome
+    note: "Les deux voies produisent le même schéma, si bien que le moteur de rendu n'apprend jamais de quel cadre il vient. Chaque sous-commande devient une section et chaque drapeau un champ, en HTML sémantique, utilitaires Tailwind et modules JavaScript natifs. Pas de cadre à l'exécution, pas d'étape de compilation, un seul fichier."
+  footer: La page assemble la ligne de commande exacte sous forme de texte, dans le navigateur du visiteur, et s'arrête là. L'exécuter reste un copier-coller, un appel Tauri invoke ou un point d'entrée FastAPI, et c'est la décision de quelqu'un d'autre.

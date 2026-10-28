@@ -13,6 +13,10 @@ Exemple : un outil avec un drapeau `--verbose` et une sous-commande `convert INP
 
 Pas de cadre logiciel, pas d'étape de compilation : la page produite est un seul fichier HTML. Elle charge tout de même la version « Play » de Tailwind depuis un réseau de diffusion de contenu (`cdn.tailwindcss.com`) pour transformer les classes utilitaires en vrai CSS dans le navigateur de la personne qui l'ouvre ; une connexion internet est donc nécessaire au premier chargement. Les champs du formulaire, eux, fonctionnent sans elle, simplement sans mise en forme.
 
+## Comment ça marche
+
+![Schéma de flux. En haut, un outil en ligne de commande alimente deux voies, qui sont deux façons de le lire. La voie de gauche importe le module et parcourt les champs internes de l'objet parseur, avec une grande fidélité. La voie de droite lance l'aide de l'outil dans un sous-processus et en lit le texte imprimé, avec une fidélité moindre, et le dit. Les deux se rejoignent en un seul résultat, une description normalisée que le moteur de rendu transforme en une page HTML autonome.](https://raw.githubusercontent.com/warith-harchaoui/sprezzature-cli-gui/main/assets/comment-ca-marche.svg)
+
 ## Installation
 
 ```bash
@@ -33,7 +37,7 @@ sprezzature-cli-gui ./my_cli.py:make_parser > gui.html
 
 Quand le parseur ne peut pas être importé, l'outil se rabat sur l'analyse de la sortie `--help` de la cible ; il fonctionne donc même contre un outil qu'il ne peut pas inspecter directement, y compris un outil qui n'est pas écrit en Python.
 
-## Fonctionnement
+## Dans le paquet
 
 `cli_to_gui.py` est une façade légère qui réexporte l'implémentation réelle, elle-même dans le paquet `sprezzature_cli_gui` :
 
