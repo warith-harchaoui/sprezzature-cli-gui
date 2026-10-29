@@ -1,0 +1,615 @@
+meta:
+  reference: sprezzature-cli-gui
+  rotation_deg: -32.795
+  explained_variance_ratio:
+  - 0.3204
+  - 0.2405
+  cumulative_variance: 0.561
+  n_approaches: 25
+  attributes:
+  - Zéro configuration dans l'outil enveloppé
+  - Sortie statique hébergeable
+  - Aucune dépendance ajoutée à la cible
+  - Analyseurs d'arguments lus automatiquement
+  - Outils en ligne de commande hors Python
+  - Fidélité de la lecture
+  - Exécution de la commande enveloppée
+  - Flux de journal en direct
+  - Maîtrise du rendu
+  - Accessibilité du formulaire produit
+  - Interface garantie conforme à l'outil
+  - Légèreté de l'installation
+  - Gratuit et auto-hébergeable
+  - Maturité et écosystème
+  lower_is_better: []
+  imputed_cells: []
+axes:
+  axis_1:
+    name: Robustesse ↔ Simplicité
+    pole_left: Robustesse
+    pole_right: Simplicité
+    loadings:
+      Zéro configuration dans l'outil enveloppé: 0.4375
+      Sortie statique hébergeable: 0.2171
+      Aucune dépendance ajoutée à la cible: 0.2672
+      Analyseurs d'arguments lus automatiquement: 0.3246
+      Outils en ligne de commande hors Python: -0.2317
+      Fidélité de la lecture: 0.3781
+      Exécution de la commande enveloppée: 0.0944
+      Flux de journal en direct: -0.0758
+      Maîtrise du rendu: -0.341
+      Accessibilité du formulaire produit: 0.046
+      Interface garantie conforme à l'outil: 0.3867
+      Légèreté de l'installation: 0.2293
+      Gratuit et auto-hébergeable: 0.027
+      Maturité et écosystème: -0.2283
+  axis_2:
+    name: Adaptabilité ↔ Efficacité
+    pole_bottom: Adaptabilité
+    pole_top: Efficacité
+    loadings:
+      Zéro configuration dans l'outil enveloppé: 0.0756
+      Sortie statique hébergeable: 0.4431
+      Aucune dépendance ajoutée à la cible: 0.291
+      Analyseurs d'arguments lus automatiquement: -0.0593
+      Outils en ligne de commande hors Python: 0.2934
+      Fidélité de la lecture: -0.0705
+      Exécution de la commande enveloppée: -0.4429
+      Flux de journal en direct: -0.3401
+      Maîtrise du rendu: 0.1715
+      Accessibilité du formulaire produit: 0.3672
+      Interface garantie conforme à l'outil: -0.23
+      Légèreté de l'installation: 0.2075
+      Gratuit et auto-hébergeable: -0.2102
+      Maturité et écosystème: -0.0504
+approaches:
+- name: sprezzature-cli-gui
+  coordinates:
+    axis_1: 3.0375
+    axis_2: 3.6575
+  role: best
+  color: '#FF3B30'
+  attributes:
+    Zéro configuration dans l'outil enveloppé: 5.0
+    Sortie statique hébergeable: 5.0
+    Aucune dépendance ajoutée à la cible: 5.0
+    Analyseurs d'arguments lus automatiquement: 4.0
+    Outils en ligne de commande hors Python: 4.0
+    Fidélité de la lecture: 4.0
+    Exécution de la commande enveloppée: 1.0
+    Flux de journal en direct: 1.0
+    Maîtrise du rendu: 2.0
+    Accessibilité du formulaire produit: 5.0
+    Interface garantie conforme à l'outil: 4.0
+    Légèreté de l'installation: 5.0
+    Gratuit et auto-hébergeable: 5.0
+    Maturité et écosystème: 1.0
+  imputed_attributes: []
+- name: Gooey
+  coordinates:
+    axis_1: -0.0173
+    axis_2: -3.6575
+  role: competitor
+  color: '#00A180'
+  attributes:
+    Zéro configuration dans l'outil enveloppé: 2.0
+    Sortie statique hébergeable: 1.0
+    Aucune dépendance ajoutée à la cible: 1.0
+    Analyseurs d'arguments lus automatiquement: 2.0
+    Outils en ligne de commande hors Python: 1.0
+    Fidélité de la lecture: 4.0
+    Exécution de la commande enveloppée: 5.0
+    Flux de journal en direct: 5.0
+    Maîtrise du rendu: 3.0
+    Accessibilité du formulaire produit: 2.0
+    Interface garantie conforme à l'outil: 5.0
+    Légèreté de l'installation: 2.0
+    Gratuit et auto-hébergeable: 5.0
+    Maturité et écosystème: 5.0
+  imputed_attributes: []
+- name: Trogon
+  coordinates:
+    axis_1: 1.3204
+    axis_2: -3.1887
+  role: competitor
+  color: '#46A5E1'
+  attributes:
+    Zéro configuration dans l'outil enveloppé: 2.0
+    Sortie statique hébergeable: 1.0
+    Aucune dépendance ajoutée à la cible: 1.0
+    Analyseurs d'arguments lus automatiquement: 3.0
+    Outils en ligne de commande hors Python: 1.0
+    Fidélité de la lecture: 5.0
+    Exécution de la commande enveloppée: 5.0
+    Flux de journal en direct: 3.0
+    Maîtrise du rendu: 2.0
+    Accessibilité du formulaire produit: 2.0
+    Interface garantie conforme à l'outil: 5.0
+    Légèreté de l'installation: 3.0
+    Gratuit et auto-hébergeable: 5.0
+    Maturité et écosystème: 4.0
+  imputed_attributes: []
+- name: trogon_js
+  coordinates:
+    axis_1: 1.3208
+    axis_2: 0.3349
+  role: competitor
+  color: '#C597EA'
+  attributes:
+    Zéro configuration dans l'outil enveloppé: 2.0
+    Sortie statique hébergeable: 4.0
+    Aucune dépendance ajoutée à la cible: 2.0
+    Analyseurs d'arguments lus automatiquement: 2.0
+    Outils en ligne de commande hors Python: 1.0
+    Fidélité de la lecture: 4.0
+    Exécution de la commande enveloppée: 2.0
+    Flux de journal en direct: 1.0
+    Maîtrise du rendu: 3.0
+    Accessibilité du formulaire produit: 2.0
+    Interface garantie conforme à l'outil: 3.0
+    Légèreté de l'installation: 4.0
+    Gratuit et auto-hébergeable: 5.0
+    Maturité et écosystème: 1.0
+  imputed_attributes: []
+- name: click-web
+  coordinates:
+    axis_1: 1.6478
+    axis_2: -2.6548
+  role: competitor
+  color: '#8D9EF3'
+  attributes:
+    Zéro configuration dans l'outil enveloppé: 3.0
+    Sortie statique hébergeable: 2.0
+    Aucune dépendance ajoutée à la cible: 2.0
+    Analyseurs d'arguments lus automatiquement: 2.0
+    Outils en ligne de commande hors Python: 1.0
+    Fidélité de la lecture: 3.0
+    Exécution de la commande enveloppée: 5.0
+    Flux de journal en direct: 5.0
+    Maîtrise du rendu: 2.0
+    Accessibilité du formulaire produit: 2.0
+    Interface garantie conforme à l'outil: 5.0
+    Légèreté de l'installation: 4.0
+    Gratuit et auto-hébergeable: 5.0
+    Maturité et écosystème: 2.0
+  imputed_attributes: []
+- name: Cli2Gui
+  coordinates:
+    axis_1: 1.2756
+    axis_2: -3.2784
+  role: competitor
+  color: '#0BA8D0'
+  attributes:
+    Zéro configuration dans l'outil enveloppé: 2.0
+    Sortie statique hébergeable: 1.0
+    Aucune dépendance ajoutée à la cible: 1.0
+    Analyseurs d'arguments lus automatiquement: 5.0
+    Outils en ligne de commande hors Python: 1.0
+    Fidélité de la lecture: 3.0
+    Exécution de la commande enveloppée: 5.0
+    Flux de journal en direct: 4.0
+    Maîtrise du rendu: 3.0
+    Accessibilité du formulaire produit: 2.0
+    Interface garantie conforme à l'outil: 5.0
+    Légèreté de l'installation: 3.0
+    Gratuit et auto-hébergeable: 5.0
+    Maturité et écosystème: 3.0
+  imputed_attributes: []
+- name: quick (Qt5 for Click)
+  coordinates:
+    axis_1: 0.7396
+    axis_2: -3.0236
+  role: competitor
+  color: '#3ED8E8'
+  attributes:
+    Zéro configuration dans l'outil enveloppé: 2.0
+    Sortie statique hébergeable: 1.0
+    Aucune dépendance ajoutée à la cible: 1.0
+    Analyseurs d'arguments lus automatiquement: 2.0
+    Outils en ligne de commande hors Python: 1.0
+    Fidélité de la lecture: 4.0
+    Exécution de la commande enveloppée: 5.0
+    Flux de journal en direct: 3.0
+    Maîtrise du rendu: 3.0
+    Accessibilité du formulaire produit: 2.0
+    Interface garantie conforme à l'outil: 5.0
+    Légèreté de l'installation: 2.0
+    Gratuit et auto-hébergeable: 5.0
+    Maturité et écosystème: 1.0
+  imputed_attributes: []
+- name: argparseui
+  coordinates:
+    axis_1: 1.1316
+    axis_2: -2.4736
+  role: competitor
+  color: '#7DB3FF'
+  attributes:
+    Zéro configuration dans l'outil enveloppé: 3.0
+    Sortie statique hébergeable: 1.0
+    Aucune dépendance ajoutée à la cible: 1.0
+    Analyseurs d'arguments lus automatiquement: 2.0
+    Outils en ligne de commande hors Python: 1.0
+    Fidélité de la lecture: 3.0
+    Exécution de la commande enveloppée: 4.0
+    Flux de journal en direct: 2.0
+    Maîtrise du rendu: 2.0
+    Accessibilité du formulaire produit: 2.0
+    Interface garantie conforme à l'outil: 5.0
+    Légèreté de l'installation: 2.0
+    Gratuit et auto-hébergeable: 5.0
+    Maturité et écosystème: 1.0
+  imputed_attributes: []
+- name: Streamlit
+  coordinates:
+    axis_1: -2.7032
+    axis_2: -0.4646
+  role: competitor
+  color: '#EF8C75'
+  attributes:
+    Zéro configuration dans l'outil enveloppé: 1.0
+    Sortie statique hébergeable: 1.0
+    Aucune dépendance ajoutée à la cible: 1.0
+    Analyseurs d'arguments lus automatiquement: 1.0
+    Outils en ligne de commande hors Python: 3.0
+    Fidélité de la lecture: 1.0
+    Exécution de la commande enveloppée: 3.0
+    Flux de journal en direct: 2.0
+    Maîtrise du rendu: 3.0
+    Accessibilité du formulaire produit: 3.0
+    Interface garantie conforme à l'outil: 1.0
+    Légèreté de l'installation: 2.0
+    Gratuit et auto-hébergeable: 4.0
+    Maturité et écosystème: 5.0
+  imputed_attributes: []
+- name: Gradio
+  coordinates:
+    axis_1: -2.8126
+    axis_2: -0.9555
+  role: competitor
+  color: '#B1881D'
+  attributes:
+    Zéro configuration dans l'outil enveloppé: 1.0
+    Sortie statique hébergeable: 1.0
+    Aucune dépendance ajoutée à la cible: 1.0
+    Analyseurs d'arguments lus automatiquement: 1.0
+    Outils en ligne de commande hors Python: 3.0
+    Fidélité de la lecture: 1.0
+    Exécution de la commande enveloppée: 3.0
+    Flux de journal en direct: 4.0
+    Maîtrise du rendu: 3.0
+    Accessibilité du formulaire produit: 3.0
+    Interface garantie conforme à l'outil: 1.0
+    Légèreté de l'installation: 2.0
+    Gratuit et auto-hébergeable: 4.0
+    Maturité et écosystème: 5.0
+  imputed_attributes: []
+- name: NiceGUI
+  coordinates:
+    axis_1: -3.0375
+    axis_2: -0.8635
+  role: competitor
+  color: '#CE7A45'
+  attributes:
+    Zéro configuration dans l'outil enveloppé: 1.0
+    Sortie statique hébergeable: 1.0
+    Aucune dépendance ajoutée à la cible: 1.0
+    Analyseurs d'arguments lus automatiquement: 1.0
+    Outils en ligne de commande hors Python: 3.0
+    Fidélité de la lecture: 1.0
+    Exécution de la commande enveloppée: 3.0
+    Flux de journal en direct: 5.0
+    Maîtrise du rendu: 5.0
+    Accessibilité du formulaire produit: 3.0
+    Interface garantie conforme à l'outil: 1.0
+    Légèreté de l'installation: 3.0
+    Gratuit et auto-hébergeable: 5.0
+    Maturité et écosystème: 4.0
+  imputed_attributes: []
+- name: Shiny for Python
+  coordinates:
+    axis_1: -2.591
+    axis_2: -0.0747
+  role: competitor
+  color: '#FC97B7'
+  attributes:
+    Zéro configuration dans l'outil enveloppé: 1.0
+    Sortie statique hébergeable: 1.0
+    Aucune dépendance ajoutée à la cible: 1.0
+    Analyseurs d'arguments lus automatiquement: 1.0
+    Outils en ligne de commande hors Python: 3.0
+    Fidélité de la lecture: 1.0
+    Exécution de la commande enveloppée: 3.0
+    Flux de journal en direct: 3.0
+    Maîtrise du rendu: 4.0
+    Accessibilité du formulaire produit: 4.0
+    Interface garantie conforme à l'outil: 1.0
+    Légèreté de l'installation: 3.0
+    Gratuit et auto-hébergeable: 5.0
+    Maturité et écosystème: 4.0
+  imputed_attributes: []
+- name: Taipy
+  coordinates:
+    axis_1: -2.7492
+    axis_2: -1.1081
+  role: competitor
+  color: '#839735'
+  attributes:
+    Zéro configuration dans l'outil enveloppé: 1.0
+    Sortie statique hébergeable: 1.0
+    Aucune dépendance ajoutée à la cible: 1.0
+    Analyseurs d'arguments lus automatiquement: 1.0
+    Outils en ligne de commande hors Python: 3.0
+    Fidélité de la lecture: 1.0
+    Exécution de la commande enveloppée: 3.0
+    Flux de journal en direct: 3.0
+    Maîtrise du rendu: 4.0
+    Accessibilité du formulaire produit: 2.0
+    Interface garantie conforme à l'outil: 1.0
+    Légèreté de l'installation: 2.0
+    Gratuit et auto-hébergeable: 5.0
+    Maturité et écosystème: 3.0
+  imputed_attributes: []
+- name: PyWebIO
+  coordinates:
+    axis_1: -1.3294
+    axis_2: -0.5065
+  role: competitor
+  color: '#ADA137'
+  attributes:
+    Zéro configuration dans l'outil enveloppé: 2.0
+    Sortie statique hébergeable: 1.0
+    Aucune dépendance ajoutée à la cible: 1.0
+    Analyseurs d'arguments lus automatiquement: 1.0
+    Outils en ligne de commande hors Python: 3.0
+    Fidélité de la lecture: 1.0
+    Exécution de la commande enveloppée: 3.0
+    Flux de journal en direct: 3.0
+    Maîtrise du rendu: 2.0
+    Accessibilité du formulaire produit: 3.0
+    Interface garantie conforme à l'outil: 1.0
+    Légèreté de l'installation: 4.0
+    Gratuit et auto-hébergeable: 5.0
+    Maturité et écosystème: 3.0
+  imputed_attributes: []
+- name: Flet
+  coordinates:
+    axis_1: -2.9434
+    axis_2: -0.1095
+  role: competitor
+  color: '#C6646B'
+  attributes:
+    Zéro configuration dans l'outil enveloppé: 1.0
+    Sortie statique hébergeable: 1.0
+    Aucune dépendance ajoutée à la cible: 1.0
+    Analyseurs d'arguments lus automatiquement: 1.0
+    Outils en ligne de commande hors Python: 3.0
+    Fidélité de la lecture: 1.0
+    Exécution de la commande enveloppée: 3.0
+    Flux de journal en direct: 2.0
+    Maîtrise du rendu: 5.0
+    Accessibilité du formulaire produit: 3.0
+    Interface garantie conforme à l'outil: 1.0
+    Légèreté de l'installation: 2.0
+    Gratuit et auto-hébergeable: 4.0
+    Maturité et écosystème: 3.0
+  imputed_attributes: []
+- name: Dear PyGui
+  coordinates:
+    axis_1: -2.9835
+    axis_2: -1.0063
+  role: competitor
+  color: '#DB9847'
+  attributes:
+    Zéro configuration dans l'outil enveloppé: 1.0
+    Sortie statique hébergeable: 1.0
+    Aucune dépendance ajoutée à la cible: 1.0
+    Analyseurs d'arguments lus automatiquement: 1.0
+    Outils en ligne de commande hors Python: 3.0
+    Fidélité de la lecture: 1.0
+    Exécution de la commande enveloppée: 3.0
+    Flux de journal en direct: 2.0
+    Maîtrise du rendu: 5.0
+    Accessibilité du formulaire produit: 1.0
+    Interface garantie conforme à l'outil: 1.0
+    Légèreté de l'installation: 3.0
+    Gratuit et auto-hébergeable: 5.0
+    Maturité et écosystème: 4.0
+  imputed_attributes: []
+- name: Textual
+  coordinates:
+    axis_1: -2.7626
+    axis_2: -1.2907
+  role: worst
+  color: '#A52A2A'
+  attributes:
+    Zéro configuration dans l'outil enveloppé: 1.0
+    Sortie statique hébergeable: 1.0
+    Aucune dépendance ajoutée à la cible: 1.0
+    Analyseurs d'arguments lus automatiquement: 1.0
+    Outils en ligne de commande hors Python: 3.0
+    Fidélité de la lecture: 1.0
+    Exécution de la commande enveloppée: 3.0
+    Flux de journal en direct: 5.0
+    Maîtrise du rendu: 4.0
+    Accessibilité du formulaire produit: 2.0
+    Interface garantie conforme à l'outil: 1.0
+    Légèreté de l'installation: 4.0
+    Gratuit et auto-hébergeable: 5.0
+    Maturité et écosystème: 5.0
+  imputed_attributes: []
+- name: react-jsonschema-form
+  coordinates:
+    axis_1: -1.8951
+    axis_2: 2.3372
+  role: competitor
+  color: '#EEA7F0'
+  attributes:
+    Zéro configuration dans l'outil enveloppé: 1.0
+    Sortie statique hébergeable: 4.0
+    Aucune dépendance ajoutée à la cible: 3.0
+    Analyseurs d'arguments lus automatiquement: 1.0
+    Outils en ligne de commande hors Python: 3.0
+    Fidélité de la lecture: 3.0
+    Exécution de la commande enveloppée: 1.0
+    Flux de journal en direct: 1.0
+    Maîtrise du rendu: 5.0
+    Accessibilité du formulaire produit: 4.0
+    Interface garantie conforme à l'outil: 1.0
+    Légèreté de l'installation: 2.0
+    Gratuit et auto-hébergeable: 5.0
+    Maturité et écosystème: 5.0
+  imputed_attributes: []
+- name: Galaxy
+  coordinates:
+    axis_1: -1.5272
+    axis_2: -0.9954
+  role: competitor
+  color: '#6FA758'
+  attributes:
+    Zéro configuration dans l'outil enveloppé: 1.0
+    Sortie statique hébergeable: 1.0
+    Aucune dépendance ajoutée à la cible: 4.0
+    Analyseurs d'arguments lus automatiquement: 1.0
+    Outils en ligne de commande hors Python: 5.0
+    Fidélité de la lecture: 5.0
+    Exécution de la commande enveloppée: 5.0
+    Flux de journal en direct: 4.0
+    Maîtrise du rendu: 3.0
+    Accessibilité du formulaire produit: 3.0
+    Interface garantie conforme à l'outil: 2.0
+    Légèreté de l'installation: 1.0
+    Gratuit et auto-hébergeable: 4.0
+    Maturité et écosystème: 5.0
+  imputed_attributes: []
+- name: nf-core launch
+  coordinates:
+    axis_1: 1.4284
+    axis_2: -0.8977
+  role: competitor
+  color: '#B5A5FE'
+  attributes:
+    Zéro configuration dans l'outil enveloppé: 3.0
+    Sortie statique hébergeable: 2.0
+    Aucune dépendance ajoutée à la cible: 4.0
+    Analyseurs d'arguments lus automatiquement: 2.0
+    Outils en ligne de commande hors Python: 2.0
+    Fidélité de la lecture: 4.0
+    Exécution de la commande enveloppée: 5.0
+    Flux de journal en direct: 3.0
+    Maîtrise du rendu: 2.0
+    Accessibilité du formulaire produit: 3.0
+    Interface garantie conforme à l'outil: 4.0
+    Légèreté de l'installation: 3.0
+    Gratuit et auto-hébergeable: 3.0
+    Maturité et écosystème: 4.0
+  imputed_attributes: []
+- name: Seqera Platform
+  coordinates:
+    axis_1: 0.2639
+    axis_2: -1.8365
+  role: competitor
+  color: '#34D1C7'
+  attributes:
+    Zéro configuration dans l'outil enveloppé: 3.0
+    Sortie statique hébergeable: 1.0
+    Aucune dépendance ajoutée à la cible: 4.0
+    Analyseurs d'arguments lus automatiquement: 2.0
+    Outils en ligne de commande hors Python: 2.0
+    Fidélité de la lecture: 4.0
+    Exécution de la commande enveloppée: 5.0
+    Flux de journal en direct: 5.0
+    Maîtrise du rendu: 3.0
+    Accessibilité du formulaire produit: 3.0
+    Interface garantie conforme à l'outil: 4.0
+    Légèreté de l'installation: 1.0
+    Gratuit et auto-hébergeable: 2.0
+    Maturité et écosystème: 5.0
+  imputed_attributes: []
+- name: v0 (Vercel)
+  coordinates:
+    axis_1: -0.9789
+    axis_2: 3.6575
+  role: top
+  color: '#AF52DE'
+  attributes:
+    Zéro configuration dans l'outil enveloppé: 2.0
+    Sortie statique hébergeable: 5.0
+    Aucune dépendance ajoutée à la cible: 4.0
+    Analyseurs d'arguments lus automatiquement: 1.0
+    Outils en ligne de commande hors Python: 3.0
+    Fidélité de la lecture: 2.0
+    Exécution de la commande enveloppée: 1.0
+    Flux de journal en direct: 1.0
+    Maîtrise du rendu: 5.0
+    Accessibilité du formulaire produit: 3.0
+    Interface garantie conforme à l'outil: 1.0
+    Légèreté de l'installation: 4.0
+    Gratuit et auto-hébergeable: 1.0
+    Maturité et écosystème: 4.0
+  imputed_attributes: []
+- name: Lovable
+  coordinates:
+    axis_1: -1.4548
+    axis_2: 1.4632
+  role: competitor
+  color: '#D781B6'
+  attributes:
+    Zéro configuration dans l'outil enveloppé: 2.0
+    Sortie statique hébergeable: 2.0
+    Aucune dépendance ajoutée à la cible: 4.0
+    Analyseurs d'arguments lus automatiquement: 1.0
+    Outils en ligne de commande hors Python: 3.0
+    Fidélité de la lecture: 2.0
+    Exécution de la commande enveloppée: 3.0
+    Flux de journal en direct: 3.0
+    Maîtrise du rendu: 5.0
+    Accessibilité du formulaire produit: 3.0
+    Interface garantie conforme à l'outil: 1.0
+    Légèreté de l'installation: 4.0
+    Gratuit et auto-hébergeable: 1.0
+    Maturité et écosystème: 4.0
+  imputed_attributes: []
+- name: FastAPI + Swagger UI
+  coordinates:
+    axis_1: -0.1372
+    axis_2: -0.9147
+  role: competitor
+  color: '#77D599'
+  attributes:
+    Zéro configuration dans l'outil enveloppé: 1.0
+    Sortie statique hébergeable: 2.0
+    Aucune dépendance ajoutée à la cible: 1.0
+    Analyseurs d'arguments lus automatiquement: 1.0
+    Outils en ligne de commande hors Python: 2.0
+    Fidélité de la lecture: 4.0
+    Exécution de la commande enveloppée: 3.0
+    Flux de journal en direct: 1.0
+    Maîtrise du rendu: 2.0
+    Accessibilité du formulaire produit: 3.0
+    Interface garantie conforme à l'outil: 5.0
+    Légèreté de l'installation: 3.0
+    Gratuit et auto-hébergeable: 5.0
+    Maturité et écosystème: 5.0
+  imputed_attributes: []
+- name: Typer's own --help
+  coordinates:
+    axis_1: 3.0375
+    axis_2: -2.1244
+  role: right
+  color: '#007AFF'
+  attributes:
+    Zéro configuration dans l'outil enveloppé: 5.0
+    Sortie statique hébergeable: 1.0
+    Aucune dépendance ajoutée à la cible: 5.0
+    Analyseurs d'arguments lus automatiquement: 1.0
+    Outils en ligne de commande hors Python: 1.0
+    Fidélité de la lecture: 5.0
+    Exécution de la commande enveloppée: 5.0
+    Flux de journal en direct: 4.0
+    Maîtrise du rendu: 1.0
+    Accessibilité du formulaire produit: 2.0
+    Interface garantie conforme à l'outil: 5.0
+    Légèreté de l'installation: 5.0
+    Gratuit et auto-hébergeable: 5.0
+    Maturité et écosystème: 5.0
+  imputed_attributes: []

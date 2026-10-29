@@ -1,0 +1,701 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1384" height="946" viewBox="0 0 1384 946" role="img" aria-labelledby="sp-title sp-desc" font-family="Roboto, -apple-system, Helvetica, Arial, sans-serif"><title id="sp-title">Outils dans le quadrant</title><desc id="sp-desc">A 2D positioning map of 25 outils, Robustesse to Simplicité on the horizontal axis, Adaptabilité to Efficacité on the vertical axis.</desc><style>.sp-dot{cursor:pointer}.sp-dot:hover circle,.sp-dot:focus circle{stroke-width:2.4}.sp-dot:hover,.sp-dot:focus{filter:brightness(1.08);outline:none}</style><line x1="197.6" y1="484.0" x2="1026.4" y2="484.0" stroke="#C7C7CC" stroke-width="1.2" stroke-dasharray="2,4"/><line x1="612.0" y1="866.0" x2="612.0" y2="102.0" stroke="#C7C7CC" stroke-width="1.2" stroke-dasharray="2,4"/><text data-pole="right" x="1164.0" y="491.7" font-size="22" font-style="italic" fill="#6E6E73" text-anchor="end">Simplicité</text><text data-pole="left" x="60.0" y="491.7" font-size="22" font-style="italic" fill="#6E6E73" text-anchor="start">Robustesse</text><text data-pole="top" x="612.0" y="65.4" font-size="22" font-style="italic" fill="#6E6E73" text-anchor="middle">Efficacité</text><text data-pole="bottom" x="612.0" y="915.6" font-size="22" font-style="italic" fill="#6E6E73" text-anchor="middle">Adaptabilité</text><g class="sp-dot" tabindex="0" role="img" aria-label="Outils: sprezzature-cli-gui
+Zéro configuration dans l'outil enveloppé: 5
+Sortie statique hébergeable: 5
+Aucune dépendance ajoutée à la cible: 5
+Analyseurs d'arguments lus automatiquement: 4
+Outils en ligne de commande hors Python: 4
+Fidélité de la lecture: 4
+Exécution de la commande enveloppée: 1
+Flux de journal en direct: 1
+Maîtrise du rendu: 2
+Accessibilité du formulaire produit: 5
+Interface garantie conforme à l'outil: 4
+Légèreté de l'installation: 5
+Gratuit et auto-hébergeable: 5
+Maturité et écosystème: 1"><circle cx="912.0" cy="259.0" r="7.14" fill="#FF3B30" stroke="white" stroke-width="1" opacity="0.95"/><title>Outils: sprezzature-cli-gui
+Zéro configuration dans l'outil enveloppé: 5
+Sortie statique hébergeable: 5
+Aucune dépendance ajoutée à la cible: 5
+Analyseurs d'arguments lus automatiquement: 4
+Outils en ligne de commande hors Python: 4
+Fidélité de la lecture: 4
+Exécution de la commande enveloppée: 1
+Flux de journal en direct: 1
+Maîtrise du rendu: 2
+Accessibilité du formulaire produit: 5
+Interface garantie conforme à l'outil: 4
+Légèreté de l'installation: 5
+Gratuit et auto-hébergeable: 5
+Maturité et écosystème: 1</title></g><text x="899.5" y="263.9" font-size="14" fill="#1C1C1E" text-anchor="end">sprezzature-cli-gui</text><g class="sp-dot" tabindex="0" role="img" aria-label="Outils: Gooey
+Zéro configuration dans l'outil enveloppé: 2
+Sortie statique hébergeable: 1
+Aucune dépendance ajoutée à la cible: 1
+Analyseurs d'arguments lus automatiquement: 2
+Outils en ligne de commande hors Python: 1
+Fidélité de la lecture: 4
+Exécution de la commande enveloppée: 5
+Flux de journal en direct: 5
+Maîtrise du rendu: 3
+Accessibilité du formulaire produit: 2
+Interface garantie conforme à l'outil: 5
+Légèreté de l'installation: 2
+Gratuit et auto-hébergeable: 5
+Maturité et écosystème: 5"><circle cx="610.3" cy="709.0" r="7.14" fill="#00A180" stroke="white" stroke-width="1" opacity="0.95"/><title>Outils: Gooey
+Zéro configuration dans l'outil enveloppé: 2
+Sortie statique hébergeable: 1
+Aucune dépendance ajoutée à la cible: 1
+Analyseurs d'arguments lus automatiquement: 2
+Outils en ligne de commande hors Python: 1
+Fidélité de la lecture: 4
+Exécution de la commande enveloppée: 5
+Flux de journal en direct: 5
+Maîtrise du rendu: 3
+Accessibilité du formulaire produit: 2
+Interface garantie conforme à l'outil: 5
+Légèreté de l'installation: 2
+Gratuit et auto-hébergeable: 5
+Maturité et écosystème: 5</title></g><text x="597.8" y="713.9" font-size="14" fill="#1C1C1E" text-anchor="end">Gooey</text><g class="sp-dot" tabindex="0" role="img" aria-label="Outils: Trogon
+Zéro configuration dans l'outil enveloppé: 2
+Sortie statique hébergeable: 1
+Aucune dépendance ajoutée à la cible: 1
+Analyseurs d'arguments lus automatiquement: 3
+Outils en ligne de commande hors Python: 1
+Fidélité de la lecture: 5
+Exécution de la commande enveloppée: 5
+Flux de journal en direct: 3
+Maîtrise du rendu: 2
+Accessibilité du formulaire produit: 2
+Interface garantie conforme à l'outil: 5
+Légèreté de l'installation: 3
+Gratuit et auto-hébergeable: 5
+Maturité et écosystème: 4"><circle cx="742.4" cy="680.2" r="7.14" fill="#46A5E1" stroke="white" stroke-width="1" opacity="0.95"/><title>Outils: Trogon
+Zéro configuration dans l'outil enveloppé: 2
+Sortie statique hébergeable: 1
+Aucune dépendance ajoutée à la cible: 1
+Analyseurs d'arguments lus automatiquement: 3
+Outils en ligne de commande hors Python: 1
+Fidélité de la lecture: 5
+Exécution de la commande enveloppée: 5
+Flux de journal en direct: 3
+Maîtrise du rendu: 2
+Accessibilité du formulaire produit: 2
+Interface garantie conforme à l'outil: 5
+Légèreté de l'installation: 3
+Gratuit et auto-hébergeable: 5
+Maturité et écosystème: 4</title></g><text x="754.9" y="715.8" font-size="14" fill="#1C1C1E" text-anchor="start">Trogon</text><g class="sp-dot" tabindex="0" role="img" aria-label="Outils: trogon_js
+Zéro configuration dans l'outil enveloppé: 2
+Sortie statique hébergeable: 4
+Aucune dépendance ajoutée à la cible: 2
+Analyseurs d'arguments lus automatiquement: 2
+Outils en ligne de commande hors Python: 1
+Fidélité de la lecture: 4
+Exécution de la commande enveloppée: 2
+Flux de journal en direct: 1
+Maîtrise du rendu: 3
+Accessibilité du formulaire produit: 2
+Interface garantie conforme à l'outil: 3
+Légèreté de l'installation: 4
+Gratuit et auto-hébergeable: 5
+Maturité et écosystème: 1"><circle cx="742.4" cy="463.4" r="7.14" fill="#C597EA" stroke="white" stroke-width="1" opacity="0.95"/><title>Outils: trogon_js
+Zéro configuration dans l'outil enveloppé: 2
+Sortie statique hébergeable: 4
+Aucune dépendance ajoutée à la cible: 2
+Analyseurs d'arguments lus automatiquement: 2
+Outils en ligne de commande hors Python: 1
+Fidélité de la lecture: 4
+Exécution de la commande enveloppée: 2
+Flux de journal en direct: 1
+Maîtrise du rendu: 3
+Accessibilité du formulaire produit: 2
+Interface garantie conforme à l'outil: 3
+Légèreté de l'installation: 4
+Gratuit et auto-hébergeable: 5
+Maturité et écosystème: 1</title></g><text x="754.9" y="468.3" font-size="14" fill="#1C1C1E" text-anchor="start">trogon_js</text><g class="sp-dot" tabindex="0" role="img" aria-label="Outils: click-web
+Zéro configuration dans l'outil enveloppé: 3
+Sortie statique hébergeable: 2
+Aucune dépendance ajoutée à la cible: 2
+Analyseurs d'arguments lus automatiquement: 2
+Outils en ligne de commande hors Python: 1
+Fidélité de la lecture: 3
+Exécution de la commande enveloppée: 5
+Flux de journal en direct: 5
+Maîtrise du rendu: 2
+Accessibilité du formulaire produit: 2
+Interface garantie conforme à l'outil: 5
+Légèreté de l'installation: 4
+Gratuit et auto-hébergeable: 5
+Maturité et écosystème: 2"><circle cx="774.7" cy="647.3" r="7.14" fill="#8D9EF3" stroke="white" stroke-width="1" opacity="0.95"/><title>Outils: click-web
+Zéro configuration dans l'outil enveloppé: 3
+Sortie statique hébergeable: 2
+Aucune dépendance ajoutée à la cible: 2
+Analyseurs d'arguments lus automatiquement: 2
+Outils en ligne de commande hors Python: 1
+Fidélité de la lecture: 3
+Exécution de la commande enveloppée: 5
+Flux de journal en direct: 5
+Maîtrise du rendu: 2
+Accessibilité du formulaire produit: 2
+Interface garantie conforme à l'outil: 5
+Légèreté de l'installation: 4
+Gratuit et auto-hébergeable: 5
+Maturité et écosystème: 2</title></g><text x="787.2" y="652.2" font-size="14" fill="#1C1C1E" text-anchor="start">click-web</text><g class="sp-dot" tabindex="0" role="img" aria-label="Outils: Cli2Gui
+Zéro configuration dans l'outil enveloppé: 2
+Sortie statique hébergeable: 1
+Aucune dépendance ajoutée à la cible: 1
+Analyseurs d'arguments lus automatiquement: 5
+Outils en ligne de commande hors Python: 1
+Fidélité de la lecture: 3
+Exécution de la commande enveloppée: 5
+Flux de journal en direct: 4
+Maîtrise du rendu: 3
+Accessibilité du formulaire produit: 2
+Interface garantie conforme à l'outil: 5
+Légèreté de l'installation: 3
+Gratuit et auto-hébergeable: 5
+Maturité et écosystème: 3"><circle cx="738.0" cy="685.7" r="7.14" fill="#0BA8D0" stroke="white" stroke-width="1" opacity="0.95"/><title>Outils: Cli2Gui
+Zéro configuration dans l'outil enveloppé: 2
+Sortie statique hébergeable: 1
+Aucune dépendance ajoutée à la cible: 1
+Analyseurs d'arguments lus automatiquement: 5
+Outils en ligne de commande hors Python: 1
+Fidélité de la lecture: 3
+Exécution de la commande enveloppée: 5
+Flux de journal en direct: 4
+Maîtrise du rendu: 3
+Accessibilité du formulaire produit: 2
+Interface garantie conforme à l'outil: 5
+Légèreté de l'installation: 3
+Gratuit et auto-hébergeable: 5
+Maturité et écosystème: 3</title></g><text x="750.5" y="690.6" font-size="14" fill="#1C1C1E" text-anchor="start">Cli2Gui</text><g class="sp-dot" tabindex="0" role="img" aria-label="Outils: quick (Qt5 for Click)
+Zéro configuration dans l'outil enveloppé: 2
+Sortie statique hébergeable: 1
+Aucune dépendance ajoutée à la cible: 1
+Analyseurs d'arguments lus automatiquement: 2
+Outils en ligne de commande hors Python: 1
+Fidélité de la lecture: 4
+Exécution de la commande enveloppée: 5
+Flux de journal en direct: 3
+Maîtrise du rendu: 3
+Accessibilité du formulaire produit: 2
+Interface garantie conforme à l'outil: 5
+Légèreté de l'installation: 2
+Gratuit et auto-hébergeable: 5
+Maturité et écosystème: 1"><circle cx="685.0" cy="670.0" r="7.14" fill="#3ED8E8" stroke="white" stroke-width="1" opacity="0.95"/><title>Outils: quick (Qt5 for Click)
+Zéro configuration dans l'outil enveloppé: 2
+Sortie statique hébergeable: 1
+Aucune dépendance ajoutée à la cible: 1
+Analyseurs d'arguments lus automatiquement: 2
+Outils en ligne de commande hors Python: 1
+Fidélité de la lecture: 4
+Exécution de la commande enveloppée: 5
+Flux de journal en direct: 3
+Maîtrise du rendu: 3
+Accessibilité du formulaire produit: 2
+Interface garantie conforme à l'outil: 5
+Légèreté de l'installation: 2
+Gratuit et auto-hébergeable: 5
+Maturité et écosystème: 1</title></g><text x="672.5" y="674.9" font-size="14" fill="#1C1C1E" text-anchor="end">quick (Qt5 for Click)</text><g class="sp-dot" tabindex="0" role="img" aria-label="Outils: argparseui
+Zéro configuration dans l'outil enveloppé: 3
+Sortie statique hébergeable: 1
+Aucune dépendance ajoutée à la cible: 1
+Analyseurs d'arguments lus automatiquement: 2
+Outils en ligne de commande hors Python: 1
+Fidélité de la lecture: 3
+Exécution de la commande enveloppée: 4
+Flux de journal en direct: 2
+Maîtrise du rendu: 2
+Accessibilité du formulaire produit: 2
+Interface garantie conforme à l'outil: 5
+Légèreté de l'installation: 2
+Gratuit et auto-hébergeable: 5
+Maturité et écosystème: 1"><circle cx="723.8" cy="636.2" r="7.14" fill="#7DB3FF" stroke="white" stroke-width="1" opacity="0.95"/><title>Outils: argparseui
+Zéro configuration dans l'outil enveloppé: 3
+Sortie statique hébergeable: 1
+Aucune dépendance ajoutée à la cible: 1
+Analyseurs d'arguments lus automatiquement: 2
+Outils en ligne de commande hors Python: 1
+Fidélité de la lecture: 3
+Exécution de la commande enveloppée: 4
+Flux de journal en direct: 2
+Maîtrise du rendu: 2
+Accessibilité du formulaire produit: 2
+Interface garantie conforme à l'outil: 5
+Légèreté de l'installation: 2
+Gratuit et auto-hébergeable: 5
+Maturité et écosystème: 1</title></g><text x="711.3" y="641.1" font-size="14" fill="#1C1C1E" text-anchor="end">argparseui</text><g class="sp-dot" tabindex="0" role="img" aria-label="Outils: Streamlit
+Zéro configuration dans l'outil enveloppé: 1
+Sortie statique hébergeable: 1
+Aucune dépendance ajoutée à la cible: 1
+Analyseurs d'arguments lus automatiquement: 1
+Outils en ligne de commande hors Python: 3
+Fidélité de la lecture: 1
+Exécution de la commande enveloppée: 3
+Flux de journal en direct: 2
+Maîtrise du rendu: 3
+Accessibilité du formulaire produit: 3
+Interface garantie conforme à l'outil: 1
+Légèreté de l'installation: 2
+Gratuit et auto-hébergeable: 4
+Maturité et écosystème: 5"><circle cx="345.0" cy="512.6" r="7.14" fill="#EF8C75" stroke="white" stroke-width="1" opacity="0.95"/><title>Outils: Streamlit
+Zéro configuration dans l'outil enveloppé: 1
+Sortie statique hébergeable: 1
+Aucune dépendance ajoutée à la cible: 1
+Analyseurs d'arguments lus automatiquement: 1
+Outils en ligne de commande hors Python: 3
+Fidélité de la lecture: 1
+Exécution de la commande enveloppée: 3
+Flux de journal en direct: 2
+Maîtrise du rendu: 3
+Accessibilité du formulaire produit: 3
+Interface garantie conforme à l'outil: 1
+Légèreté de l'installation: 2
+Gratuit et auto-hébergeable: 4
+Maturité et écosystème: 5</title></g><text x="332.5" y="517.5" font-size="14" fill="#1C1C1E" text-anchor="end">Streamlit</text><g class="sp-dot" tabindex="0" role="img" aria-label="Outils: Gradio
+Zéro configuration dans l'outil enveloppé: 1
+Sortie statique hébergeable: 1
+Aucune dépendance ajoutée à la cible: 1
+Analyseurs d'arguments lus automatiquement: 1
+Outils en ligne de commande hors Python: 3
+Fidélité de la lecture: 1
+Exécution de la commande enveloppée: 3
+Flux de journal en direct: 4
+Maîtrise du rendu: 3
+Accessibilité du formulaire produit: 3
+Interface garantie conforme à l'outil: 1
+Légèreté de l'installation: 2
+Gratuit et auto-hébergeable: 4
+Maturité et écosystème: 5"><circle cx="334.2" cy="542.8" r="7.14" fill="#B1881D" stroke="white" stroke-width="1" opacity="0.95"/><title>Outils: Gradio
+Zéro configuration dans l'outil enveloppé: 1
+Sortie statique hébergeable: 1
+Aucune dépendance ajoutée à la cible: 1
+Analyseurs d'arguments lus automatiquement: 1
+Outils en ligne de commande hors Python: 3
+Fidélité de la lecture: 1
+Exécution de la commande enveloppée: 3
+Flux de journal en direct: 4
+Maîtrise du rendu: 3
+Accessibilité du formulaire produit: 3
+Interface garantie conforme à l'outil: 1
+Légèreté de l'installation: 2
+Gratuit et auto-hébergeable: 4
+Maturité et écosystème: 5</title></g><text x="346.7" y="535.2" font-size="14" fill="#1C1C1E" text-anchor="start">Gradio</text><g class="sp-dot" tabindex="0" role="img" aria-label="Outils: NiceGUI
+Zéro configuration dans l'outil enveloppé: 1
+Sortie statique hébergeable: 1
+Aucune dépendance ajoutée à la cible: 1
+Analyseurs d'arguments lus automatiquement: 1
+Outils en ligne de commande hors Python: 3
+Fidélité de la lecture: 1
+Exécution de la commande enveloppée: 3
+Flux de journal en direct: 5
+Maîtrise du rendu: 5
+Accessibilité du formulaire produit: 3
+Interface garantie conforme à l'outil: 1
+Légèreté de l'installation: 3
+Gratuit et auto-hébergeable: 5
+Maturité et écosystème: 4"><circle cx="312.0" cy="537.1" r="7.14" fill="#CE7A45" stroke="white" stroke-width="1" opacity="0.95"/><title>Outils: NiceGUI
+Zéro configuration dans l'outil enveloppé: 1
+Sortie statique hébergeable: 1
+Aucune dépendance ajoutée à la cible: 1
+Analyseurs d'arguments lus automatiquement: 1
+Outils en ligne de commande hors Python: 3
+Fidélité de la lecture: 1
+Exécution de la commande enveloppée: 3
+Flux de journal en direct: 5
+Maîtrise du rendu: 5
+Accessibilité du formulaire produit: 3
+Interface garantie conforme à l'outil: 1
+Légèreté de l'installation: 3
+Gratuit et auto-hébergeable: 5
+Maturité et écosystème: 4</title></g><text x="299.5" y="542.0" font-size="14" fill="#1C1C1E" text-anchor="end">NiceGUI</text><g class="sp-dot" tabindex="0" role="img" aria-label="Outils: Shiny for Python
+Zéro configuration dans l'outil enveloppé: 1
+Sortie statique hébergeable: 1
+Aucune dépendance ajoutée à la cible: 1
+Analyseurs d'arguments lus automatiquement: 1
+Outils en ligne de commande hors Python: 3
+Fidélité de la lecture: 1
+Exécution de la commande enveloppée: 3
+Flux de journal en direct: 3
+Maîtrise du rendu: 4
+Accessibilité du formulaire produit: 4
+Interface garantie conforme à l'outil: 1
+Légèreté de l'installation: 3
+Gratuit et auto-hébergeable: 5
+Maturité et écosystème: 4"><circle cx="356.1" cy="488.6" r="7.14" fill="#FC97B7" stroke="white" stroke-width="1" opacity="0.95"/><title>Outils: Shiny for Python
+Zéro configuration dans l'outil enveloppé: 1
+Sortie statique hébergeable: 1
+Aucune dépendance ajoutée à la cible: 1
+Analyseurs d'arguments lus automatiquement: 1
+Outils en ligne de commande hors Python: 3
+Fidélité de la lecture: 1
+Exécution de la commande enveloppée: 3
+Flux de journal en direct: 3
+Maîtrise du rendu: 4
+Accessibilité du formulaire produit: 4
+Interface garantie conforme à l'outil: 1
+Légèreté de l'installation: 3
+Gratuit et auto-hébergeable: 5
+Maturité et écosystème: 4</title></g><g class="sp-dot" tabindex="0" role="img" aria-label="Outils: Taipy
+Zéro configuration dans l'outil enveloppé: 1
+Sortie statique hébergeable: 1
+Aucune dépendance ajoutée à la cible: 1
+Analyseurs d'arguments lus automatiquement: 1
+Outils en ligne de commande hors Python: 3
+Fidélité de la lecture: 1
+Exécution de la commande enveloppée: 3
+Flux de journal en direct: 3
+Maîtrise du rendu: 4
+Accessibilité du formulaire produit: 2
+Interface garantie conforme à l'outil: 1
+Légèreté de l'installation: 2
+Gratuit et auto-hébergeable: 5
+Maturité et écosystème: 3"><circle cx="340.5" cy="552.2" r="7.14" fill="#839735" stroke="white" stroke-width="1" opacity="0.95"/><title>Outils: Taipy
+Zéro configuration dans l'outil enveloppé: 1
+Sortie statique hébergeable: 1
+Aucune dépendance ajoutée à la cible: 1
+Analyseurs d'arguments lus automatiquement: 1
+Outils en ligne de commande hors Python: 3
+Fidélité de la lecture: 1
+Exécution de la commande enveloppée: 3
+Flux de journal en direct: 3
+Maîtrise du rendu: 4
+Accessibilité du formulaire produit: 2
+Interface garantie conforme à l'outil: 1
+Légèreté de l'installation: 2
+Gratuit et auto-hébergeable: 5
+Maturité et écosystème: 3</title></g><text x="361.4" y="596.2" font-size="14" fill="#1C1C1E" text-anchor="start">Taipy</text><g class="sp-dot" tabindex="0" role="img" aria-label="Outils: PyWebIO
+Zéro configuration dans l'outil enveloppé: 2
+Sortie statique hébergeable: 1
+Aucune dépendance ajoutée à la cible: 1
+Analyseurs d'arguments lus automatiquement: 1
+Outils en ligne de commande hors Python: 3
+Fidélité de la lecture: 1
+Exécution de la commande enveloppée: 3
+Flux de journal en direct: 3
+Maîtrise du rendu: 2
+Accessibilité du formulaire produit: 3
+Interface garantie conforme à l'outil: 1
+Légèreté de l'installation: 4
+Gratuit et auto-hébergeable: 5
+Maturité et écosystème: 3"><circle cx="480.7" cy="515.2" r="7.14" fill="#ADA137" stroke="white" stroke-width="1" opacity="0.95"/><title>Outils: PyWebIO
+Zéro configuration dans l'outil enveloppé: 2
+Sortie statique hébergeable: 1
+Aucune dépendance ajoutée à la cible: 1
+Analyseurs d'arguments lus automatiquement: 1
+Outils en ligne de commande hors Python: 3
+Fidélité de la lecture: 1
+Exécution de la commande enveloppée: 3
+Flux de journal en direct: 3
+Maîtrise du rendu: 2
+Accessibilité du formulaire produit: 3
+Interface garantie conforme à l'outil: 1
+Légèreté de l'installation: 4
+Gratuit et auto-hébergeable: 5
+Maturité et écosystème: 3</title></g><text x="493.2" y="520.1" font-size="14" fill="#1C1C1E" text-anchor="start">PyWebIO</text><g class="sp-dot" tabindex="0" role="img" aria-label="Outils: Flet
+Zéro configuration dans l'outil enveloppé: 1
+Sortie statique hébergeable: 1
+Aucune dépendance ajoutée à la cible: 1
+Analyseurs d'arguments lus automatiquement: 1
+Outils en ligne de commande hors Python: 3
+Fidélité de la lecture: 1
+Exécution de la commande enveloppée: 3
+Flux de journal en direct: 2
+Maîtrise du rendu: 5
+Accessibilité du formulaire produit: 3
+Interface garantie conforme à l'outil: 1
+Légèreté de l'installation: 2
+Gratuit et auto-hébergeable: 4
+Maturité et écosystème: 3"><circle cx="321.3" cy="490.7" r="7.14" fill="#C6646B" stroke="white" stroke-width="1" opacity="0.95"/><title>Outils: Flet
+Zéro configuration dans l'outil enveloppé: 1
+Sortie statique hébergeable: 1
+Aucune dépendance ajoutée à la cible: 1
+Analyseurs d'arguments lus automatiquement: 1
+Outils en ligne de commande hors Python: 3
+Fidélité de la lecture: 1
+Exécution de la commande enveloppée: 3
+Flux de journal en direct: 2
+Maîtrise du rendu: 5
+Accessibilité du formulaire produit: 3
+Interface garantie conforme à l'outil: 1
+Légèreté de l'installation: 2
+Gratuit et auto-hébergeable: 4
+Maturité et écosystème: 3</title></g><g class="sp-dot" tabindex="0" role="img" aria-label="Outils: Dear PyGui
+Zéro configuration dans l'outil enveloppé: 1
+Sortie statique hébergeable: 1
+Aucune dépendance ajoutée à la cible: 1
+Analyseurs d'arguments lus automatiquement: 1
+Outils en ligne de commande hors Python: 3
+Fidélité de la lecture: 1
+Exécution de la commande enveloppée: 3
+Flux de journal en direct: 2
+Maîtrise du rendu: 5
+Accessibilité du formulaire produit: 1
+Interface garantie conforme à l'outil: 1
+Légèreté de l'installation: 3
+Gratuit et auto-hébergeable: 5
+Maturité et écosystème: 4"><circle cx="317.3" cy="545.9" r="7.14" fill="#DB9847" stroke="white" stroke-width="1" opacity="0.95"/><title>Outils: Dear PyGui
+Zéro configuration dans l'outil enveloppé: 1
+Sortie statique hébergeable: 1
+Aucune dépendance ajoutée à la cible: 1
+Analyseurs d'arguments lus automatiquement: 1
+Outils en ligne de commande hors Python: 3
+Fidélité de la lecture: 1
+Exécution de la commande enveloppée: 3
+Flux de journal en direct: 2
+Maîtrise du rendu: 5
+Accessibilité du formulaire produit: 1
+Interface garantie conforme à l'outil: 1
+Légèreté de l'installation: 3
+Gratuit et auto-hébergeable: 5
+Maturité et écosystème: 4</title></g><text x="304.8" y="581.5" font-size="14" fill="#1C1C1E" text-anchor="end">Dear PyGui</text><g class="sp-dot" tabindex="0" role="img" aria-label="Outils: Textual
+Zéro configuration dans l'outil enveloppé: 1
+Sortie statique hébergeable: 1
+Aucune dépendance ajoutée à la cible: 1
+Analyseurs d'arguments lus automatiquement: 1
+Outils en ligne de commande hors Python: 3
+Fidélité de la lecture: 1
+Exécution de la commande enveloppée: 3
+Flux de journal en direct: 5
+Maîtrise du rendu: 4
+Accessibilité du formulaire produit: 2
+Interface garantie conforme à l'outil: 1
+Légèreté de l'installation: 4
+Gratuit et auto-hébergeable: 5
+Maturité et écosystème: 5"><circle cx="339.2" cy="563.4" r="7.14" fill="#A52A2A" stroke="white" stroke-width="1" opacity="0.95"/><title>Outils: Textual
+Zéro configuration dans l'outil enveloppé: 1
+Sortie statique hébergeable: 1
+Aucune dépendance ajoutée à la cible: 1
+Analyseurs d'arguments lus automatiquement: 1
+Outils en ligne de commande hors Python: 3
+Fidélité de la lecture: 1
+Exécution de la commande enveloppée: 3
+Flux de journal en direct: 5
+Maîtrise du rendu: 4
+Accessibilité du formulaire produit: 2
+Interface garantie conforme à l'outil: 1
+Légèreté de l'installation: 4
+Gratuit et auto-hébergeable: 5
+Maturité et écosystème: 5</title></g><text x="351.7" y="568.3" font-size="14" fill="#1C1C1E" text-anchor="start">Textual</text><g class="sp-dot" tabindex="0" role="img" aria-label="Outils: react-jsonschema-form
+Zéro configuration dans l'outil enveloppé: 1
+Sortie statique hébergeable: 4
+Aucune dépendance ajoutée à la cible: 3
+Analyseurs d'arguments lus automatiquement: 1
+Outils en ligne de commande hors Python: 3
+Fidélité de la lecture: 3
+Exécution de la commande enveloppée: 1
+Flux de journal en direct: 1
+Maîtrise du rendu: 5
+Accessibilité du formulaire produit: 4
+Interface garantie conforme à l'outil: 1
+Légèreté de l'installation: 2
+Gratuit et auto-hébergeable: 5
+Maturité et écosystème: 5"><circle cx="424.8" cy="340.2" r="7.14" fill="#EEA7F0" stroke="white" stroke-width="1" opacity="0.95"/><title>Outils: react-jsonschema-form
+Zéro configuration dans l'outil enveloppé: 1
+Sortie statique hébergeable: 4
+Aucune dépendance ajoutée à la cible: 3
+Analyseurs d'arguments lus automatiquement: 1
+Outils en ligne de commande hors Python: 3
+Fidélité de la lecture: 3
+Exécution de la commande enveloppée: 1
+Flux de journal en direct: 1
+Maîtrise du rendu: 5
+Accessibilité du formulaire produit: 4
+Interface garantie conforme à l'outil: 1
+Légèreté de l'installation: 2
+Gratuit et auto-hébergeable: 5
+Maturité et écosystème: 5</title></g><text x="437.3" y="345.1" font-size="14" fill="#1C1C1E" text-anchor="start">react-jsonschema-form</text><g class="sp-dot" tabindex="0" role="img" aria-label="Outils: Galaxy
+Zéro configuration dans l'outil enveloppé: 1
+Sortie statique hébergeable: 1
+Aucune dépendance ajoutée à la cible: 4
+Analyseurs d'arguments lus automatiquement: 1
+Outils en ligne de commande hors Python: 5
+Fidélité de la lecture: 5
+Exécution de la commande enveloppée: 5
+Flux de journal en direct: 4
+Maîtrise du rendu: 3
+Accessibilité du formulaire produit: 3
+Interface garantie conforme à l'outil: 2
+Légèreté de l'installation: 1
+Gratuit et auto-hébergeable: 4
+Maturité et écosystème: 5"><circle cx="461.2" cy="545.2" r="7.14" fill="#6FA758" stroke="white" stroke-width="1" opacity="0.95"/><title>Outils: Galaxy
+Zéro configuration dans l'outil enveloppé: 1
+Sortie statique hébergeable: 1
+Aucune dépendance ajoutée à la cible: 4
+Analyseurs d'arguments lus automatiquement: 1
+Outils en ligne de commande hors Python: 5
+Fidélité de la lecture: 5
+Exécution de la commande enveloppée: 5
+Flux de journal en direct: 4
+Maîtrise du rendu: 3
+Accessibilité du formulaire produit: 3
+Interface garantie conforme à l'outil: 2
+Légèreté de l'installation: 1
+Gratuit et auto-hébergeable: 4
+Maturité et écosystème: 5</title></g><text x="473.7" y="550.1" font-size="14" fill="#1C1C1E" text-anchor="start">Galaxy</text><g class="sp-dot" tabindex="0" role="img" aria-label="Outils: nf-core launch
+Zéro configuration dans l'outil enveloppé: 3
+Sortie statique hébergeable: 2
+Aucune dépendance ajoutée à la cible: 4
+Analyseurs d'arguments lus automatiquement: 2
+Outils en ligne de commande hors Python: 2
+Fidélité de la lecture: 4
+Exécution de la commande enveloppée: 5
+Flux de journal en direct: 3
+Maîtrise du rendu: 2
+Accessibilité du formulaire produit: 3
+Interface garantie conforme à l'outil: 4
+Légèreté de l'installation: 3
+Gratuit et auto-hébergeable: 3
+Maturité et écosystème: 4"><circle cx="753.1" cy="539.2" r="7.14" fill="#B5A5FE" stroke="white" stroke-width="1" opacity="0.95"/><title>Outils: nf-core launch
+Zéro configuration dans l'outil enveloppé: 3
+Sortie statique hébergeable: 2
+Aucune dépendance ajoutée à la cible: 4
+Analyseurs d'arguments lus automatiquement: 2
+Outils en ligne de commande hors Python: 2
+Fidélité de la lecture: 4
+Exécution de la commande enveloppée: 5
+Flux de journal en direct: 3
+Maîtrise du rendu: 2
+Accessibilité du formulaire produit: 3
+Interface garantie conforme à l'outil: 4
+Légèreté de l'installation: 3
+Gratuit et auto-hébergeable: 3
+Maturité et écosystème: 4</title></g><text x="765.6" y="544.1" font-size="14" fill="#1C1C1E" text-anchor="start">nf-core launch</text><g class="sp-dot" tabindex="0" role="img" aria-label="Outils: Seqera Platform
+Zéro configuration dans l'outil enveloppé: 3
+Sortie statique hébergeable: 1
+Aucune dépendance ajoutée à la cible: 4
+Analyseurs d'arguments lus automatiquement: 2
+Outils en ligne de commande hors Python: 2
+Fidélité de la lecture: 4
+Exécution de la commande enveloppée: 5
+Flux de journal en direct: 5
+Maîtrise du rendu: 3
+Accessibilité du formulaire produit: 3
+Interface garantie conforme à l'outil: 4
+Légèreté de l'installation: 1
+Gratuit et auto-hébergeable: 2
+Maturité et écosystème: 5"><circle cx="638.1" cy="597.0" r="7.14" fill="#34D1C7" stroke="white" stroke-width="1" opacity="0.95"/><title>Outils: Seqera Platform
+Zéro configuration dans l'outil enveloppé: 3
+Sortie statique hébergeable: 1
+Aucune dépendance ajoutée à la cible: 4
+Analyseurs d'arguments lus automatiquement: 2
+Outils en ligne de commande hors Python: 2
+Fidélité de la lecture: 4
+Exécution de la commande enveloppée: 5
+Flux de journal en direct: 5
+Maîtrise du rendu: 3
+Accessibilité du formulaire produit: 3
+Interface garantie conforme à l'outil: 4
+Légèreté de l'installation: 1
+Gratuit et auto-hébergeable: 2
+Maturité et écosystème: 5</title></g><text x="625.6" y="601.9" font-size="14" fill="#1C1C1E" text-anchor="end">Seqera Platform</text><g class="sp-dot" tabindex="0" role="img" aria-label="Outils: v0 (Vercel)
+Zéro configuration dans l'outil enveloppé: 2
+Sortie statique hébergeable: 5
+Aucune dépendance ajoutée à la cible: 4
+Analyseurs d'arguments lus automatiquement: 1
+Outils en ligne de commande hors Python: 3
+Fidélité de la lecture: 2
+Exécution de la commande enveloppée: 1
+Flux de journal en direct: 1
+Maîtrise du rendu: 5
+Accessibilité du formulaire produit: 3
+Interface garantie conforme à l'outil: 1
+Légèreté de l'installation: 4
+Gratuit et auto-hébergeable: 1
+Maturité et écosystème: 4"><circle cx="515.3" cy="259.0" r="7.14" fill="#AF52DE" stroke="white" stroke-width="1" opacity="0.95"/><title>Outils: v0 (Vercel)
+Zéro configuration dans l'outil enveloppé: 2
+Sortie statique hébergeable: 5
+Aucune dépendance ajoutée à la cible: 4
+Analyseurs d'arguments lus automatiquement: 1
+Outils en ligne de commande hors Python: 3
+Fidélité de la lecture: 2
+Exécution de la commande enveloppée: 1
+Flux de journal en direct: 1
+Maîtrise du rendu: 5
+Accessibilité du formulaire produit: 3
+Interface garantie conforme à l'outil: 1
+Légèreté de l'installation: 4
+Gratuit et auto-hébergeable: 1
+Maturité et écosystème: 4</title></g><text x="527.8" y="263.9" font-size="14" fill="#1C1C1E" text-anchor="start">v0 (Vercel)</text><g class="sp-dot" tabindex="0" role="img" aria-label="Outils: Lovable
+Zéro configuration dans l'outil enveloppé: 2
+Sortie statique hébergeable: 2
+Aucune dépendance ajoutée à la cible: 4
+Analyseurs d'arguments lus automatiquement: 1
+Outils en ligne de commande hors Python: 3
+Fidélité de la lecture: 2
+Exécution de la commande enveloppée: 3
+Flux de journal en direct: 3
+Maîtrise du rendu: 5
+Accessibilité du formulaire produit: 3
+Interface garantie conforme à l'outil: 1
+Légèreté de l'installation: 4
+Gratuit et auto-hébergeable: 1
+Maturité et écosystème: 4"><circle cx="468.3" cy="394.0" r="7.14" fill="#D781B6" stroke="white" stroke-width="1" opacity="0.95"/><title>Outils: Lovable
+Zéro configuration dans l'outil enveloppé: 2
+Sortie statique hébergeable: 2
+Aucune dépendance ajoutée à la cible: 4
+Analyseurs d'arguments lus automatiquement: 1
+Outils en ligne de commande hors Python: 3
+Fidélité de la lecture: 2
+Exécution de la commande enveloppée: 3
+Flux de journal en direct: 3
+Maîtrise du rendu: 5
+Accessibilité du formulaire produit: 3
+Interface garantie conforme à l'outil: 1
+Légèreté de l'installation: 4
+Gratuit et auto-hébergeable: 1
+Maturité et écosystème: 4</title></g><text x="480.8" y="398.9" font-size="14" fill="#1C1C1E" text-anchor="start">Lovable</text><g class="sp-dot" tabindex="0" role="img" aria-label="Outils: FastAPI + Swagger UI
+Zéro configuration dans l'outil enveloppé: 1
+Sortie statique hébergeable: 2
+Aucune dépendance ajoutée à la cible: 1
+Analyseurs d'arguments lus automatiquement: 1
+Outils en ligne de commande hors Python: 2
+Fidélité de la lecture: 4
+Exécution de la commande enveloppée: 3
+Flux de journal en direct: 1
+Maîtrise du rendu: 2
+Accessibilité du formulaire produit: 3
+Interface garantie conforme à l'outil: 5
+Légèreté de l'installation: 3
+Gratuit et auto-hébergeable: 5
+Maturité et écosystème: 5"><circle cx="598.5" cy="540.3" r="7.14" fill="#77D599" stroke="white" stroke-width="1" opacity="0.95"/><title>Outils: FastAPI + Swagger UI
+Zéro configuration dans l'outil enveloppé: 1
+Sortie statique hébergeable: 2
+Aucune dépendance ajoutée à la cible: 1
+Analyseurs d'arguments lus automatiquement: 1
+Outils en ligne de commande hors Python: 2
+Fidélité de la lecture: 4
+Exécution de la commande enveloppée: 3
+Flux de journal en direct: 1
+Maîtrise du rendu: 2
+Accessibilité du formulaire produit: 3
+Interface garantie conforme à l'outil: 5
+Légèreté de l'installation: 3
+Gratuit et auto-hébergeable: 5
+Maturité et écosystème: 5</title></g><text x="611.0" y="575.9" font-size="14" fill="#1C1C1E" text-anchor="start">FastAPI + Swagger UI</text><g class="sp-dot" tabindex="0" role="img" aria-label="Outils: Typer's own --help
+Zéro configuration dans l'outil enveloppé: 5
+Sortie statique hébergeable: 1
+Aucune dépendance ajoutée à la cible: 5
+Analyseurs d'arguments lus automatiquement: 1
+Outils en ligne de commande hors Python: 1
+Fidélité de la lecture: 5
+Exécution de la commande enveloppée: 5
+Flux de journal en direct: 4
+Maîtrise du rendu: 1
+Accessibilité du formulaire produit: 2
+Interface garantie conforme à l'outil: 5
+Légèreté de l'installation: 5
+Gratuit et auto-hébergeable: 5
+Maturité et écosystème: 5"><circle cx="912.0" cy="614.7" r="7.14" fill="#007AFF" stroke="white" stroke-width="1" opacity="0.95"/><title>Outils: Typer's own --help
+Zéro configuration dans l'outil enveloppé: 5
+Sortie statique hébergeable: 1
+Aucune dépendance ajoutée à la cible: 5
+Analyseurs d'arguments lus automatiquement: 1
+Outils en ligne de commande hors Python: 1
+Fidélité de la lecture: 5
+Exécution de la commande enveloppée: 5
+Flux de journal en direct: 4
+Maîtrise du rendu: 1
+Accessibilité du formulaire produit: 2
+Interface garantie conforme à l'outil: 5
+Légèreté de l'installation: 5
+Gratuit et auto-hébergeable: 5
+Maturité et écosystème: 5</title></g><text x="899.5" y="619.6" font-size="14" fill="#1C1C1E" text-anchor="end">Typer's own --help</text><text x="1236.0" y="42.0" font-size="11" font-weight="700" fill="#1C1C1E">Outils</text><circle cx="1242.0" cy="58.1" r="6" fill="#FF3B30" opacity="0.95"/><text x="1254.0" y="62.0" font-size="11" fill="#1C1C1E">sprezzature-cli-gui</text><circle cx="1242.0" cy="79.1" r="6" fill="#C597EA" opacity="0.95"/><text x="1254.0" y="82.9" font-size="11" fill="#1C1C1E">trogon_js</text><circle cx="1242.0" cy="100.0" r="6" fill="#AF52DE" opacity="0.95"/><text x="1254.0" y="103.8" font-size="11" fill="#1C1C1E">v0 (Vercel)</text><circle cx="1242.0" cy="120.8" r="6" fill="#D781B6" opacity="0.95"/><text x="1254.0" y="124.7" font-size="11" fill="#1C1C1E">Lovable</text><circle cx="1242.0" cy="141.8" r="6" fill="#EEA7F0" opacity="0.95"/><text x="1254.0" y="145.6" font-size="11" fill="#1C1C1E">react-jsonschema-form</text><circle cx="1242.0" cy="162.7" r="6" fill="#ADA137" opacity="0.95"/><text x="1254.0" y="166.5" font-size="11" fill="#1C1C1E">PyWebIO</text><circle cx="1242.0" cy="183.5" r="6" fill="#FC97B7" opacity="0.95"/><text x="1254.0" y="187.4" font-size="11" fill="#1C1C1E">Shiny for Python</text><circle cx="1242.0" cy="204.4" r="6" fill="#EF8C75" opacity="0.95"/><text x="1254.0" y="208.3" font-size="11" fill="#1C1C1E">Streamlit</text><circle cx="1242.0" cy="225.3" r="6" fill="#C6646B" opacity="0.95"/><text x="1254.0" y="229.2" font-size="11" fill="#1C1C1E">Flet</text><circle cx="1242.0" cy="246.2" r="6" fill="#CE7A45" opacity="0.95"/><text x="1254.0" y="250.1" font-size="11" fill="#1C1C1E">NiceGUI</text><circle cx="1242.0" cy="267.1" r="6" fill="#B5A5FE" opacity="0.95"/><text x="1254.0" y="271.0" font-size="11" fill="#1C1C1E">nf-core launch</text><circle cx="1242.0" cy="288.0" r="6" fill="#77D599" opacity="0.95"/><text x="1254.0" y="291.9" font-size="11" fill="#1C1C1E">FastAPI + Swagger UI</text><circle cx="1242.0" cy="308.9" r="6" fill="#6FA758" opacity="0.95"/><text x="1254.0" y="312.8" font-size="11" fill="#1C1C1E">Galaxy</text><circle cx="1242.0" cy="329.8" r="6" fill="#B1881D" opacity="0.95"/><text x="1254.0" y="333.7" font-size="11" fill="#1C1C1E">Gradio</text><circle cx="1242.0" cy="350.7" r="6" fill="#DB9847" opacity="0.95"/><text x="1254.0" y="354.6" font-size="11" fill="#1C1C1E">Dear PyGui</text><circle cx="1242.0" cy="371.6" r="6" fill="#007AFF" opacity="0.95"/><text x="1254.0" y="375.5" font-size="11" fill="#1C1C1E">Typer's own --help</text><circle cx="1242.0" cy="392.5" r="6" fill="#7DB3FF" opacity="0.95"/><text x="1254.0" y="396.4" font-size="11" fill="#1C1C1E">argparseui</text><circle cx="1242.0" cy="413.4" r="6" fill="#34D1C7" opacity="0.95"/><text x="1254.0" y="417.3" font-size="11" fill="#1C1C1E">Seqera Platform</text><circle cx="1242.0" cy="434.3" r="6" fill="#839735" opacity="0.95"/><text x="1254.0" y="438.2" font-size="11" fill="#1C1C1E">Taipy</text><circle cx="1242.0" cy="455.2" r="6" fill="#A52A2A" opacity="0.95"/><text x="1254.0" y="459.1" font-size="11" fill="#1C1C1E">Textual</text><circle cx="1242.0" cy="476.1" r="6" fill="#8D9EF3" opacity="0.95"/><text x="1254.0" y="480.0" font-size="11" fill="#1C1C1E">click-web</text><circle cx="1242.0" cy="497.0" r="6" fill="#46A5E1" opacity="0.95"/><text x="1254.0" y="500.9" font-size="11" fill="#1C1C1E">Trogon</text><circle cx="1242.0" cy="517.9" r="6" fill="#0BA8D0" opacity="0.95"/><text x="1254.0" y="521.8" font-size="11" fill="#1C1C1E">Cli2Gui</text><circle cx="1242.0" cy="538.9" r="6" fill="#3ED8E8" opacity="0.95"/><text x="1254.0" y="542.7" font-size="11" fill="#1C1C1E">quick (Qt5 for Click)</text><circle cx="1242.0" cy="559.7" r="6" fill="#00A180" opacity="0.95"/><text x="1254.0" y="563.6" font-size="11" fill="#1C1C1E">Gooey</text><text x="612.0" y="26" font-size="18" font-weight="bold" fill="#000" text-anchor="middle">Outils dans le quadrant</text></svg>

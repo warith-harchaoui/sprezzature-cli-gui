@@ -1,0 +1,26 @@
+Tool,Zéro configuration dans l'outil enveloppé,Sortie statique hébergeable,Aucune dépendance ajoutée à la cible,Analyseurs d'arguments lus automatiquement,Outils en ligne de commande hors Python,Fidélité de la lecture,Exécution de la commande enveloppée,Flux de journal en direct,Maîtrise du rendu,Accessibilité du formulaire produit,Interface garantie conforme à l'outil,Légèreté de l'installation,Gratuit et auto-hébergeable,Maturité et écosystème
+sprezzature-cli-gui,5,5,5,4,4,4,1,1,2,5,4,5,5,1
+Gooey,2,1,1,2,1,4,5,5,3,2,5,2,5,5
+Trogon,2,1,1,3,1,5,5,3,2,2,5,3,5,4
+trogon_js,2,4,2,2,1,4,2,1,3,2,3,4,5,1
+click-web,3,2,2,2,1,3,5,5,2,2,5,4,5,2
+Cli2Gui,2,1,1,5,1,3,5,4,3,2,5,3,5,3
+quick (Qt5 for Click),2,1,1,2,1,4,5,3,3,2,5,2,5,1
+argparseui,3,1,1,2,1,3,4,2,2,2,5,2,5,1
+Streamlit,1,1,1,1,3,1,3,2,3,3,1,2,4,5
+Gradio,1,1,1,1,3,1,3,4,3,3,1,2,4,5
+NiceGUI,1,1,1,1,3,1,3,5,5,3,1,3,5,4
+Shiny for Python,1,1,1,1,3,1,3,3,4,4,1,3,5,4
+Taipy,1,1,1,1,3,1,3,3,4,2,1,2,5,3
+PyWebIO,2,1,1,1,3,1,3,3,2,3,1,4,5,3
+Flet,1,1,1,1,3,1,3,2,5,3,1,2,4,3
+Dear PyGui,1,1,1,1,3,1,3,2,5,1,1,3,5,4
+Textual,1,1,1,1,3,1,3,5,4,2,1,4,5,5
+react-jsonschema-form,1,4,3,1,3,3,1,1,5,4,1,2,5,5
+Galaxy,1,1,4,1,5,5,5,4,3,3,2,1,4,5
+nf-core launch,3,2,4,2,2,4,5,3,2,3,4,3,3,4
+Seqera Platform,3,1,4,2,2,4,5,5,3,3,4,1,2,5
+v0 (Vercel),2,5,4,1,3,2,1,1,5,3,1,4,1,4
+Lovable,2,2,4,1,3,2,3,3,5,3,1,4,1,4
+FastAPI + Swagger UI,1,2,1,1,2,4,3,1,2,3,5,3,5,5
+Typer's own --help,5,1,5,1,1,5,5,4,1,2,5,5,5,5

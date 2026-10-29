@@ -1,0 +1,615 @@
+meta:
+  reference: sprezzature-cli-gui
+  rotation_deg: -32.795
+  explained_variance_ratio:
+  - 0.3204
+  - 0.2405
+  cumulative_variance: 0.561
+  n_approaches: 25
+  attributes:
+  - Zero setup in the wrapped tool
+  - Static hostable output
+  - No dependency added to the target
+  - Parser frameworks read automatically
+  - Non-Python command-line tools
+  - Fidelity of what is read
+  - Runs the wrapped command
+  - Live log streaming
+  - Control over the rendering
+  - Accessibility of the produced form
+  - Interface guaranteed to match the tool
+  - Lightness of the install
+  - Free and self-hostable
+  - Maturity and ecosystem
+  lower_is_better: []
+  imputed_cells: []
+axes:
+  axis_1:
+    name: Precision ↔ Seamless
+    pole_left: Precision
+    pole_right: Seamless
+    loadings:
+      Zero setup in the wrapped tool: 0.4375
+      Static hostable output: 0.2171
+      No dependency added to the target: 0.2672
+      Parser frameworks read automatically: 0.3246
+      Non-Python command-line tools: -0.2317
+      Fidelity of what is read: 0.3781
+      Runs the wrapped command: 0.0944
+      Live log streaming: -0.0758
+      Control over the rendering: -0.341
+      Accessibility of the produced form: 0.046
+      Interface guaranteed to match the tool: 0.3867
+      Lightness of the install: 0.2293
+      Free and self-hostable: 0.027
+      Maturity and ecosystem: -0.2283
+  axis_2:
+    name: Versatile ↔ Portable
+    pole_bottom: Versatile
+    pole_top: Portable
+    loadings:
+      Zero setup in the wrapped tool: 0.0756
+      Static hostable output: 0.4431
+      No dependency added to the target: 0.291
+      Parser frameworks read automatically: -0.0593
+      Non-Python command-line tools: 0.2934
+      Fidelity of what is read: -0.0705
+      Runs the wrapped command: -0.4429
+      Live log streaming: -0.3401
+      Control over the rendering: 0.1715
+      Accessibility of the produced form: 0.3672
+      Interface guaranteed to match the tool: -0.23
+      Lightness of the install: 0.2075
+      Free and self-hostable: -0.2102
+      Maturity and ecosystem: -0.0504
+approaches:
+- name: sprezzature-cli-gui
+  coordinates:
+    axis_1: 3.0375
+    axis_2: 3.6575
+  role: best
+  color: '#FF3B30'
+  attributes:
+    Zero setup in the wrapped tool: 5.0
+    Static hostable output: 5.0
+    No dependency added to the target: 5.0
+    Parser frameworks read automatically: 4.0
+    Non-Python command-line tools: 4.0
+    Fidelity of what is read: 4.0
+    Runs the wrapped command: 1.0
+    Live log streaming: 1.0
+    Control over the rendering: 2.0
+    Accessibility of the produced form: 5.0
+    Interface guaranteed to match the tool: 4.0
+    Lightness of the install: 5.0
+    Free and self-hostable: 5.0
+    Maturity and ecosystem: 1.0
+  imputed_attributes: []
+- name: Gooey
+  coordinates:
+    axis_1: -0.0173
+    axis_2: -3.6575
+  role: competitor
+  color: '#00A180'
+  attributes:
+    Zero setup in the wrapped tool: 2.0
+    Static hostable output: 1.0
+    No dependency added to the target: 1.0
+    Parser frameworks read automatically: 2.0
+    Non-Python command-line tools: 1.0
+    Fidelity of what is read: 4.0
+    Runs the wrapped command: 5.0
+    Live log streaming: 5.0
+    Control over the rendering: 3.0
+    Accessibility of the produced form: 2.0
+    Interface guaranteed to match the tool: 5.0
+    Lightness of the install: 2.0
+    Free and self-hostable: 5.0
+    Maturity and ecosystem: 5.0
+  imputed_attributes: []
+- name: Trogon
+  coordinates:
+    axis_1: 1.3204
+    axis_2: -3.1887
+  role: competitor
+  color: '#46A5E1'
+  attributes:
+    Zero setup in the wrapped tool: 2.0
+    Static hostable output: 1.0
+    No dependency added to the target: 1.0
+    Parser frameworks read automatically: 3.0
+    Non-Python command-line tools: 1.0
+    Fidelity of what is read: 5.0
+    Runs the wrapped command: 5.0
+    Live log streaming: 3.0
+    Control over the rendering: 2.0
+    Accessibility of the produced form: 2.0
+    Interface guaranteed to match the tool: 5.0
+    Lightness of the install: 3.0
+    Free and self-hostable: 5.0
+    Maturity and ecosystem: 4.0
+  imputed_attributes: []
+- name: trogon_js
+  coordinates:
+    axis_1: 1.3208
+    axis_2: 0.3349
+  role: competitor
+  color: '#C597EA'
+  attributes:
+    Zero setup in the wrapped tool: 2.0
+    Static hostable output: 4.0
+    No dependency added to the target: 2.0
+    Parser frameworks read automatically: 2.0
+    Non-Python command-line tools: 1.0
+    Fidelity of what is read: 4.0
+    Runs the wrapped command: 2.0
+    Live log streaming: 1.0
+    Control over the rendering: 3.0
+    Accessibility of the produced form: 2.0
+    Interface guaranteed to match the tool: 3.0
+    Lightness of the install: 4.0
+    Free and self-hostable: 5.0
+    Maturity and ecosystem: 1.0
+  imputed_attributes: []
+- name: click-web
+  coordinates:
+    axis_1: 1.6478
+    axis_2: -2.6548
+  role: competitor
+  color: '#8D9EF3'
+  attributes:
+    Zero setup in the wrapped tool: 3.0
+    Static hostable output: 2.0
+    No dependency added to the target: 2.0
+    Parser frameworks read automatically: 2.0
+    Non-Python command-line tools: 1.0
+    Fidelity of what is read: 3.0
+    Runs the wrapped command: 5.0
+    Live log streaming: 5.0
+    Control over the rendering: 2.0
+    Accessibility of the produced form: 2.0
+    Interface guaranteed to match the tool: 5.0
+    Lightness of the install: 4.0
+    Free and self-hostable: 5.0
+    Maturity and ecosystem: 2.0
+  imputed_attributes: []
+- name: Cli2Gui
+  coordinates:
+    axis_1: 1.2756
+    axis_2: -3.2784
+  role: competitor
+  color: '#0BA8D0'
+  attributes:
+    Zero setup in the wrapped tool: 2.0
+    Static hostable output: 1.0
+    No dependency added to the target: 1.0
+    Parser frameworks read automatically: 5.0
+    Non-Python command-line tools: 1.0
+    Fidelity of what is read: 3.0
+    Runs the wrapped command: 5.0
+    Live log streaming: 4.0
+    Control over the rendering: 3.0
+    Accessibility of the produced form: 2.0
+    Interface guaranteed to match the tool: 5.0
+    Lightness of the install: 3.0
+    Free and self-hostable: 5.0
+    Maturity and ecosystem: 3.0
+  imputed_attributes: []
+- name: quick (Qt5 for Click)
+  coordinates:
+    axis_1: 0.7396
+    axis_2: -3.0236
+  role: competitor
+  color: '#3ED8E8'
+  attributes:
+    Zero setup in the wrapped tool: 2.0
+    Static hostable output: 1.0
+    No dependency added to the target: 1.0
+    Parser frameworks read automatically: 2.0
+    Non-Python command-line tools: 1.0
+    Fidelity of what is read: 4.0
+    Runs the wrapped command: 5.0
+    Live log streaming: 3.0
+    Control over the rendering: 3.0
+    Accessibility of the produced form: 2.0
+    Interface guaranteed to match the tool: 5.0
+    Lightness of the install: 2.0
+    Free and self-hostable: 5.0
+    Maturity and ecosystem: 1.0
+  imputed_attributes: []
+- name: argparseui
+  coordinates:
+    axis_1: 1.1316
+    axis_2: -2.4736
+  role: competitor
+  color: '#7DB3FF'
+  attributes:
+    Zero setup in the wrapped tool: 3.0
+    Static hostable output: 1.0
+    No dependency added to the target: 1.0
+    Parser frameworks read automatically: 2.0
+    Non-Python command-line tools: 1.0
+    Fidelity of what is read: 3.0
+    Runs the wrapped command: 4.0
+    Live log streaming: 2.0
+    Control over the rendering: 2.0
+    Accessibility of the produced form: 2.0
+    Interface guaranteed to match the tool: 5.0
+    Lightness of the install: 2.0
+    Free and self-hostable: 5.0
+    Maturity and ecosystem: 1.0
+  imputed_attributes: []
+- name: Streamlit
+  coordinates:
+    axis_1: -2.7032
+    axis_2: -0.4646
+  role: competitor
+  color: '#EF8C75'
+  attributes:
+    Zero setup in the wrapped tool: 1.0
+    Static hostable output: 1.0
+    No dependency added to the target: 1.0
+    Parser frameworks read automatically: 1.0
+    Non-Python command-line tools: 3.0
+    Fidelity of what is read: 1.0
+    Runs the wrapped command: 3.0
+    Live log streaming: 2.0
+    Control over the rendering: 3.0
+    Accessibility of the produced form: 3.0
+    Interface guaranteed to match the tool: 1.0
+    Lightness of the install: 2.0
+    Free and self-hostable: 4.0
+    Maturity and ecosystem: 5.0
+  imputed_attributes: []
+- name: Gradio
+  coordinates:
+    axis_1: -2.8126
+    axis_2: -0.9555
+  role: competitor
+  color: '#B1881D'
+  attributes:
+    Zero setup in the wrapped tool: 1.0
+    Static hostable output: 1.0
+    No dependency added to the target: 1.0
+    Parser frameworks read automatically: 1.0
+    Non-Python command-line tools: 3.0
+    Fidelity of what is read: 1.0
+    Runs the wrapped command: 3.0
+    Live log streaming: 4.0
+    Control over the rendering: 3.0
+    Accessibility of the produced form: 3.0
+    Interface guaranteed to match the tool: 1.0
+    Lightness of the install: 2.0
+    Free and self-hostable: 4.0
+    Maturity and ecosystem: 5.0
+  imputed_attributes: []
+- name: NiceGUI
+  coordinates:
+    axis_1: -3.0375
+    axis_2: -0.8635
+  role: competitor
+  color: '#CE7A45'
+  attributes:
+    Zero setup in the wrapped tool: 1.0
+    Static hostable output: 1.0
+    No dependency added to the target: 1.0
+    Parser frameworks read automatically: 1.0
+    Non-Python command-line tools: 3.0
+    Fidelity of what is read: 1.0
+    Runs the wrapped command: 3.0
+    Live log streaming: 5.0
+    Control over the rendering: 5.0
+    Accessibility of the produced form: 3.0
+    Interface guaranteed to match the tool: 1.0
+    Lightness of the install: 3.0
+    Free and self-hostable: 5.0
+    Maturity and ecosystem: 4.0
+  imputed_attributes: []
+- name: Shiny for Python
+  coordinates:
+    axis_1: -2.591
+    axis_2: -0.0747
+  role: competitor
+  color: '#FC97B7'
+  attributes:
+    Zero setup in the wrapped tool: 1.0
+    Static hostable output: 1.0
+    No dependency added to the target: 1.0
+    Parser frameworks read automatically: 1.0
+    Non-Python command-line tools: 3.0
+    Fidelity of what is read: 1.0
+    Runs the wrapped command: 3.0
+    Live log streaming: 3.0
+    Control over the rendering: 4.0
+    Accessibility of the produced form: 4.0
+    Interface guaranteed to match the tool: 1.0
+    Lightness of the install: 3.0
+    Free and self-hostable: 5.0
+    Maturity and ecosystem: 4.0
+  imputed_attributes: []
+- name: Taipy
+  coordinates:
+    axis_1: -2.7492
+    axis_2: -1.1081
+  role: competitor
+  color: '#839735'
+  attributes:
+    Zero setup in the wrapped tool: 1.0
+    Static hostable output: 1.0
+    No dependency added to the target: 1.0
+    Parser frameworks read automatically: 1.0
+    Non-Python command-line tools: 3.0
+    Fidelity of what is read: 1.0
+    Runs the wrapped command: 3.0
+    Live log streaming: 3.0
+    Control over the rendering: 4.0
+    Accessibility of the produced form: 2.0
+    Interface guaranteed to match the tool: 1.0
+    Lightness of the install: 2.0
+    Free and self-hostable: 5.0
+    Maturity and ecosystem: 3.0
+  imputed_attributes: []
+- name: PyWebIO
+  coordinates:
+    axis_1: -1.3294
+    axis_2: -0.5065
+  role: competitor
+  color: '#ADA137'
+  attributes:
+    Zero setup in the wrapped tool: 2.0
+    Static hostable output: 1.0
+    No dependency added to the target: 1.0
+    Parser frameworks read automatically: 1.0
+    Non-Python command-line tools: 3.0
+    Fidelity of what is read: 1.0
+    Runs the wrapped command: 3.0
+    Live log streaming: 3.0
+    Control over the rendering: 2.0
+    Accessibility of the produced form: 3.0
+    Interface guaranteed to match the tool: 1.0
+    Lightness of the install: 4.0
+    Free and self-hostable: 5.0
+    Maturity and ecosystem: 3.0
+  imputed_attributes: []
+- name: Flet
+  coordinates:
+    axis_1: -2.9434
+    axis_2: -0.1095
+  role: competitor
+  color: '#C6646B'
+  attributes:
+    Zero setup in the wrapped tool: 1.0
+    Static hostable output: 1.0
+    No dependency added to the target: 1.0
+    Parser frameworks read automatically: 1.0
+    Non-Python command-line tools: 3.0
+    Fidelity of what is read: 1.0
+    Runs the wrapped command: 3.0
+    Live log streaming: 2.0
+    Control over the rendering: 5.0
+    Accessibility of the produced form: 3.0
+    Interface guaranteed to match the tool: 1.0
+    Lightness of the install: 2.0
+    Free and self-hostable: 4.0
+    Maturity and ecosystem: 3.0
+  imputed_attributes: []
+- name: Dear PyGui
+  coordinates:
+    axis_1: -2.9835
+    axis_2: -1.0063
+  role: competitor
+  color: '#DB9847'
+  attributes:
+    Zero setup in the wrapped tool: 1.0
+    Static hostable output: 1.0
+    No dependency added to the target: 1.0
+    Parser frameworks read automatically: 1.0
+    Non-Python command-line tools: 3.0
+    Fidelity of what is read: 1.0
+    Runs the wrapped command: 3.0
+    Live log streaming: 2.0
+    Control over the rendering: 5.0
+    Accessibility of the produced form: 1.0
+    Interface guaranteed to match the tool: 1.0
+    Lightness of the install: 3.0
+    Free and self-hostable: 5.0
+    Maturity and ecosystem: 4.0
+  imputed_attributes: []
+- name: Textual
+  coordinates:
+    axis_1: -2.7626
+    axis_2: -1.2907
+  role: worst
+  color: '#A52A2A'
+  attributes:
+    Zero setup in the wrapped tool: 1.0
+    Static hostable output: 1.0
+    No dependency added to the target: 1.0
+    Parser frameworks read automatically: 1.0
+    Non-Python command-line tools: 3.0
+    Fidelity of what is read: 1.0
+    Runs the wrapped command: 3.0
+    Live log streaming: 5.0
+    Control over the rendering: 4.0
+    Accessibility of the produced form: 2.0
+    Interface guaranteed to match the tool: 1.0
+    Lightness of the install: 4.0
+    Free and self-hostable: 5.0
+    Maturity and ecosystem: 5.0
+  imputed_attributes: []
+- name: react-jsonschema-form
+  coordinates:
+    axis_1: -1.8951
+    axis_2: 2.3372
+  role: competitor
+  color: '#EEA7F0'
+  attributes:
+    Zero setup in the wrapped tool: 1.0
+    Static hostable output: 4.0
+    No dependency added to the target: 3.0
+    Parser frameworks read automatically: 1.0
+    Non-Python command-line tools: 3.0
+    Fidelity of what is read: 3.0
+    Runs the wrapped command: 1.0
+    Live log streaming: 1.0
+    Control over the rendering: 5.0
+    Accessibility of the produced form: 4.0
+    Interface guaranteed to match the tool: 1.0
+    Lightness of the install: 2.0
+    Free and self-hostable: 5.0
+    Maturity and ecosystem: 5.0
+  imputed_attributes: []
+- name: Galaxy
+  coordinates:
+    axis_1: -1.5272
+    axis_2: -0.9954
+  role: competitor
+  color: '#6FA758'
+  attributes:
+    Zero setup in the wrapped tool: 1.0
+    Static hostable output: 1.0
+    No dependency added to the target: 4.0
+    Parser frameworks read automatically: 1.0
+    Non-Python command-line tools: 5.0
+    Fidelity of what is read: 5.0
+    Runs the wrapped command: 5.0
+    Live log streaming: 4.0
+    Control over the rendering: 3.0
+    Accessibility of the produced form: 3.0
+    Interface guaranteed to match the tool: 2.0
+    Lightness of the install: 1.0
+    Free and self-hostable: 4.0
+    Maturity and ecosystem: 5.0
+  imputed_attributes: []
+- name: nf-core launch
+  coordinates:
+    axis_1: 1.4284
+    axis_2: -0.8977
+  role: competitor
+  color: '#B5A5FE'
+  attributes:
+    Zero setup in the wrapped tool: 3.0
+    Static hostable output: 2.0
+    No dependency added to the target: 4.0
+    Parser frameworks read automatically: 2.0
+    Non-Python command-line tools: 2.0
+    Fidelity of what is read: 4.0
+    Runs the wrapped command: 5.0
+    Live log streaming: 3.0
+    Control over the rendering: 2.0
+    Accessibility of the produced form: 3.0
+    Interface guaranteed to match the tool: 4.0
+    Lightness of the install: 3.0
+    Free and self-hostable: 3.0
+    Maturity and ecosystem: 4.0
+  imputed_attributes: []
+- name: Seqera Platform
+  coordinates:
+    axis_1: 0.2639
+    axis_2: -1.8365
+  role: competitor
+  color: '#34D1C7'
+  attributes:
+    Zero setup in the wrapped tool: 3.0
+    Static hostable output: 1.0
+    No dependency added to the target: 4.0
+    Parser frameworks read automatically: 2.0
+    Non-Python command-line tools: 2.0
+    Fidelity of what is read: 4.0
+    Runs the wrapped command: 5.0
+    Live log streaming: 5.0
+    Control over the rendering: 3.0
+    Accessibility of the produced form: 3.0
+    Interface guaranteed to match the tool: 4.0
+    Lightness of the install: 1.0
+    Free and self-hostable: 2.0
+    Maturity and ecosystem: 5.0
+  imputed_attributes: []
+- name: v0 (Vercel)
+  coordinates:
+    axis_1: -0.9789
+    axis_2: 3.6575
+  role: top
+  color: '#AF52DE'
+  attributes:
+    Zero setup in the wrapped tool: 2.0
+    Static hostable output: 5.0
+    No dependency added to the target: 4.0
+    Parser frameworks read automatically: 1.0
+    Non-Python command-line tools: 3.0
+    Fidelity of what is read: 2.0
+    Runs the wrapped command: 1.0
+    Live log streaming: 1.0
+    Control over the rendering: 5.0
+    Accessibility of the produced form: 3.0
+    Interface guaranteed to match the tool: 1.0
+    Lightness of the install: 4.0
+    Free and self-hostable: 1.0
+    Maturity and ecosystem: 4.0
+  imputed_attributes: []
+- name: Lovable
+  coordinates:
+    axis_1: -1.4548
+    axis_2: 1.4632
+  role: competitor
+  color: '#D781B6'
+  attributes:
+    Zero setup in the wrapped tool: 2.0
+    Static hostable output: 2.0
+    No dependency added to the target: 4.0
+    Parser frameworks read automatically: 1.0
+    Non-Python command-line tools: 3.0
+    Fidelity of what is read: 2.0
+    Runs the wrapped command: 3.0
+    Live log streaming: 3.0
+    Control over the rendering: 5.0
+    Accessibility of the produced form: 3.0
+    Interface guaranteed to match the tool: 1.0
+    Lightness of the install: 4.0
+    Free and self-hostable: 1.0
+    Maturity and ecosystem: 4.0
+  imputed_attributes: []
+- name: FastAPI + Swagger UI
+  coordinates:
+    axis_1: -0.1372
+    axis_2: -0.9147
+  role: competitor
+  color: '#77D599'
+  attributes:
+    Zero setup in the wrapped tool: 1.0
+    Static hostable output: 2.0
+    No dependency added to the target: 1.0
+    Parser frameworks read automatically: 1.0
+    Non-Python command-line tools: 2.0
+    Fidelity of what is read: 4.0
+    Runs the wrapped command: 3.0
+    Live log streaming: 1.0
+    Control over the rendering: 2.0
+    Accessibility of the produced form: 3.0
+    Interface guaranteed to match the tool: 5.0
+    Lightness of the install: 3.0
+    Free and self-hostable: 5.0
+    Maturity and ecosystem: 5.0
+  imputed_attributes: []
+- name: Typer's own --help
+  coordinates:
+    axis_1: 3.0375
+    axis_2: -2.1244
+  role: right
+  color: '#007AFF'
+  attributes:
+    Zero setup in the wrapped tool: 5.0
+    Static hostable output: 1.0
+    No dependency added to the target: 5.0
+    Parser frameworks read automatically: 1.0
+    Non-Python command-line tools: 1.0
+    Fidelity of what is read: 5.0
+    Runs the wrapped command: 5.0
+    Live log streaming: 4.0
+    Control over the rendering: 1.0
+    Accessibility of the produced form: 2.0
+    Interface guaranteed to match the tool: 5.0
+    Lightness of the install: 5.0
+    Free and self-hostable: 5.0
+    Maturity and ecosystem: 5.0
+  imputed_attributes: []
