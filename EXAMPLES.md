@@ -20,7 +20,6 @@ sprezzature-cli-gui mypkg.cli:build_parser --out dist/index.html --title "My Too
 ## A Click app
 
 ```sh
-pip install "sprezzature-cli-gui[click]"
 sprezzature-cli-gui mypkg.cli:cli --out gui.html
 # cli here can be the click.Group / click.Command object itself (mypkg/cli.py
 # defines `cli = click.group()(...)` at module level): the loader detects an

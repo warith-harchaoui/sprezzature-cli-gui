@@ -24,7 +24,9 @@ A comment earns its place by explaining *why* a choice was made (a constraint, a
 
 ## Optional imports
 
-Click is declared under the `[click]` extra, not the base install; Typer is covered through the Click adapter (`app.cli` is a Click group) and does not need an adapter of its own. Both `schema.walk` and `loader.load_parser_from_spec` import `click` inside a `try`/`except ImportError` at the point of use, never at module scope, so `pip install sprezzature-cli-gui` with no extras keeps the argparse path fully usable and importable.
+Click is a **base** dependency, not an extra: this tool's own command line is written in click, bought on purpose on 2026-10-25 when the argparse twin was dropped, so the Click adapter has nothing left to install. The `[click]` extra was removed with it — a line reading `pip install 'sprezzature-cli-gui[click]'` now names an extra that does not exist, and pip warns and carries on rather than failing. Typer is covered through the Click adapter (`app.cli` is a Click group) and does not need an adapter of its own; it stays an extra, since reading a Typer app means importing Typer.
+
+Both `schema.walk` and `loader.load_parser_from_spec` still import `click` inside a `try`/`except ImportError` at the point of use, never at module scope. That is no longer load-bearing for the base install — click is always there — and it is kept because it costs nothing and keeps the argparse path importable in an environment where click has been removed by hand.
 
 ## Versioning
 

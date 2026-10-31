@@ -4,9 +4,13 @@ tests/test_cli_gui.py already covers the package end to end (import,
 --help, a full argparse-to-HTML run through the subprocess entry point).
 This file exercises the modules underneath directly: the schema
 dispatcher, each framework adapter, the help-text fallback parser, the
-HTML field renderer, and the module:factory loader. Click is an optional
-extra (``pip install "sprezzature-cli-gui[click]"``), so the Click-only
-tests are skipped when it is not installed.
+HTML field renderer, and the module:factory loader.
+
+The ``pytest.importorskip("click")`` calls below are left in place but no
+longer fire: click became a **base** dependency on 2026-10-25, when this
+tool's own argparse front door was dropped and click was bought to replace
+it, so the Click-only cases always run. They are kept so the file still
+reads correctly in an environment where click has been removed by hand.
 """
 
 from __future__ import annotations

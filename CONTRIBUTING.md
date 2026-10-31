@@ -5,10 +5,10 @@
 ```sh
 git clone https://github.com/warith-harchaoui/sprezzature-cli-gui.git
 cd sprezzature-cli-gui
-pip install -e ".[dev,click,typer]"
+pip install -e ".[dev,typer]"
 ```
 
-The `-e` flag installs the package in "editable" mode: your local checkout is used directly, so an edit to a `.py` file takes effect the next time you run the code, with no reinstall step. The `click` and `typer` extras are pulled in too so the full test suite (both adapters) runs locally, matching what `.github/workflows/ci.yml` installs.
+The `-e` flag installs the package in "editable" mode: your local checkout is used directly, so an edit to a `.py` file takes effect the next time you run the code, with no reinstall step. The `typer` extra is pulled in too so the full test suite (both adapters) runs locally; click needs no extra, being a base dependency since 2026-10-25. This matches what `.github/workflows/ci.yml` installs, which is `.[dev,typer,api,mcp]`.
 
 ## Run tests
 
@@ -44,4 +44,4 @@ Every adapter reduces its framework's parser object to the same shape: `{"prog":
 3. Keep each commit atomic: one commit should correspond to one coherent change, not a mix of unrelated edits.
 4. Open a pull request against `main`.
 
-Click and Typer stay optional extras, not requirements. Any new adapter or feature that touches them must still let the base install (`pip install sprezzature-cli-gui`, no extras) import cleanly and serve the argparse path.
+Typer stays an optional extra, not a requirement; click is a base dependency, so the Click adapter is always available. Any new adapter or feature that touches Typer must still let the base install (`pip install sprezzature-cli-gui`, no extras) import cleanly and serve both the argparse and the Click path.
