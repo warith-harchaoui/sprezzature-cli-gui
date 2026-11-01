@@ -27,9 +27,10 @@ What ships here
 - ``GET  /v1/example``: a small schema tree, so a caller can see the shape.
 - ``POST /v1/render``: schema tree in, GUI HTML out.
 
-Install the extra to get the runtime dependencies::
+FastAPI and uvicorn are base dependencies since 2026-11-01, so there
+is no extra to ask for::
 
-    pip install 'sprezzature-cli-gui[api]'
+    pip install 'sprezzature-cli-gui'
 
 Then run the app with any ASGI server::
 
@@ -60,8 +61,10 @@ try:
     from fastapi.responses import HTMLResponse, RedirectResponse
 except ImportError as exc:  # pragma: no cover - dependency guard
     raise ImportError(
-        "The FastAPI HTTP surface requires the [api] extra. "
-        "Install with: pip install 'sprezzature-cli-gui[api]'"
+        "The FastAPI HTTP surface could not import fastapi, which is a base "
+        "dependency since 2026-11-01 -- so this is a broken install rather "
+        "than a missing extra. Reinstall with: "
+        "pip install 'sprezzature-cli-gui'"
     ) from exc
 
 from pydantic import BaseModel, Field

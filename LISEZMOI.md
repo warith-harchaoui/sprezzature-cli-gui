@@ -21,7 +21,7 @@ Pas de cadre logiciel, pas d'étape de compilation : la page produite est un seu
 
 ```bash
 pip install sprezzature-cli-gui           # argparse et Click, lus tous les deux d'emblée
-pip install "sprezzature-cli-gui[typer]"  # ajoute la prise en charge de Typer
+pip install "sprezzature-cli-gui"  # ajoute la prise en charge de Typer
 ```
 
 ## Utilisation

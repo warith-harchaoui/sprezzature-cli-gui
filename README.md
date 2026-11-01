@@ -45,7 +45,7 @@ connection the first time; the form fields themselves still work, unstyled, with
 
 ```bash
 pip install sprezzature-cli-gui           # argparse and Click, both read out of the box
-pip install "sprezzature-cli-gui[typer]"  # add Typer support
+pip install "sprezzature-cli-gui"  # add Typer support
 ```
 
 ## Use

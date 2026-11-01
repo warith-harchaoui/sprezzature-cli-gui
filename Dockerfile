@@ -11,9 +11,9 @@ COPY . .
 # says it on purpose. What this image needs beyond that is the two adapters,
 # so a mounted Click or Typer CLI can be imported at all, and the web server:
 # fastapi and uvicorn live behind the `api` extra so that nobody installing
-# the library pays for them. The previous `.[click,typer]` build could not
+# the library pays for them. The previous `.` build could not
 # serve the API this image exists to serve.
-RUN pip install --no-cache-dir ".[typer,api,mcp]"
+RUN pip install --no-cache-dir "."
 
 EXPOSE 8000
 

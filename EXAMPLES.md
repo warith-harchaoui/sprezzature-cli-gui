@@ -30,7 +30,7 @@ sprezzature-cli-gui mypkg.cli:cli --out gui.html
 ## A Typer app
 
 ```sh
-pip install "sprezzature-cli-gui[typer]"
+pip install "sprezzature-cli-gui"
 ```
 
 ```python

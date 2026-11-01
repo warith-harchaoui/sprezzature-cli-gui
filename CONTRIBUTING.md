@@ -5,10 +5,10 @@
 ```sh
 git clone https://github.com/warith-harchaoui/sprezzature-cli-gui.git
 cd sprezzature-cli-gui
-pip install -e ".[dev,typer]"
+pip install -e ".[dev]"
 ```
 
-The `-e` flag installs the package in "editable" mode: your local checkout is used directly, so an edit to a `.py` file takes effect the next time you run the code, with no reinstall step. The `typer` extra is pulled in too so the full test suite (both adapters) runs locally; click needs no extra, being a base dependency since 2026-10-25. This matches what `.github/workflows/ci.yml` installs, which is `.[dev,typer,api,mcp]`.
+The `-e` flag installs the package in "editable" mode: your local checkout is used directly, so an edit to a `.py` file takes effect the next time you run the code, with no reinstall step. The `typer` extra is pulled in too so the full test suite (both adapters) runs locally; click needs no extra, being a base dependency since 2026-10-25. This matches what `.github/workflows/ci.yml` installs, which is `.[dev]`.
 
 ## Run tests
 
