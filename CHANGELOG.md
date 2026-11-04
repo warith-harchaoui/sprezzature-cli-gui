@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.4.0] — 2026-11-04: the documentation says what the code does, and the image serves /mcp
+
 ### Changed
 
 - `sprezzature-cli-gui-mcp` parses its command line with click instead of
