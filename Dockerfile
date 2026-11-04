@@ -15,10 +15,14 @@ RUN pip install --no-cache-dir "."
 
 EXPOSE 8000
 
-# Serve what the image was built for. A CMD of `--help` is a container that
+# Serve what the image was built for: the MCP server, which is the same FastAPI
+# app as the HTTP routes with /mcp mounted on it, so one container answers both
+# /v1/... and /mcp on one port. Serving `api:app` with uvicorn directly would
+# leave /mcp out, because the endpoint is mounted when mcp.py is imported.
+# A CMD of `--help` is a container that
 # starts, prints and exits — which looks like it works and does nothing.
 # Override with the command line:
 #
 #   docker run --rm -v "$PWD:/work" -e PYTHONPATH=/work IMAGE \
 #       sprezzature-cli-gui mytool.cli:build_parser --out /work/gui.html
-CMD ["uvicorn", "sprezzature_cli_gui.api:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["sprezzature-cli-gui-mcp", "--host", "0.0.0.0", "--port", "8000"]

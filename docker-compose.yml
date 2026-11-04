@@ -6,6 +6,7 @@
 #   docker compose up -d
 #   curl -s localhost:8000/health
 #   curl -s localhost:8000/v1/example        # the schema shape, to post back
+#   # and the MCP endpoint, on the same port: /mcp
 #   docker compose run --rm api sprezzature-cli-gui mytool.cli:build_parser --out /work/gui.html
 #
 # Two ways in, and they are not the same way. The command line imports your
@@ -32,4 +33,6 @@ services:
       # The CLI to introspect, and the single-file GUI written beside it.
       - ./work:/work
     working_dir: /work
+    # The HTTP routes and the MCP endpoint, from one process on one port.
+    command: ["sprezzature-cli-gui-mcp", "--host", "0.0.0.0", "--port", "8000"]
     restart: unless-stopped

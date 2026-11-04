@@ -129,7 +129,7 @@ Avec Docker, `docker compose up -d` construit l'image et sert ces routes sur le 
 docker compose run --rm api sprezzature-cli-gui mytool.cli:build_parser --out /work/gui.html
 ```
 
-La commande par défaut de l'image sert les routes HTTP seulement. Le point d'accès MCP est monté par `sprezzature-cli-gui-mcp`.
+La commande par défaut de l'image est `sprezzature-cli-gui-mcp --host 0.0.0.0 --port 8000` : un seul conteneur sert les routes HTTP et le point d'accès MCP sur `/mcp`, sur le même port.
 
 ## Serveur MCP
 

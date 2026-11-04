@@ -170,8 +170,8 @@ command line inside the container can import a CLI you put there:
 docker compose run --rm api sprezzature-cli-gui mytool.cli:build_parser --out /work/gui.html
 ```
 
-The image's default command serves the HTTP routes only. The MCP endpoint is mounted
-by `sprezzature-cli-gui-mcp`.
+The image's default command is `sprezzature-cli-gui-mcp --host 0.0.0.0 --port 8000`,
+so one container serves the HTTP routes and the MCP endpoint at `/mcp` on the same port.
 
 ## MCP server
 

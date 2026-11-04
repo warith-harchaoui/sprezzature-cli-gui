@@ -55,7 +55,7 @@ try:
     from fastapi_mcp import FastApiMCP
 except ImportError:  # pragma: no cover - dependency guard
 
-    def main(argv: list[str] | None = None) -> None:
+    def main(argv: list[str] | None = None) -> int:
         """
         Entry point when fastapi-mcp cannot be imported.
 
@@ -101,7 +101,49 @@ else:
     else:  # pragma: no cover - legacy fastapi-mcp
         mcp.mount()
 
-    def main(argv: list[str] | None = None) -> None:
+    import os
+
+    import click
+
+    @click.command(
+        name="sprezzature-cli-gui-mcp",
+        context_settings={"help_option_names": ["-h", "--help"]},
+        help=(
+            "Serve the sprezzature-cli-gui MCP tools over HTTP. Every tool is a "
+            "route on the same FastAPI app, with the MCP endpoint "
+            "mounted beside them."
+        ),
+        epilog=(
+            "\b\n"
+            "Defaults come from SPREZZATURE_CLI_GUI_HOST and "
+            "SPREZZATURE_CLI_GUI_PORT when those are set.\n"
+            "The host defaults to 127.0.0.1: pass --host 0.0.0.0 to "
+            "accept connections from outside this machine."
+        ),
+    )
+    @click.version_option(package_name="sprezzature-cli-gui", prog_name="sprezzature-cli-gui-mcp")
+    @click.option(
+        "--host",
+        # Read at call time rather than import time, so an environment set
+        # after the import (a test, a launcher) still decides the default.
+        default=lambda: os.environ.get("SPREZZATURE_CLI_GUI_HOST", "127.0.0.1"),
+        show_default="SPREZZATURE_CLI_GUI_HOST or 127.0.0.1",
+        help="Interface to bind.",
+    )
+    @click.option(
+        "--port",
+        type=int,
+        default=lambda: int(os.environ.get("SPREZZATURE_CLI_GUI_PORT", "8000")),
+        show_default="SPREZZATURE_CLI_GUI_PORT or 8000",
+        help="Port to bind.",
+    )
+    def _serve(host: str, port: int) -> None:
+        """Bind uvicorn to HOST:PORT and serve the app."""
+        import uvicorn
+
+        uvicorn.run(app, host=host, port=port, workers=1)
+
+    def main(argv: list[str] | None = None) -> int:
         """
         Entry point for the ``sprezzature-cli-gui-mcp`` console script.
 
@@ -111,48 +153,30 @@ else:
         or ``gunicorn`` directly.
 
         Arguments are parsed before anything is bound, so ``--help`` answers
-        instead of starting a server and hanging.
+        instead of starting a server and hanging. A usage error exits 2, the
+        code argparse used before click replaced it on 2026-11-04.
 
         Parameters
         ----------
         argv : list of str or None, optional
             Arguments to parse. ``None`` reads ``sys.argv``.
+
+        Returns
+        -------
+        int
+            ``0`` once the server stops.
         """
-        import argparse
-        import os
-
-        parser = argparse.ArgumentParser(
-            prog="sprezzature-cli-gui-mcp",
-            description=(
-                "Serve the sprezzature-cli-gui MCP tools over HTTP. Every tool is a "
-                "route on the same FastAPI app, with the MCP endpoint "
-                "mounted beside them."
-            ),
-            formatter_class=argparse.RawDescriptionHelpFormatter,
-            epilog=(
-                "Defaults come from SPREZZATURE_CLI_GUI_HOST and "
-                "SPREZZATURE_CLI_GUI_PORT when those are set.\n"
-                "The host defaults to 127.0.0.1: pass --host 0.0.0.0 to "
-                "accept connections from outside this machine."
-            ),
-        )
-        parser.add_argument(
-            "--host",
-            default=os.environ.get("SPREZZATURE_CLI_GUI_HOST", "127.0.0.1"),
-            help="Interface to bind (default: %(default)s).",
-        )
-        parser.add_argument(
-            "--port",
-            type=int,
-            default=int(os.environ.get("SPREZZATURE_CLI_GUI_PORT", "8000")),
-            help="Port to bind (default: %(default)s).",
-        )
-        args = parser.parse_args(argv)
-
-        import uvicorn
-
-        uvicorn.run(app, host=args.host, port=args.port, workers=1)
+        try:
+            _serve.main(args=argv, prog_name="sprezzature-cli-gui-mcp", standalone_mode=False)
+        except click.exceptions.UsageError as exc:
+            exc.show()
+            return 2
+        except click.exceptions.Abort:
+            return 130
+        except click.exceptions.Exit as exc:
+            return exc.exit_code
+        return 0
 
 
 if __name__ == "__main__":  # pragma: no cover
-    main()
+    raise SystemExit(main())

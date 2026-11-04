@@ -2,6 +2,23 @@
 
 ## [Unreleased]
 
+### Changed
+
+- `sprezzature-cli-gui-mcp` parses its command line with click instead of
+  argparse, like the two other commands. `--host`, `--port`, their
+  `SPREZZATURE_CLI_GUI_HOST` / `SPREZZATURE_CLI_GUI_PORT` defaults and exit
+  code 2 on a usage error are unchanged; `--version` is new. `main(argv)`
+  now returns an `int`. The package's own command lines no longer import
+  argparse; only the code that reads a user's argparse parser does.
+- The unused `sprezzature_cli_gui/_argparse.py` helper is gone.
+- Docker: the image and `docker compose up` run `sprezzature-cli-gui-mcp`
+  on 0.0.0.0:8000 instead of `uvicorn sprezzature_cli_gui.api:app`, so one
+  container answers both `/v1/...` and `/mcp`. Before, the container had no
+  `/mcp`, because the endpoint is mounted when `mcp.py` is imported.
+- A guard test runs every console script with `--help` and checks a click
+  usage line, and checks that no module of the package imports argparse
+  outside the parser readers.
+
 ### Docs
 
 The documents now say what the code does, checked against the code and the
