@@ -1,3 +1,5 @@
-# Base runtime: none. The argparse adapter needs only the standard library,
-# so `pip install sprezzature-cli-gui` with no extras is already fully usable
-# for any CLI built with argparse, or introspected via --from-help.
+# Runtime dependencies are declared in pyproject.toml, and `pip install
+# sprezzature-cli-gui` installs all of them: click, typer, fastapi, uvicorn,
+# fastapi-mcp and mcp. There have been no feature extras since 2026-11-01.
+# This file lists nothing on purpose; the test toolchain is in
+# requirements-dev.txt.

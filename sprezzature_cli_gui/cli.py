@@ -39,7 +39,7 @@ Examples:
 
   \b
   sprezzature-cli-gui mytool.cli:build_parser --out gui.html
-  sprezzature-cli-gui --from-help 'ffmpeg -h' --out ffmpeg.html
+  sprezzature-cli-gui --from-help ffmpeg --out ffmpeg.html   # runs: ffmpeg --help
 """
 
 
@@ -47,7 +47,7 @@ Examples:
     context_settings={"help_option_names": ["-h", "--help"]},
     epilog=_EPILOG,
     help=(
-        "Introspect a Python CLI (argparse OR Click, autodetected) and emit a "
+        "Introspect a Python CLI (argparse, Click or Typer, autodetected) and emit a "
         "self-contained single-page GUI for it. SPEC is module:factory, or a "
         "shell command line with --from-help."
     ),

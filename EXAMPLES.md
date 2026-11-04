@@ -29,10 +29,6 @@ sprezzature-cli-gui mypkg.cli:cli --out gui.html
 
 ## A Typer app
 
-```sh
-pip install "sprezzature-cli-gui"
-```
-
 ```python
 # mypkg/cli.py
 import typer
@@ -43,17 +39,14 @@ app = typer.Typer()
 @app.command()
 def greet(name: str = "world"):
     print(f"Hello {name}")
-
-
-def get_click_group():
-    # Typer builds a Click group internally and exposes it as app.cli; the
-    # spec's factory name cannot itself be a dotted path ("app.cli" is not
-    # a single attribute), so a one-line wrapper hands that group back.
-    return app.cli
 ```
 
 ```sh
-sprezzature-cli-gui mypkg.cli:get_click_group --out gui.html
+sprezzature-cli-gui mypkg.cli:app --prog mytool --out gui.html
+# The spec names the Typer app itself. The loader recognises a typer.Typer and
+# never calls it (calling one runs the app); walk() converts it to its Click
+# command and reads it as Click. --prog matters here: a single-command Typer
+# app is named after its function ("greet"), not after the installed command.
 ```
 
 ## A CLI whose factory cannot be imported, or that is not Python at all
@@ -78,7 +71,7 @@ sprezzature-cli-gui mypkg.cli:build_parser --json | python -m json.tool
 ## Wiring the emitted page to something that actually runs the command
 
 The generated page never executes anything; it only assembles the command line as
-text into a `<pre id="cli-out">` block. Three common ways to take it from there:
+text into a `<pre id="cli-out">` block. Two common ways to take it from there:
 
 ```js
 // Tauri desktop app: read the built command from the page and run it locally.
@@ -91,4 +84,25 @@ await invoke("run_shell_command", { commandLine });
 // FastAPI backend over Server-Sent Events: stream the command's output back.
 const es = new EventSource(`/run?cmd=${encodeURIComponent(commandLine)}`);
 es.onmessage = (e) => console.log(e.data);
+```
+
+## Checking a page committed earlier
+
+```sh
+sprezzature-cli-gui-audit mypkg.cli:build_parser dist/index.html
+# Prints one line per finding, then exits 1; prints "The page covers the CLI."
+# and exits 0 when nothing has drifted. --format json gives
+# {"findings_total": n, "findings": [{"rule", "subject", "message"}, ...]}.
+```
+
+## The HTTP API, with a tree walked locally
+
+```sh
+uvicorn sprezzature_cli_gui.api:app --port 8000 &
+curl -s localhost:8000/v1/example                    # the shape to copy
+sprezzature-cli-gui mypkg.cli:build_parser --json > tree.json
+python -c "import json; print(json.dumps({'tree': json.load(open('tree.json')), 'title': 'My Tool'}))" \
+  | curl -s -X POST localhost:8000/v1/render -H 'content-type: application/json' -d @- > gui.html
+# The server takes the tree, never a module:factory spec: importing a module
+# named by a remote caller would be remote code execution.
 ```

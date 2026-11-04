@@ -1,5 +1,48 @@
 # Changelog
 
+## [Unreleased]
+
+### Docs
+
+The documents now say what the code does, checked against the code and the
+installed commands.
+
+- README and LISEZMOI: the install section showed a second `pip install` line
+  "to add Typer support", for an extra that no longer exists; Typer is in the
+  base. They claimed the tool falls back to `--help` parsing on its own when a
+  parser cannot be imported; it does not, `--from-help` has to be passed. The
+  example put a top-level `--verbose` in a sub-command's built line; each form
+  builds from its own fields only. Added what was missing: the five surfaces,
+  every option of `sprezzature-cli-gui`, the `sprezzature-cli-gui-audit`
+  command and its five rules, the library (`walk`, `render_html`, `audit`), the
+  four HTTP routes with their `operation_id`, Docker and compose, the MCP
+  server and its `/mcp` endpoint, and what the emitted page contains.
+- TRIGGERS: `audit_gui`, `health` and `sprezzature-cli-gui-audit` were missing
+  from the routing tables. The generalisation now routes on the domain's
+  vocabulary rather than on phrasings.
+- EXAMPLES: the Typer recipe wrapped `app.cli`, which does not exist on Typer;
+  the spec now names the Typer app directly. It also asked for a Typer extra.
+  "Three common ways" introduced two examples. Added an audit example and an
+  HTTP example.
+- CONTRIBUTING and CODING: both still called Typer an optional extra. The
+  adapter recipe now names the loader's "already a parser" check.
+- Docstrings and one help string: `mcp.py` listed three colour tools from
+  another brick (`check_contrast`, `simulate_color_blindness`, `get_palette`)
+  as this server's tools; `api.py` said sub-commands become tabs and file
+  arguments become pickers (they become collapsible sections and text fields)
+  and left `/v1/audit` out of its route list; `adapters/click.py` and
+  `scripts/cli_to_gui.py` pointed Typer users at `app.cli`; the
+  `sprezzature-cli-gui --help` text left Typer out. Its epilog example
+  `--from-help 'ffmpeg -h'` ran `ffmpeg -h --help`, since `--from-help`
+  appends `--help` itself; it is now `--from-help ffmpeg`.
+- Stale comments and messages about the removed extras: the Dockerfile (an
+  `api` extra), `requirements.txt` ("Base runtime: none"), the loader's error
+  ("install the matching extra"), and a pyproject comment for a Click twin
+  entry point that no longer exists. The audit command's comment promised exit
+  2 for a missing page; it exits 1, and the comment now says so.
+- Removed `requirements-click.txt` and `requirements-typer.txt`: nothing read
+  them, and both described Click and Typer as things to install separately.
+
 ## [1.3.0] — 2026-11-01: one `pip install`
 
 ### Changed — one `pip install`

@@ -142,8 +142,9 @@ def walk_click(cmd: Any, prog: str | None = None) -> dict[str, Any]:
     Parameters
     ----------
     cmd : click.Command
-        A Click command or group. Typer apps expose their underlying
-        Click group via ``app.cli``; pass that.
+        A Click command or group. For a Typer app, call
+        :func:`sprezzature_cli_gui.schema.walk`, which converts it with
+        ``typer.main.get_command`` and then calls this.
     prog : str or None, optional
         Override the ``prog`` field. Defaults to the command's own
         ``name`` (Click sets this from the function name).

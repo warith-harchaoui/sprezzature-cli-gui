@@ -63,7 +63,8 @@ from sprezzature_cli_gui.schema import walk
 def main(spec: str, page: Path, prog: str | None, fmt: str) -> None:
     """Report where a generated page no longer matches its CLI."""
     if not page.is_file():
-        # 2, not 1: "you pointed me at nothing" is not "the page disagrees".
+        # SystemExit with a message exits 1, the same status as a finding; the
+        # message on stderr is what tells "no such file" from "the page disagrees".
         raise SystemExit(f"{page}: no such file")
 
     tree = walk(load_parser_from_spec(spec), prog=prog)

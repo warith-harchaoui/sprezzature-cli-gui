@@ -7,12 +7,10 @@ WORKDIR /app
 
 COPY . .
 
-# The base runtime is the standard library — `requirements.txt` says so, and
-# says it on purpose. What this image needs beyond that is the two adapters,
-# so a mounted Click or Typer CLI can be imported at all, and the web server:
-# fastapi and uvicorn live behind the `api` extra so that nobody installing
-# the library pays for them. The previous `.` build could not
-# serve the API this image exists to serve.
+# One install brings everything this image serves: Click and Typer, so a
+# mounted Click or Typer CLI can be read, and fastapi, uvicorn and fastapi-mcp
+# for the HTTP and MCP surfaces. They are all base dependencies since
+# 2026-11-01; there is no extra to ask for.
 RUN pip install --no-cache-dir "."
 
 EXPOSE 8000

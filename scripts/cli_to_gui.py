@@ -32,10 +32,10 @@ adapters ship today:
 - **argparse** (in Python's standard library, so always available). Reads
   an :class:`argparse.ArgumentParser` with :func:`walk_parser`, used
   whenever the target factory returns one.
-- **Click** (an optional third-party dependency, only imported when
-  actually needed). Reads a :class:`click.Command` with :func:`walk_click`.
-  `Typer` apps are covered too, through the Click group Typer builds
-  internally (``app.cli``).
+- **Click** (a base dependency). Reads a :class:`click.Command` with
+  :func:`walk_click`. `Typer` apps are covered too: ``schema.walk``
+  converts one with ``typer.main.get_command`` and reads the result as
+  Click.
 - **``--from-help``** (framework-agnostic). Runs the target command with
   ``--help`` and parses the printed text instead of a live parser object,
   with :func:`walk_from_help`. This is the fallback for a CLI written in

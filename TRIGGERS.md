@@ -1,75 +1,105 @@
 # Triggers: sprezzature-cli-gui
 
-When someone needs a face on a command-line tool, and what to call.
+When someone needs a face on a command-line tool, or wants to know whether an existing
+face still matches the tool, and what to call.
 
-This file is written for an agent — a Claude Code / OpenCode skill, an MCP
-host, anything choosing a tool on someone's behalf. Humans are welcome, but
-the routing rules below are the point.
+This file is written for an agent: a Claude Code skill, an MCP (Model Context Protocol)
+host, anything choosing a tool on someone's behalf. Humans are welcome, but the routing
+rules below are the point.
 
 ---
 
 ## The generalisation, stated once
 
-> **The trigger is "somebody who will not type this command needs to run
-> it."** That is the whole shape, and it is usually said without the words
-> "GUI" or "form": "my colleague keeps getting the flags wrong", "can
-> non-technical people use this", "I want a page where you fill in the
-> options and hit go", « il faudrait une interface pour que l'équipe puisse
-> s'en servir », "make this usable by the ops team". All of it routes here.
+> **Route here when the request is about a command-line tool and a form for it.** The
+> domain has a closed vocabulary, and a request belongs here when it pairs one word
+> from each list:
+>
+> - **the tool**: CLI, command line, command-line tool, script, parser, argparse,
+>   Click, Typer, `--help`, flags, options, sub-commands, arguments, cobra, clap;
+> - **the face**: GUI, form, web form, interface, page, UI, fields, "fill in", "click".
+>
+> A third word turns a making request into a checking one: **still, stale, drift,
+> out of date, missing flag, covers, matches, audit** about a page already generated.
 
-The instinct it exists to interrupt is hand-writing a bespoke form, or
-reaching for a framework, when the command's own `--help` already describes
-every control the page needs.
+The pairing is the mechanism, not any particular phrasing. "My colleague keeps getting
+the flags wrong", « il faudrait une interface pour que l'équipe puisse lancer ce
+script », "can the ops team use this without a terminal" all name the tool and the
+face, and all route here.
 
-| The user has… | Route | Why |
+The instinct this file exists to interrupt is hand-writing a bespoke form, or reaching
+for a framework, when the tool's own parser already describes every control the page
+needs.
+
+Not this one when there is no command-line tool behind the screen (`sprezzature-ui`),
+when the page exists and the question is its accessibility (`sprezzature-accessibility`),
+or when the job is to run the command and stream its output: this package only builds
+the command line.
+
+---
+
+## Every tool, and the request it answers
+
+| Tool | Surface | The request it answers |
 |---|---|---|
-| a Python CLI you can import (argparse / Click / Typer) | `sprezzature-cli-gui` CLI, pointed at the module | It introspects the real parser, so the form cannot drift from the flags. |
-| a CLI you cannot import — Go, Rust, Node, a binary, only `--help` | `sprezzature-cli-gui` on the help text, or build the tree by hand | The schema is the interface; where it came from does not matter. |
-| a schema tree already, or a non-Python caller | `render_gui` (MCP / HTTP) | Tree in, one self-contained HTML page out. |
-| no idea what a schema tree looks like | `get_example_schema` first | A worked example beats guessing and getting a 422. |
+| `sprezzature-cli-gui SPEC` | CLI | "Make a form for this Python CLI": imports `module:factory` and walks the argparse, Click or Typer parser. |
+| `sprezzature-cli-gui --from-help "CMD"` | CLI | "Make a form for this CLI I cannot import" (Go, Rust, Node, a binary): parses `CMD --help`. |
+| `sprezzature-cli-gui SPEC --json` | CLI | "Show me what was read from this parser": the schema tree, without HTML. |
+| `sprezzature-cli-gui-audit SPEC PAGE` | CLI | "Does this generated page still cover the CLI?": five rules, exit 1 on any finding. |
+| `walk`, `render_html`, `audit` | Library | The same three jobs from Python, in the caller's process. |
+| `health` | MCP / HTTP `GET /health` | "Is the server up?" Only for diagnosing a connection. |
+| `get_example_schema` | MCP / HTTP `GET /v1/example` | "What does a schema tree look like?" Call it before `render_gui` when the shape is unknown. |
+| `render_gui` | MCP / HTTP `POST /v1/render` | "Turn this schema tree into a page." Tree in, one self-contained HTML page out. |
+| `audit_gui` | MCP / HTTP `POST /v1/audit` | "Does this page still match this schema tree?" Returns `findings_total` and the findings. |
 
 ---
 
 ## What to call, on every surface
 
-| Job | CLI | MCP tool |
-|---|---|---|
-| Read a real Python parser and emit a page | `sprezzature-cli-gui` | *(not an MCP tool — it imports the user's module)* |
-| Schema tree → HTML page | — | `render_gui` |
-| See the schema shape | — | `get_example_schema` |
+| Job | Library | CLI | MCP tool (= `operation_id`) |
+|---|---|---|---|
+| Read a Python parser and emit a page | `walk` + `render_html` | `sprezzature-cli-gui SPEC` | *(none: it imports the user's module)* |
+| Read `--help` text and emit a page | `adapters.help_text.walk_from_help` + `render_html` | `sprezzature-cli-gui --from-help "CMD"` | *(none: it runs the user's command)* |
+| Schema tree to page | `render_html` | none | `render_gui` |
+| See the schema shape | `walk` | `sprezzature-cli-gui SPEC --json` | `get_example_schema` |
+| Check a page against its parser | `audit` | `sprezzature-cli-gui-audit SPEC PAGE` | `audit_gui` |
+| Liveness | none | none | `health` |
 
-The gap is the honest one: introspecting a parser means importing the user's
-code, which belongs on their machine and not behind an HTTP request on
-someone else's.
+The gap is deliberate. Reading a parser means importing the user's code, and reading
+`--help` means running it. Both belong on the user's machine, not behind an HTTP
+request. The HTTP and MCP surfaces take the schema tree instead.
+
+The MCP tools are served by `sprezzature-cli-gui-mcp` (endpoint `/mcp`). The skill
+named `sprezzature-cli-gui` lives in the sprezzature hub and points at the same tools.
 
 ---
 
 ## Two contracts an agent must not break
 
-**1. `render_gui` takes a schema tree, not source code.** It will not read a
-Python file and work out the argparse calls for you. Either run the CLI,
-which introspects the real parser, or describe the sub-commands and flags in
-the shape `get_example_schema` returns.
+**1. `render_gui` takes a schema tree, not source code.** It will not read a Python
+file and work out the argparse calls. Either run the CLI, which introspects the real
+parser, or describe the sub-commands and flags in the shape `get_example_schema`
+returns. A tree without `prog` or `actions` is refused with a 400.
 
-**2. The page builds a command line; it does not run one.** Nothing here
-executes the user's CLI — that is why it can be an ordinary HTTP tool at all.
-Wiring the built command to something that runs it (a Tauri shell, an SSE log
-stream, a job runner) is the caller's job, and the place to be careful.
+**2. The page builds a command line; it does not run one.** Nothing here executes the
+user's CLI, which is why it can be an ordinary HTTP tool at all. Wiring the built
+command to something that runs it (a Tauri shell, a Server-Sent Events log stream, a
+job runner) is the caller's job, and the place to be careful.
 
 ---
 
 ## Phrasings, for matching
 
-Not a closed list — the generalisation above is the mechanism.
+Examples of the pairing above, not a list to match against.
 
-**Making the GUI** — "turn this CLI into a GUI", "web form for this
-command-line tool", "generate a GUI from my argparse parser", "wrap my Click
-/ Typer app in a form", "cli to gui", "auto-generate a form from --help",
-"give this tool a clickable interface", « une interface web pour mon
-script », « un formulaire pour cette commande ».
+**Making the form**: "turn this CLI into a GUI", "web form for this command-line
+tool", "generate a GUI from my argparse parser", "wrap my Click / Typer app in a form",
+"auto-generate a form from --help", « une interface web pour mon script », « un
+formulaire pour cette commande ».
 
-**Not a Python CLI** — "make a GUI for a CLI that isn't Python", "wrap a Rust
-/ Go / Node CLI in a web form", "I can't import the parser, only run --help".
+**Not a Python CLI**: "make a GUI for a CLI that isn't Python", "wrap a Rust / Go /
+Node CLI in a web form", "I can't import the parser, only run --help".
 
-**Wiring it up** — "hand this command to a Tauri app", "stream this command's
-output over SSE", "build the command line from form fields".
+**Checking the form**: "is this generated page still up to date with the CLI", "the
+form is missing a flag", "did the GUI drift from the tool", « la page couvre-t-elle
+encore toutes les options ».

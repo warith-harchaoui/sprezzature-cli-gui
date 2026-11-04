@@ -59,9 +59,6 @@ dev = ["pytest>=8.0", "ruff", "mypy", "httpx2>=2.0.0"]
 [project.scripts]
 sprezzature-cli-gui-mcp = "sprezzature_cli_gui.mcp:main"
 sprezzature-cli-gui = "sprezzature_cli_gui.cli:main"
-# The Click twin. Both front doors build the same namespace and call the same
-# handler, so a flag cannot exist on one and be missing from the other — and
-# a package that reads Click commands for a living ought to offer one.
 # The audit half. This brick promises the page covers the CLI; this is what
 # checks it, and it gates a build the way every other brick's lint does.
 sprezzature-cli-gui-audit = "sprezzature_cli_gui.audit_cli:main"

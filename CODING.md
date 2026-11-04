@@ -2,7 +2,7 @@
 
 ## Language
 
-Python 3.10 or newer. Every function and class carries full type annotations. Avoid the catch-all type `Any`; where it is truly unavoidable (a Click parameter object, whose concrete type depends on an optional dependency, for instance), leave a comment saying why.
+Python 3.10 or newer. Every function and class carries full type annotations. Avoid the catch-all type `Any`; where it is truly unavoidable (a parser object that may come from argparse, Click or Typer, for instance), leave a comment saying why.
 
 ## Docstrings
 
@@ -10,7 +10,7 @@ NumPy style: a short summary line, then a `Parameters` section and a `Returns` s
 
 ## Comments
 
-A comment earns its place by explaining *why* a choice was made (a constraint, a workaround, a non-obvious trade-off), never by restating in English what the line already says in Python. The adapters lean on this heavily: `click = None` inside a bare `except ImportError` reads like a shrug until the comment next to it explains that Click is optional and the isinstance check has to survive its absence.
+A comment earns its place by explaining *why* a choice was made (a constraint, a workaround, a non-obvious trade-off), never by restating in English what the line already says in Python. The adapters lean on this heavily: `click = None` inside a bare `except ImportError` reads like a shrug until the comment next to it explains why the isinstance check is kept able to survive Click's absence (see below).
 
 ## Style
 
@@ -24,9 +24,9 @@ A comment earns its place by explaining *why* a choice was made (a constraint, a
 
 ## Optional imports
 
-Click is a **base** dependency, not an extra: this tool's own command line is written in click, bought on purpose on 2026-10-25 when the argparse twin was dropped, so the Click adapter has nothing left to install. The `[click]` extra was removed with it — an install line still asking pip for a `[click]` extra of this package names one that does not exist, and pip warns and carries on rather than failing. Typer is covered through the Click adapter (`app.cli` is a Click group) and does not need an adapter of its own; it stays an extra, since reading a Typer app means importing Typer.
+Click and Typer are both **base** dependencies. Click became one on 2026-10-25, when the argparse front door was dropped and this tool's own command line was written in Click. Typer, FastAPI, uvicorn and fastapi-mcp followed on 2026-11-01, when every feature extra was folded into the base. An install line asking pip for a `[click]`, `[typer]`, `[api]` or `[mcp]` extra of this package names one that does not exist, and pip warns and carries on rather than failing. A Typer app is read through the Click adapter: `schema.walk` converts it with Typer's own `get_command` and walks the result as Click, so there is no Typer adapter.
 
-Both `schema.walk` and `loader.load_parser_from_spec` still import `click` inside a `try`/`except ImportError` at the point of use, never at module scope. That is no longer load-bearing for the base install — click is always there — and it is kept because it costs nothing and keeps the argparse path importable in an environment where click has been removed by hand.
+Both `schema.walk` and `loader.load_parser_from_spec` still import `click` and `typer` inside a `try`/`except ImportError` at the point of use, never at module scope. That is no longer load-bearing for the base install, since both are always there. It is kept because it costs nothing and keeps the argparse path importable in an environment where one of them has been removed by hand.
 
 ## Versioning
 

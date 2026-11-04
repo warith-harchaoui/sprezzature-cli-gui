@@ -5,13 +5,15 @@
 
 [![logo](https://raw.githubusercontent.com/warith-harchaoui/sprezzature-cli-gui/main/assets/logo.png)](https://sprezzature.ai/)
 
-Transformer n'importe quel outil en ligne de commande Python en formulaire cliquable, automatiquement. Un outil en ligne de commande se pilote en tapant du texte (« fais ceci, avec ces options ») plutôt qu'en cliquant sur des boutons et des champs ; ce paquet lit la définition que l'outil se donne déjà de ses commandes et de ses options et construit à partir de là une page web avec un bouton et un champ pour chacune, pour qu'une personne qui n'a jamais ouvert de terminal puisse quand même s'en servir.
+Transformer un outil en ligne de commande en formulaire cliquable, automatiquement. Un outil en ligne de commande se pilote en tapant du texte (« fais ceci, avec ces options ») plutôt qu'en cliquant sur des boutons et des champs ; ce paquet lit la définition que l'outil se donne déjà de ses commandes et de ses options et construit une page web avec un champ pour chacune, pour qu'une personne qui n'a jamais ouvert de terminal puisse quand même s'en servir.
 
-On pointe l'outil vers un parseur : l'objet qu'un programme en ligne de commande Python construit pour lire et valider ce que l'utilisateur tape. Trois bibliothèques servent à construire cet objet, toutes trois importées et parcourues directement : `argparse` (dans la bibliothèque standard de Python), `Click` et `Typer`. Un programme écrit avec autre chose — `cobra` en Go, `clap` en Rust — passe par `--from-help`, qui lance le `--help` de l'outil dans un sous-processus et en lit le texte : ça marche sur n'importe quelle ligne de commande, avec moins de fidélité, parce qu'un texte d'aide en dit moins qu'un parseur. À partir de ce parseur, le paquet produit une seule page autonome, écrite en JavaScript pur et mise en forme avec Tailwind (un cadre de style CSS qui fournit des classes prêtes à l'emploi plutôt que d'écrire le CSS à la main). Chaque sous-commande devient une section, chaque drapeau (une option de la ligne de commande, comme `--verbose`) un champ. La page n'exécute jamais la commande elle-même : elle assemble la ligne de commande exacte sous forme de texte, dans le navigateur de la personne qui la visite, prête à copier-coller, à transmettre à une application de bureau via un appel `Tauri` `invoke` (`Tauri` habille une page web en application de bureau native ; `invoke` est le pont par lequel cette page rappelle l'application), ou à envoyer à un point d'entrée FastAPI (un petit serveur web Python) qui l'exécute pour de vrai.
+On le pointe vers un parseur : l'objet qu'un CLI Python (*command-line interface*, interface en ligne de commande) construit pour lire et valider ce que l'utilisateur tape. `argparse` (dans la bibliothèque standard de Python), `Click` et `Typer` sont les trois façons courantes d'en construire un ; les trois sont importés et parcourus directement. Un CLI écrit avec autre chose, comme `cobra` en Go ou `clap` en Rust, passe par `--from-help`, qui lance le `--help` de l'outil dans un sous-processus et en lit le texte. Ça marche sur n'importe quel CLI, avec moins de fidélité : un texte d'aide en dit moins qu'un parseur.
 
-Exemple : un outil avec un drapeau `--verbose` et une sous-commande `convert INPUT OUTPUT` devient une page avec une case à cocher pour `--verbose` et deux champs de texte pour `INPUT` et `OUTPUT` ; les remplir puis cliquer sur « Build command » affiche la ligne exacte `mytool convert in.csv out.json --verbose`, prête à copier.
+À partir de ce parseur, le paquet produit une seule page autonome, écrite en JavaScript pur et mise en forme avec Tailwind (un cadre CSS qui fournit des classes de style prêtes à l'emploi plutôt que du CSS écrit à la main). Chaque sous-commande devient une section repliable avec son propre formulaire, et chaque drapeau (une option comme `--verbose`) un champ. La page n'exécute jamais la commande. Elle assemble la ligne de commande exacte sous forme de texte, dans le navigateur de la personne qui la visite, prête à copier-coller, à transmettre à une application de bureau par un appel `Tauri` `invoke` (`Tauri` habille une page web en application de bureau native ; `invoke` est le pont par lequel la page rappelle l'application), ou à envoyer à un serveur qui l'exécute.
 
-Pas de cadre logiciel, pas d'étape de compilation : la page produite est un seul fichier HTML. Elle charge tout de même la version « Play » de Tailwind depuis un réseau de diffusion de contenu (`cdn.tailwindcss.com`) pour transformer les classes utilitaires en vrai CSS dans le navigateur de la personne qui l'ouvre ; une connexion internet est donc nécessaire au premier chargement. Les champs du formulaire, eux, fonctionnent sans elle, simplement sans mise en forme.
+Exemple : un CLI avec une sous-commande `convert INPUT OUTPUT` qui prend aussi `--verbose` devient une page avec une section `convert` contenant deux champs de texte et une case à cocher. Les remplir puis cliquer sur « Build command » affiche la ligne exacte `mytool convert in.csv out.json --verbose`, prête à copier.
+
+Pas de cadre logiciel, pas d'étape de compilation : la page produite est un seul fichier HTML. Elle charge la version « Play » de Tailwind depuis un CDN (*content delivery network*, réseau de diffusion de contenu, ici `cdn.tailwindcss.com`) pour transformer les classes utilitaires en vrai CSS dans le navigateur ; la mise en forme demande donc une connexion internet. Les champs du formulaire et le bouton « Build command » fonctionnent sans elle, simplement sans mise en forme.
 
 ## Comment ça marche
 
@@ -20,30 +22,154 @@ Pas de cadre logiciel, pas d'étape de compilation : la page produite est un seu
 ## Installation
 
 ```bash
-pip install sprezzature-cli-gui           # argparse et Click, lus tous les deux d'emblée
-pip install "sprezzature-cli-gui"  # ajoute la prise en charge de Typer
+pip install sprezzature-cli-gui
 ```
 
-## Utilisation
+Une seule installation apporte tout : les lecteurs argparse, Click et Typer, le lecteur `--from-help`, l'audit, l'API HTTP et le serveur MCP. Il n'y a aucun extra de fonctionnalité. Le seul extra, `[dev]`, est l'outillage de test (pytest, ruff, mypy, httpx2).
+
+## Cinq surfaces
+
+| Surface | Point d'entrée | Ce qu'elle fait |
+|---|---|---|
+| Bibliothèque | `from sprezzature_cli_gui import walk, render_html, audit` | Parcourir un parseur dans votre processus, produire la page, vérifier une page contre un parseur. |
+| CLI | `sprezzature-cli-gui`, `sprezzature-cli-gui-audit` | Les deux mêmes travaux depuis un terminal. Ce sont deux commandes Click. |
+| API HTTP | `uvicorn sprezzature_cli_gui.api:app`, ou `docker compose up` | Des routes FastAPI : un arbre de schéma en entrée, la page en sortie ; une page et un arbre en entrée, les constats en sortie. |
+| MCP | `sprezzature-cli-gui-mcp` | Les mêmes routes, en outils MCP (*Model Context Protocol*) pour un hôte d'agent. |
+| Skill | `sprezzature-cli-gui` dans le [hub sprezzature](https://github.com/warith-harchaoui/sprezzature/tree/main/sprezzature-cli-gui) | Le `SKILL.md` qu'un agent comme Claude Code lit pour savoir quand router ici. |
+
+Le CLI et la bibliothèque importent votre module. L'API HTTP et le serveur MCP ne le font jamais : ils prennent l'arbre de schéma que `walk` produit, pas une spécification `module:fabrique`. Importer un module arbitraire nommé par un appelant non authentifié serait une exécution de code à distance ; cette étape reste donc sur votre machine.
+
+## Ligne de commande
+
+### `sprezzature-cli-gui` : un parseur en entrée, une page en sortie
 
 ```bash
 # Depuis une fabrique de parseur dans un module importable
 sprezzature-cli-gui my_pkg.my_cli:build_parser > gui.html
 
-# Depuis un chemin de script
-sprezzature-cli-gui ./my_cli.py:make_parser > gui.html
+# Depuis un chemin de script, écrit dans un fichier avec un titre de page
+sprezzature-cli-gui ./my_cli.py:make_parser --out gui.html --title "My Tool"
+
+# Depuis un CLI qu'on ne peut pas importer, ou qui n'est pas en Python
+sprezzature-cli-gui --from-help "mytool" --out gui.html
 ```
 
-Quand le parseur ne peut pas être importé, l'outil se rabat sur l'analyse de la sortie `--help` de la cible ; il fonctionne donc même contre un outil qu'il ne peut pas inspecter directement, y compris un outil qui n'est pas écrit en Python.
+`SPEC` vaut `module:fabrique` ou `chemin/vers/fichier.py:fabrique`. Le nom après les deux-points est une fonction sans argument qui renvoie un `argparse.ArgumentParser`, une `click.Command` ou une `typer.Typer`. Il peut aussi nommer directement un tel objet : le chargeur l'utilise alors tel quel et ne l'appelle jamais, parce qu'appeler une commande Click ou une application Typer la lance.
+
+| Option | Effet |
+|---|---|
+| `--from-help` | Traiter `SPEC` comme une ligne de commande, la lancer avec `--help` ajouté à la fin, et analyser le texte imprimé. Rien ne s'y rabat tout seul : il faut le demander. |
+| `--out PATH` | Écrire le HTML dans `PATH` plutôt que sur la sortie standard. |
+| `--title TEXT` | Le `<title>` de la page. Par défaut, le nom du programme. |
+| `--prog TEXT` | Remplacer le nom du programme dans la page et dans la ligne construite. Le nom que donne un groupe Click ou une application Typer (un nom de fonction, ou `cli` pour une application Typer à plusieurs commandes) est rarement celui de la commande installée. |
+| `--json` | Imprimer l'arbre du parseur en JSON plutôt que le HTML. |
+| `--version`, `-h`/`--help` | Version et aide. |
+
+Une spécification introuvable, non importable ou impossible à parcourir sort avec le code 1 et une phrase sur la sortie d'erreur.
+
+La complétion du shell vient de Click :
+
+```bash
+eval "$(_SPREZZATURE_CLI_GUI_COMPLETE=bash_source sprezzature-cli-gui)"   # bash
+eval "$(_SPREZZATURE_CLI_GUI_COMPLETE=zsh_source sprezzature-cli-gui)"    # zsh
+```
+
+### `sprezzature-cli-gui-audit` : la page couvre-t-elle encore le CLI ?
+
+Une page produite le mois dernier peut prendre du retard sur un CLI qui a bougé depuis. L'audit prend la même `SPEC` et la page, et signale cinq sortes de désaccord :
+
+| Règle | Sens |
+|---|---|
+| `flag-not-in-page` | Une option que le parseur accepte n'a aucun champ dans la page. |
+| `field-has-no-flag` | Un champ construit une option que le parseur n'accepte pas. |
+| `choice-dropped` | Un choix que le parseur propose manque dans la liste déroulante de la page. |
+| `prog-missing` | La page n'amorce sa ligne de commande avec aucun nom de programme. |
+| `prog-mismatch` | La page construit une ligne de commande pour un autre nom de programme. |
+
+```bash
+sprezzature-cli-gui-audit mytool.cli:build_parser gui.html
+sprezzature-cli-gui-audit mytool.cli:build_parser gui.html --format json --prog mytool
+```
+
+Il sort avec 0 quand la page couvre le CLI et 1 dès qu'il y a au moins un constat. Une `PAGE` qui n'est pas un fichier sort aussi avec 1, et un message. `--prog` a le même sens que pour le générateur ; `--format` vaut `text` (par défaut) ou `json`.
+
+## Bibliothèque
+
+```python
+from sprezzature_cli_gui import walk, render_html, audit
+
+tree = walk(build_parser())               # argparse, Click ou Typer, dans votre processus
+html = render_html(tree, title="My Tool")
+open("gui.html", "w", encoding="utf-8").write(html)
+
+for finding in audit(tree, html):         # une liste vide : la page couvre le CLI
+    print(finding.rule, finding.subject, finding.message)
+```
+
+`walk(obj, prog=None)` renvoie l'arbre canonique : `prog`, `description`, `actions`, `sub_commands`. Elle lève `TypeError` pour tout ce qui n'est pas l'un des trois types de parseur. `render_html(tree, title="CLI GUI")` renvoie la page complète. `audit(tree, page)` renvoie une liste d'objets `Finding` (`rule`, `subject`, `message`).
+
+## API HTTP
+
+```bash
+uvicorn sprezzature_cli_gui.api:app --host 0.0.0.0 --port 8000
+```
+
+| Méthode et chemin | `operation_id` | Ce qu'elle fait |
+|---|---|---|
+| `GET /health` | `health` | Sonde de vie : `{"status": "ok"}`. |
+| `GET /v1/example` | `get_example_schema` | Un arbre de schéma parcouru depuis un petit parseur de démonstration, pour en copier la forme. |
+| `POST /v1/render` | `render_gui` | Corps `{"tree": ..., "title": ...}` ; renvoie la page en HTML. Répond 400 quand l'arbre n'a pas `prog` ou `actions`. |
+| `POST /v1/audit` | `audit_gui` | Corps `{"schema": ..., "page": ...}` ; renvoie `{"findings_total": n, "findings": [...]}`. |
+
+La documentation interactive est servie sur `/docs` et `/redoc`.
+
+Avec Docker, `docker compose up -d` construit l'image et sert ces routes sur le port 8000. Le fichier compose monte `./work` sur `/work` et fixe `PYTHONPATH=/work` ; la ligne de commande du conteneur peut donc importer un CLI que vous y déposez :
+
+```bash
+docker compose run --rm api sprezzature-cli-gui mytool.cli:build_parser --out /work/gui.html
+```
+
+La commande par défaut de l'image sert les routes HTTP seulement. Le point d'accès MCP est monté par `sprezzature-cli-gui-mcp`.
+
+## Serveur MCP
+
+```bash
+sprezzature-cli-gui-mcp                       # 127.0.0.1:8000
+sprezzature-cli-gui-mcp --host 0.0.0.0 --port 9000
+```
+
+Il sert la même application FastAPI, avec un point d'accès MCP monté sur `/mcp`, en HTTP. Les valeurs par défaut viennent de `SPREZZATURE_CLI_GUI_HOST` et `SPREZZATURE_CLI_GUI_PORT` quand elles sont définies. Le nom de chaque outil est l'`operation_id` de sa route : `health`, `get_example_schema`, `render_gui`, `audit_gui`. Le routage des agents est décrit dans [TRIGGERS.md](https://github.com/warith-harchaoui/sprezzature-cli-gui/blob/main/TRIGGERS.md).
+
+## Ce que contient la page
+
+- Un formulaire racine pour les options de premier niveau, puis une section repliable `<details>` par sous-commande, imbriquée aussi profond que le parseur.
+- Un champ par option : une case à cocher pour un drapeau booléen, une liste déroulante pour une liste de choix, un champ numérique pour un entier ou un flottant, et un champ de texte pour tout le reste. Les arguments de fichier sont des champs de texte avec l'indication `path/to/file` ; un vrai sélecteur de fichier relève de l'hôte.
+- Un bouton « Build command » dans chaque formulaire. Il construit la ligne à partir des champs de ce formulaire seulement ; un drapeau de premier niveau n'apparaît donc pas dans la ligne d'une sous-commande.
+- Un bloc `<pre id="cli-out">` où la ligne construite apparaît, avec une mise entre guillemets prudente pour le shell.
+
+Chaque champ porte un attribut `data-cli-flag` qui nomme l'option qu'il construit ; c'est ce que l'audit lit. Des exemples de branchement pour Tauri et les *Server-Sent Events* sont dans [EXAMPLES.md](https://github.com/warith-harchaoui/sprezzature-cli-gui/blob/main/EXAMPLES.md).
 
 ## Dans le paquet
 
-`cli_to_gui.py` est une façade légère qui réexporte l'implémentation réelle, elle-même dans le paquet `sprezzature_cli_gui` :
+- `adapters/` : un lecteur par source. `argparse.py` et `click.py` parcourent un objet parseur vivant ; une application Typer est convertie en sa commande Click et parcourue comme Click. `help_text.py` analyse le texte imprimé par `--help`.
+- `schema.py` : `walk`, l'aiguillage qui ramène chaque source au même arbre.
+- `renderer.py` : `render_html`, de l'arbre à la page autonome.
+- `loader.py` : résout une spécification `module:fabrique` ou `chemin.py:fabrique` jusqu'au parseur.
+- `audit.py` : les cinq règles ci-dessus.
+- `cli.py`, `audit_cli.py`, `_generate.py` : les deux commandes Click et le travail derrière le générateur.
+- `api.py`, `mcp.py` : les surfaces HTTP et MCP.
 
-- `adapters/` : lit (inspecte, c'est-à-dire examine directement les champs internes de l'objet parseur, plutôt que de deviner à partir du texte imprimé) un parseur argparse ou Click ; ou, quand aucun objet parseur n'est accessible, se rabat sur l'analyse du texte `--help`.
-- `schema.py` : la description normalisée de commande et de drapeau que chaque adaptateur produit, la même quel que soit le framework d'origine, si bien que le moteur de rendu n'a jamais besoin de savoir lequel des trois l'a produite.
-- `renderer.py` : transforme cette description en la page HTML autonome, avec Tailwind et le JavaScript pur.
-- `loader.py` : résout une spécification `module:fabrique` ou `chemin.py:fabrique` (une chaîne qui nomme l'endroit où vit la fonction qui construit le parseur) jusqu'à l'objet parseur réel.
+`scripts/cli_to_gui.py` réexporte le paquet pour un usage depuis un clone.
+
+## Développement
+
+```bash
+pip install -e ".[dev]"
+ruff check .
+python -m pytest -q
+```
+
+Voir [CONTRIBUTING.md](https://github.com/warith-harchaoui/sprezzature-cli-gui/blob/main/CONTRIBUTING.md) et, pour les voisins de ce paquet, [PAYSAGE.md](https://github.com/warith-harchaoui/sprezzature-cli-gui/blob/main/PAYSAGE.md).
 
 ## Licence
 

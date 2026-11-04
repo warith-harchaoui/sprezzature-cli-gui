@@ -151,6 +151,6 @@ def load_parser_from_spec(spec: str) -> Any:
     raise ValueError(
         f"Factory '{spec}' returned a "
         f"{type(parser_obj).__name__}; expected argparse.ArgumentParser, "
-        f"click.Command or typer.Typer (install the matching extra if your "
-        f"factory returns a Click or Typer app)."
+        f"click.Command or typer.Typer. Click and Typer both come with "
+        f"`pip install sprezzature-cli-gui`; reinstall it if either is missing."
     )

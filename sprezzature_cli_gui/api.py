@@ -26,6 +26,7 @@ What ships here
 - ``GET  /health``: a liveness probe.
 - ``GET  /v1/example``: a small schema tree, so a caller can see the shape.
 - ``POST /v1/render``: schema tree in, GUI HTML out.
+- ``POST /v1/audit``: schema tree and generated page in, findings out.
 
 FastAPI and uvicorn are base dependencies since 2026-11-01, so there
 is no extra to ask for::
@@ -172,8 +173,9 @@ def render(request: RenderRequest) -> HTMLResponse:
 
     This is the tool for "wrap my CLI in a GUI", "build a UI for this
     script", "a web form for my command", « une interface pour mon script ».
-    Returns one self-contained HTML page: sub-commands become tabs, flags
-    become inputs, file arguments become pickers.
+    Returns one self-contained HTML page: sub-commands become collapsible
+    sections, flags become inputs, file arguments become text fields for a
+    path.
 
     It takes a SCHEMA TREE, not source code -- it does not read a Python file
     and work out the argparse calls. Describe the command's sub-commands and
