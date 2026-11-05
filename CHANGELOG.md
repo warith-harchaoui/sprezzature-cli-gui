@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.5.0] — 2026-11-05
+
 ### Fixed
 
 - An argparse `store_false` flag (`--no-cache`) rendered pre-ticked, so the
