@@ -10,7 +10,7 @@ NumPy style: a short summary line, then a `Parameters` section and a `Returns` s
 
 ## Comments
 
-A comment earns its place by explaining *why* a choice was made (a constraint, a workaround, a non-obvious trade-off), never by restating in English what the line already says in Python. The adapters lean on this heavily: `click = None` inside a bare `except ImportError` reads like a shrug until the comment next to it explains why the isinstance check is kept able to survive Click's absence (see below).
+A comment earns its place by explaining *why* a choice was made (a constraint, a workaround, a non-obvious trade-off), never by restating in English what the line already says in Python. `schema.walk` and the loader lean on this: `click = None` inside a bare `except ImportError` reads like a shrug until the comment next to it explains why the isinstance check is kept able to survive Click's absence (see below).
 
 ## Style
 

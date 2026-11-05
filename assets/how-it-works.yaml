@@ -31,14 +31,14 @@ en:
           note: sub-commands, flags, types, defaults, allowed values, help strings. Nothing is guessed from printed text.
       result:
         label: High fidelity
-        note: a parser knows what a help text only hints at, which is why this path is tried first
+        note: a parser knows what a help text only hints at, which is why this is the default path
     - title: "Or read the help text"
       steps:
         - label: Run the tool's own help in a subprocess
           note: "which works against a command line written in any language at all, including one that is not Python"
       result:
         label: Lower fidelity, and it says so
-        note: "the fallback for when no parser object can be reached. A help text says less than a parser knows, and that difference shows up in the form."
+        note: "the path to ask for, with --from-help, when no parser object can be reached. Nothing falls back to it on its own. A help text says less than a parser knows, and that difference shows up in the form."
   outcome:
     label: One normalised description, then one self-contained page
     note: "Both lanes produce the same schema, so the renderer never learns which framework it came from. Every sub-command becomes a section and every flag a field, in semantic HTML, Tailwind utilities and plain JavaScript modules. No framework runtime, no build step, one file."
@@ -67,14 +67,14 @@ fr:
           note: sous-commandes, drapeaux, types, valeurs par défaut, valeurs admises, textes d'aide. Rien n'est deviné depuis du texte imprimé.
       result:
         label: Grande fidélité
-        note: un parseur sait ce qu'un texte d'aide se contente de suggérer, d'où l'ordre de priorité
+        note: un parseur sait ce qu'un texte d'aide se contente de suggérer, d'où la voie par défaut
     - title: "Ou lire le texte d'aide"
       steps:
         - label: Lancer l'aide de l'outil dans un sous-processus
           note: "ce qui fonctionne contre une ligne de commande écrite dans n'importe quel langage, y compris autre que Python"
       result:
         label: Fidélité moindre, et elle le dit
-        note: "le repli pour quand aucun objet parseur n'est accessible. Un texte d'aide en dit moins qu'un parseur, et cet écart se voit dans le formulaire."
+        note: "la voie à demander, avec --from-help, quand aucun objet parseur n'est accessible. Rien ne s'y rabat tout seul. Un texte d'aide en dit moins qu'un parseur, et cet écart se voit dans le formulaire."
   outcome:
     label: Une description normalisée, puis une page autonome
     note: "Les deux voies produisent le même schéma, si bien que le moteur de rendu n'apprend jamais de quel cadre il vient. Chaque sous-commande devient une section et chaque drapeau un champ, en HTML sémantique, utilitaires Tailwind et modules JavaScript natifs. Pas de cadre à l'exécution, pas d'étape de compilation, un seul fichier."

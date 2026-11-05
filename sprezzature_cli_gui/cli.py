@@ -105,13 +105,13 @@ def main(
         # One sentence and stop. The four exception types the two front doors
         # used to catch separately all mean the same thing to the person who
         # typed the command: the spec did not work.
-        raise SystemExit(f"cli_to_gui: {exc}") from exc
+        raise SystemExit(f"sprezzature-cli-gui: {exc}") from exc
 
     if written is None:
         sys.stdout.write(output)
     else:
         # stderr, so `--out -` style piping and shell redirection stay clean.
-        print(f"cli_to_gui: wrote {written}", file=sys.stderr)
+        print(f"sprezzature-cli-gui: wrote {written}", file=sys.stderr)
 
 
 if __name__ == "__main__":

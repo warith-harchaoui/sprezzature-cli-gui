@@ -58,8 +58,10 @@ lists, its ``type=`` conversion functions, which flags are required, and
 their real default values. Reading the object directly is preferred
 whenever it is reachable; the ``--from-help`` adapter above exists
 precisely for the cases where it is not, and it recovers correspondingly
-less: every option becomes a plain text field unless the help line spells
-out a default value (``[default: …]``) or something similar.
+less: an option with no value placeholder becomes a checkbox and one with a
+placeholder a plain text field, unless the help line spells out a set of
+choices or a recognised metavar (``INT``, ``FLOAT``, ``PATH``...); a
+``[default: …]`` in the help line pre-fills the field.
 
 Inputs
 ------
@@ -72,10 +74,11 @@ forms:
 - ``my_pkg.my_cli:build_parser``: import the dotted module path instead,
   then call the named factory function inside it.
 
-Either way, the factory must take no arguments and return either an
-:class:`argparse.ArgumentParser` or a :class:`click.Command`. Which adapter
-reads the result is then chosen automatically, from the returned object's
-own type.
+Either way, the factory must take no arguments and return an
+:class:`argparse.ArgumentParser`, a :class:`click.Command` or a
+``typer.Typer``. The name may also be such an object itself, which the
+loader then uses as is and never calls. Which adapter reads the result is
+then chosen automatically, from the object's own type.
 
 Outputs
 -------
@@ -87,7 +90,7 @@ disk when ``--out PATH`` is given. It contains:
   prototypes, fetched straight from a public URL with no local build step).
   This is the page's one runtime network dependency; the form fields still
   work, unstyled, if that request fails.
-- A sticky header showing the parser's program name and description.
+- A header showing the parser's program name and description.
 - One collapsed ``<details>`` block per sub-command, or a single form when
   the CLI has none, with a field for every flag.
 - A "Build command" button that assembles the full command line from the

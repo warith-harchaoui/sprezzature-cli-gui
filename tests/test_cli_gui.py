@@ -80,3 +80,29 @@ def test_generate_gui_from_argparse_spec() -> None:
         assert "demo" in result.stdout.lower() or "Demo CLI" in result.stdout
     finally:
         tmp_spec.unlink(missing_ok=True)
+
+
+def test_messages_name_the_installed_command(tmp_path: Path) -> None:
+    """stderr speaks as ``sprezzature-cli-gui``, the command the person typed.
+
+    Both messages were prefixed ``cli_to_gui:``, the script's name before the
+    package existed, so an error named a command nobody had run.
+    """
+    from click.testing import CliRunner
+
+    from sprezzature_cli_gui.cli import main
+
+    runner = CliRunner()
+    failed = runner.invoke(main, ["no_such_module_here:factory"])
+    assert failed.exit_code == 1
+    assert "sprezzature-cli-gui: " in failed.output
+    assert "cli_to_gui" not in failed.output
+
+    spec = tmp_path / "tool.py"
+    spec.write_text(
+        "import argparse\ndef make_parser():\n    return argparse.ArgumentParser(prog='t')\n",
+        encoding="utf-8",
+    )
+    wrote = runner.invoke(main, [f"{spec}:make_parser", "--out", str(tmp_path / "gui.html")])
+    assert wrote.exit_code == 0, wrote.output
+    assert "sprezzature-cli-gui: wrote " in wrote.output

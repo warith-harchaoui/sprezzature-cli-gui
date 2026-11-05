@@ -2,6 +2,27 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- `sprezzature-cli-gui` prefixed its error and its "wrote" message with
+  `cli_to_gui:`, the script's name before the package existed. Both now say
+  `sprezzature-cli-gui:`, the command that was typed.
+
+### Docs
+
+- The README figure called the parser path "tried first" and `--from-help`
+  "the fallback", as if one fell back to the other; nothing does, the
+  `--from-help` lane is asked for explicitly. Text changed, figure redrawn.
+- The `scripts/cli_to_gui.py` docstring said `--from-help` turns every
+  option into a text field (an option with no placeholder becomes a
+  checkbox), left Typer out of the factory's return types, and described a
+  sticky header the page does not have.
+- CODING.md placed the guarded `click = None` import in the adapters; it is
+  in `schema.walk` and the loader.
+- The skill said the package reads `--help` as the source of truth, for
+  argparse in particular; it walks argparse, Click and Typer parser objects
+  and reads `--help` only under `--from-help`.
+
 ## [1.5.1] — 2026-11-05
 
 ### Changed
