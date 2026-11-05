@@ -191,7 +191,12 @@ are set. Each tool name is the route's `operation_id`: `health`, `get_example_sc
 - A root form for the top-level options, then one collapsible `<details>` section per
   sub-command, nested as deep as the parser goes.
 - A field per option: a checkbox for a boolean flag, a dropdown for a choice list, a
-  number input for an integer or a float, and a text input for everything else. File
+  number input for an integer or a float, and a text input for everything else. A
+  counter (`-v`, `action="count"` or Click's `count=True`) is a number input that
+  repeats the flag: 3 builds `-v -v -v`. A lone flag's checkbox starts unticked and
+  means "pass this flag"; an on/off pair (`--color/--no-color`, argparse's
+  `BooleanOptionalAction`) starts at its default and writes the other spelling when
+  changed. An untouched form builds the parser's default invocation. File
   arguments are text inputs with a `path/to/file` placeholder; a real file picker
   belongs to the host.
 - A "Build command" button in each form. It builds the command line from that form's

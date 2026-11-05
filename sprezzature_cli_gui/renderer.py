@@ -30,12 +30,25 @@ Author
 from __future__ import annotations
 
 import html as html_lib
+import json
 from typing import Any
 
 
 def _e(text: str) -> str:
     """Shorthand for :func:`html.escape` (HTML-attribute-safe)."""
     return html_lib.escape(text, quote=True)
+
+
+def _js_string(text: str) -> str:
+    """
+    Encode *text* as a JavaScript string literal safe inside ``<script>``.
+
+    JSON is a JavaScript literal; escaping ``<``, ``>`` and ``&`` on top keeps
+    a ``</script>`` or a ``<!--`` in the text from ending or bending the script
+    element it sits in. Pasting the text raw let a quote in a program name end
+    the literal, and a ``</script>`` end the script.
+    """
+    return json.dumps(text).replace("<", "\\u003c").replace(">", "\\u003e").replace("&", "\\u0026")
 
 
 def _field_html(action: dict[str, Any], prefix: str) -> str:
@@ -48,7 +61,13 @@ def _field_html(action: dict[str, Any], prefix: str) -> str:
     collisions.
     """
     flag: str = action["flags"][0] if action["flags"] else action["dest"]
+    off_flags: list[str] = action.get("off_flags") or []
     label_text: str = action["dest"].replace("_", " ")
+    if action["kind"] == "bool" and not off_flags and action["flags"]:
+        # A lone flag's checkbox means "pass this flag", so it is named after
+        # the flag: ``--no-cache`` (dest ``cache``) reads "no cache", not
+        # "cache", which would say the opposite of what ticking it does.
+        label_text = max(action["flags"], key=len).lstrip("-").replace("-", " ").replace("_", " ")
     help_text: str = action.get("help") or ""
     field_id: str = f"{prefix}_{action['dest']}" if prefix else action["dest"]
     field_name: str = field_id
@@ -91,7 +110,19 @@ def _field_html(action: dict[str, Any], prefix: str) -> str:
     )
 
     if kind == "bool":
-        checked: str = " checked" if default is True else ""
+        # Ticked means "this flag is on the line". A lone flag is never
+        # pre-ticked: the untouched form must build the parser's defaults, and
+        # a pre-ticked ``store_false`` (default ``True``) built ``--no-cache``
+        # and turned the option off. An on/off pair shows the default state
+        # instead, and the script writes a spelling only when it changes.
+        pair_attrs: str = ""
+        checked: str = ""
+        if off_flags:
+            checked = " checked" if default is True else ""
+            pair_attrs = (
+                f' data-cli-flag-off="{_e(off_flags[0])}" '
+                f'data-cli-default="{"true" if default is True else "false"}"'
+            )
         # ``min-h-11`` on the checkbox satisfies the sprezzature-ux-laws Fitts
         # heuristic (44 px hit area); ``focus-visible:ring-2`` satisfies
         # the Aesthetic-Usability heuristic. The visible checkbox stays
@@ -100,7 +131,7 @@ def _field_html(action: dict[str, Any], prefix: str) -> str:
         # in the calling code so the row itself is ≥ 44 px tall.
         body: str = (
             f'<input id="{_e(field_id)}" name="{_e(field_name)}" '
-            f'type="checkbox" data-cli-flag="{_e(flag)}" '
+            f'type="checkbox" data-cli-flag="{_e(flag)}"{pair_attrs} '
             f'class="mt-1 h-5 w-5 min-h-11 rounded border-separator '
             f"text-brand-blue focus:outline-none "
             f"focus-visible:ring-2 focus-visible:ring-brand-blue "
@@ -115,6 +146,13 @@ def _field_html(action: dict[str, Any], prefix: str) -> str:
             f'<select id="{_e(field_id)}" name="{_e(field_name)}" '
             f'data-cli-flag="{_e(flag)}" class="{common_classes}">'
             f"{''.join(opts)}</select>"
+        )
+    elif kind == "count":
+        # How many times to repeat the flag: ``3`` builds ``-v -v -v``.
+        body = (
+            f'<input id="{_e(field_id)}" name="{_e(field_name)}" '
+            f'type="number" min="0" step="1" data-cli-flag="{_e(flag)}" '
+            f'data-cli-count class="{common_classes}"{default_attr}>'
         )
     elif kind in ("int", "float"):
         step: str = "1" if kind == "int" else "any"
@@ -250,30 +288,58 @@ const escape = (s) => {
   return s;
 };
 
+// The rule that turns form state into an argument vector, kept apart from
+// the DOM so it reads (and can be run) on plain objects. It writes nothing for
+// a field left as the parser's default, so the untouched form builds exactly
+// the default invocation.
+const addParts = (parts, sub, fields) => {
+  if (sub) parts.push(...sub.split('.'));
+  for (const f of fields) {
+    if (f.checkbox) {
+      if (f.off) {
+        // An on/off pair: write a spelling only when it differs from the default.
+        if (f.checked !== f.def) parts.push(f.checked ? f.flag : f.off);
+      } else if (f.checked) {
+        parts.push(f.flag);
+      }
+      continue;
+    }
+    const value = (f.value || '').trim();
+    if (!value) continue;
+    if (f.count) {
+      // A counter takes no value: 3 is the flag three times (-v -v -v).
+      const n = Number.parseInt(value, 10);
+      for (let i = 0; i < n; i += 1) parts.push(f.flag);
+      continue;
+    }
+    if (f.flag.startsWith('-')) parts.push(f.flag, escape(value));
+    else parts.push(escape(value));
+  }
+  return parts;
+};
+
 document.querySelectorAll('[data-cli-build]').forEach((btn) => {
   btn.addEventListener('click', (ev) => {
     const form = ev.currentTarget.closest('form');
     const sub = form.getAttribute('data-subcommand') || '';
-    const parts = ['<<PROG>>'];
-    if (sub) parts.push(...sub.split('.'));
-    form.querySelectorAll('[data-cli-flag]').forEach((el) => {
-      const flag = el.getAttribute('data-cli-flag');
-      if (el.type === 'checkbox') {
-        if (el.checked) parts.push(flag);
-        return;
-      }
-      const value = (el.value || '').trim();
-      if (!value) return;
-      if (flag.startsWith('-')) parts.push(flag, escape(value));
-      else parts.push(escape(value));
-    });
+    const fields = [...form.querySelectorAll('[data-cli-flag]')].map((el) => ({
+      flag: el.getAttribute('data-cli-flag'),
+      checkbox: el.type === 'checkbox',
+      checked: el.checked,
+      value: el.value,
+      off: el.getAttribute('data-cli-flag-off'),
+      def: el.getAttribute('data-cli-default') === 'true',
+      count: el.hasAttribute('data-cli-count'),
+    }));
+    const parts = [<<PROG>>];
+    addParts(parts, sub, fields);
     const out = parts.join(' ');
     const pre = document.getElementById('cli-out');
     pre.textContent = out;
     pre.scrollIntoView({behavior: 'smooth', block: 'nearest'});
   });
 });
-""".replace("<<PROG>>", tree["prog"])
+""".replace("<<PROG>>", _js_string(tree["prog"]))
 
     return (
         "<!doctype html>\n"

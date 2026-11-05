@@ -33,6 +33,7 @@ Author
 from __future__ import annotations
 
 import html as html_module
+import json
 import re
 from dataclasses import dataclass
 from typing import Any
@@ -47,7 +48,23 @@ _OPTION_RE = re.compile(r"<option[^>]*value=\"([^\"]*)\"")
 #: The line in the emitted script that seeds the built command line. Matched
 #: here rather than on the visible ``<h1>``: the heading is decoration, this
 #: is the string the page actually types for the user, and they can differ.
-_PROG_RE = re.compile(r"const parts = \['([^']*)'\]")
+#:
+#: The name is now a JSON string literal, so a quote in it cannot end
+#: the literal; the single-quoted form is what pages from 1.4.0 and earlier
+#: carry, and those are exactly the pages an audit is run on.
+_PROG_RE = re.compile(r'const parts = \[("(?:[^"\\]|\\.)*")\]')
+_LEGACY_PROG_RE = re.compile(r"const parts = \['([^']*)'\]")
+
+
+def _seeds(page: str) -> list[str]:
+    """The program names the page seeds its command lines with."""
+    seeds: list[str] = []
+    for literal in _PROG_RE.findall(page):
+        try:
+            seeds.append(str(json.loads(literal)))
+        except ValueError:
+            continue
+    return seeds + _LEGACY_PROG_RE.findall(page)
 
 
 @dataclass(frozen=True)
@@ -159,7 +176,7 @@ def audit(tree: dict[str, Any], page: str) -> list[Finding]:
     # ── the command line it builds is the one that exists ───────────────
     prog = str(tree.get("prog") or "")
     if prog:
-        stamped = _PROG_RE.findall(page)
+        stamped = _seeds(page)
         if not stamped:
             findings.append(
                 Finding(

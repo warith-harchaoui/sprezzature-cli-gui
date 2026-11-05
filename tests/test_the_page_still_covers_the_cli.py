@@ -131,7 +131,8 @@ def test_a_program_name_that_stopped_matching_is_reported(tree: dict, page: str)
 
 def test_a_page_with_no_command_seed_is_reported(tree: dict, page: str) -> None:
     """Without the seed, the copy button hands over a bare flag list."""
-    broken = page.replace("const parts = ['demo']", "const parts = []")
+    broken = page.replace('const parts = ["demo"]', "const parts = []")
+    assert broken != page
     assert "prog-missing" in {f.rule for f in audit(tree, broken)}
 
 

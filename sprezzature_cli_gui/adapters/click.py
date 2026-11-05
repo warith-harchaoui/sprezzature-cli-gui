@@ -47,18 +47,18 @@ def _click_param_kind(param: Any) -> str:
     Returns
     -------
     str
-        One of ``"bool"``, ``"int"``, ``"float"``, ``"choice"``,
-        ``"file"``, ``"text"``.
+        One of ``"bool"``, ``"count"``, ``"int"``, ``"float"``,
+        ``"choice"``, ``"file"``, ``"text"``.
     """
     # ``is_flag=True`` is Click's idiomatic boolean switch (parallel
     # to argparse's ``store_true`` / ``store_false``).
     if getattr(param, "is_flag", False):
         return "bool"
-    # ``count=True`` increments an int per repetition (``-vvv``). We
-    # render it as an integer field; the GUI cannot reasonably ask
-    # the user to "click v three times".
+    # ``count=True`` increments an int per repetition (``-vvv``). The page
+    # asks for a number and repeats the flag that many times; as an ``int``
+    # it built ``-v 3``, which Click rejects.
     if getattr(param, "count", False):
-        return "int"
+        return "count"
     # ``click.types.*`` are concrete instances on ``param.type``. We
     # inspect the type's ``name`` so we do not need to import the
     # ``click.types`` symbols at module load.
@@ -92,9 +92,9 @@ def _serialize_click_param(param: Any) -> dict[str, Any]:
     Project one :class:`click.Parameter` into the canonical action dict.
 
     The output schema is identical to :func:`serialize_action`:
-    ``dest``, ``flags``, ``kind``, ``choices``, ``required``,
-    ``default``, ``help``, ``nargs``, ``metavar``, so the HTML
-    renderer never has to branch on the source framework.
+    ``dest``, ``flags``, ``off_flags``, ``kind``, ``choices``,
+    ``required``, ``default``, ``help``, ``nargs``, ``metavar``, so the
+    HTML renderer never has to branch on the source framework.
     """
     # ``opts`` is the list of ``--flag`` strings for Options;
     # Arguments have no opts (positional).
@@ -117,6 +117,10 @@ def _serialize_click_param(param: Any) -> dict[str, Any]:
     return {
         "dest": param.name,
         "flags": flags,
+        # ``--color/--no-color``: Click keeps the off spelling in
+        # ``secondary_opts``. Without it the page could only ever build the on
+        # spelling, so a flag defaulting to on could not be turned off.
+        "off_flags": list(getattr(param, "secondary_opts", []) or []),
         "kind": _click_param_kind(param),
         "choices": _click_param_choices(param),
         "required": bool(getattr(param, "required", False)),

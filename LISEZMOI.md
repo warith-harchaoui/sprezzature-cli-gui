@@ -143,7 +143,7 @@ Il sert la même application FastAPI, avec un point d'accès MCP monté sur `/mc
 ## Ce que contient la page
 
 - Un formulaire racine pour les options de premier niveau, puis une section repliable `<details>` par sous-commande, imbriquée aussi profond que le parseur.
-- Un champ par option : une case à cocher pour un drapeau booléen, une liste déroulante pour une liste de choix, un champ numérique pour un entier ou un flottant, et un champ de texte pour tout le reste. Les arguments de fichier sont des champs de texte avec l'indication `path/to/file` ; un vrai sélecteur de fichier relève de l'hôte.
+- Un champ par option : une case à cocher pour un drapeau booléen, une liste déroulante pour une liste de choix, un champ numérique pour un entier ou un flottant, et un champ de texte pour tout le reste. Un compteur (`-v`, `action="count"` ou `count=True` de Click) est un champ numérique qui répète le drapeau : 3 donne `-v -v -v`. La case d'un drapeau seul part décochée et veut dire « passer ce drapeau » ; une paire marche/arrêt (`--color/--no-color`, `BooleanOptionalAction` d'argparse) part de sa valeur par défaut et écrit l'autre orthographe quand on la change. Un formulaire intact construit l'appel par défaut du parseur. Les arguments de fichier sont des champs de texte avec l'indication `path/to/file` ; un vrai sélecteur de fichier relève de l'hôte.
 - Un bouton « Build command » dans chaque formulaire. Il construit la ligne à partir des champs de ce formulaire seulement ; un drapeau de premier niveau n'apparaît donc pas dans la ligne d'une sous-commande.
 - Un bloc `<pre id="cli-out">` où la ligne construite apparaît, avec une mise entre guillemets prudente pour le shell.
 

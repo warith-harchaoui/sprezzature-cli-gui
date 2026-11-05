@@ -41,12 +41,19 @@ def _action_kind(a: argparse.Action) -> str:
     """
     Map an :class:`argparse.Action` to an HTML form-field kind string.
 
-    Returns one of: ``"bool"``, ``"int"``, ``"float"``, ``"choice"``,
-    ``"text"``, ``"file"`` (for actions whose ``type`` looks like
-    :func:`open` / :class:`argparse.FileType`).
+    Returns one of: ``"bool"``, ``"count"``, ``"int"``, ``"float"``,
+    ``"choice"``, ``"text"``, ``"file"`` (for actions whose ``type`` looks
+    like :func:`open` / :class:`argparse.FileType`).
     """
-    if isinstance(a, (argparse._StoreTrueAction, argparse._StoreFalseAction)):
+    if isinstance(
+        a,
+        (argparse._StoreTrueAction, argparse._StoreFalseAction, argparse.BooleanOptionalAction),
+    ):
         return "bool"
+    # ``action="count"`` takes no value: ``-vvv`` is three ``-v``. As an
+    # ``int`` it built ``-v 3``, which argparse rejects.
+    if isinstance(a, argparse._CountAction):
+        return "count"
     if a.choices:
         return "choice"
     if a.type is None:
@@ -63,9 +70,17 @@ def _action_kind(a: argparse.Action) -> str:
 
 def serialize_action(a: argparse.Action) -> dict[str, Any]:
     """Project one :class:`argparse.Action` into a JSON-friendly dict."""
+    flags: list[str] = list(a.option_strings)
+    # ``BooleanOptionalAction`` registers ``--x`` and ``--no-x`` on one action.
+    # The off spelling is kept apart, so the page can build either one.
+    off_flags: list[str] = []
+    if isinstance(a, argparse.BooleanOptionalAction):
+        off_flags = [f for f in flags if f.startswith("--no-")]
+        flags = [f for f in flags if f not in off_flags]
     return {
         "dest": a.dest,
-        "flags": list(a.option_strings),
+        "flags": flags,
+        "off_flags": off_flags,
         "kind": _action_kind(a),
         "choices": list(a.choices) if a.choices else None,
         "required": bool(a.required),

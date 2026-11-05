@@ -144,7 +144,7 @@ def test_click_param_kind_and_choices() -> None:
 
     by_name = {p.name: p for p in cmd.params}
     assert click_adapter._click_param_kind(by_name["verbose"]) == "bool"
-    assert click_adapter._click_param_kind(by_name["verbosity"]) == "int"
+    assert click_adapter._click_param_kind(by_name["verbosity"]) == "count"
     assert click_adapter._click_param_kind(by_name["format"]) == "choice"
     assert click_adapter._click_param_kind(by_name["threshold"]) == "float"
     assert click_adapter._click_param_kind(by_name["path"]) == "file"
@@ -405,7 +405,7 @@ def test_render_html_includes_prog_title_and_fields() -> None:
     assert "<title>Demo</title>" in html
     assert "demo" in html
     assert 'data-cli-flag="--name"' in html
-    assert "'demo'" in html  # <<PROG>> substitution in the JS payload
+    assert 'const parts = ["demo"]' in html  # <<PROG>>, as a JSON string literal
 
 
 def test_render_html_defines_every_custom_color_token_it_uses() -> None:
