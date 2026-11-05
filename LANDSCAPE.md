@@ -18,7 +18,7 @@ sprezzature suite
 └── sprezzature-video          (what a film about a project claims, checked)
 ```
 
-What comes before: somebody else's command-line tool, written in whatever they wanted, with a parser it already built for itself. What comes after: a host, which is a `Tauri` shell, a FastAPI endpoint, or a shell prompt where the generated line gets pasted. The sister brick is `sprezzature-ui`, which owns the design tokens, the focus-ring conventions and the three-Roboto rule the emitted page obeys; this package is the half of that stack whose input happens to be a parser rather than a drawing. `sprezzature-accessibility` is the natural second pass, because the page this one writes is ordinary HTML and the 20 rules apply to it like any other.
+What comes before: somebody else's command-line tool, written in whatever they wanted, with a parser it already built for itself. What comes after: a host, which is a `Tauri` shell, a FastAPI endpoint, or a shell prompt where the generated line gets pasted. The sister brick is `sprezzature-ui`, which owns the colour tokens and the focus-ring conventions the emitted page obeys (the page itself loads no font and uses the browser's system stack); this package is the half of that stack whose input happens to be a parser rather than a drawing. `sprezzature-accessibility` is the natural second pass, because the page this one writes is ordinary HTML and the 20 rules apply to it like any other.
 
 ## When to choose it
 

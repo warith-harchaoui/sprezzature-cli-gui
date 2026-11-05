@@ -52,8 +52,8 @@ dependencies = [
 # starlette 1.9.0 moved its TestClient onto httpx2, and this repository's CI
 # installs `.[dev]` without ever reading
 # requirements-dev.txt — so the declaration has to be here, where the install
-# actually looks. It is a *test* dependency: putting it in `api` would make
-# every user of the HTTP surface install it.
+# actually looks. It is a *test* dependency: putting it in the base would make
+# every user of the package install it.
 dev = ["pytest>=8.0", "ruff", "mypy", "httpx2>=2.0.0"]
 
 [project.scripts]

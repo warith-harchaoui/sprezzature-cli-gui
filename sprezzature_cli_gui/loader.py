@@ -60,7 +60,7 @@ def load_parser_from_spec(spec: str) -> Any:
 
     Returns
     -------
-    argparse.ArgumentParser
+    argparse.ArgumentParser, click.Command or typer.Typer
         The parser resolved from the named factory (or object). The
         function does *not* call ``parse_args``; it consumes the
         parser by introspection only.
@@ -68,9 +68,12 @@ def load_parser_from_spec(spec: str) -> Any:
     Raises
     ------
     ValueError
-        If ``spec`` does not contain a single ``:`` separator, or the
-        factory returns something that is not an
-        :class:`argparse.ArgumentParser`.
+        If ``spec`` contains no ``:`` separator, or the factory returns
+        something that is none of the three parser types.
+    FileNotFoundError
+        If the module part is a file path that does not exist.
+    AttributeError
+        If the module has no attribute named after the colon.
     """
     if ":" not in spec:
         raise ValueError(
@@ -99,9 +102,9 @@ def load_parser_from_spec(spec: str) -> Any:
     if factory is None:
         raise AttributeError(f"Module '{mod_part}' has no attribute '{factory_name}'.")
 
-    # Click is an optional dependency. We import it lazily so the
-    # ``language: python`` pre-commit hook + minimal CI runners that
-    # only target argparse keep working without Click on the path.
+    # Click and Typer are base dependencies. They are still imported lazily,
+    # and guarded, so the argparse path keeps working in an environment where
+    # one of them has been removed by hand (see CODING.md).
     try:
         import click  # noqa: WPS433  (lazy by design)
     except ImportError:

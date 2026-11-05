@@ -18,7 +18,7 @@ suite sprezzature
 └── sprezzature-video          (ce qu'un film affirme d'un projet, vérifié)
 ```
 
-Ce qui vient avant : l'outil en ligne de commande de quelqu'un d'autre, écrit dans ce qu'il a voulu, avec un analyseur d'arguments qu'il a déjà construit pour lui-même. Ce qui vient après : un hôte, c'est-à-dire une coque `Tauri`, un point d'entrée FastAPI, ou l'invite de commande où la ligne produite sera collée. La brique sœur est `sprezzature-ui`, qui détient les jetons de conception, les conventions d'anneau de focus et la règle des trois Roboto que la page émise respecte ; ce paquet est la moitié de cette pile dont l'entrée se trouve être un analyseur plutôt qu'un dessin. `sprezzature-accessibility` est la deuxième passe naturelle, puisque la page écrite ici est du HTML ordinaire et que les 20 règles s'y appliquent comme ailleurs.
+Ce qui vient avant : l'outil en ligne de commande de quelqu'un d'autre, écrit dans ce qu'il a voulu, avec un analyseur d'arguments qu'il a déjà construit pour lui-même. Ce qui vient après : un hôte, c'est-à-dire une coque `Tauri`, un point d'entrée FastAPI, ou l'invite de commande où la ligne produite sera collée. La brique sœur est `sprezzature-ui`, qui détient les jetons de couleur et les conventions d'anneau de focus que la page émise respecte (la page elle-même ne charge aucune fonte et s'en tient à celles du système) ; ce paquet est la moitié de cette pile dont l'entrée se trouve être un analyseur plutôt qu'un dessin. `sprezzature-accessibility` est la deuxième passe naturelle, puisque la page écrite ici est du HTML ordinaire et que les 20 règles s'y appliquent comme ailleurs.
 
 ## Quand la choisir
 

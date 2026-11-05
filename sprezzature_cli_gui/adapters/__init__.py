@@ -12,9 +12,9 @@ which framework produced it.
 - :mod:`sprezzature_cli_gui.adapters.argparse`: reads a standard-library
   :class:`argparse.ArgumentParser`, always available since argparse ships
   with Python itself.
-- :mod:`sprezzature_cli_gui.adapters.click`: reads an optional
-  :class:`click.Command`; also covers Typer apps, which are built on Click
-  internally.
+- :mod:`sprezzature_cli_gui.adapters.click`: reads a :class:`click.Command`
+  (Click is a base dependency); also covers Typer apps, which ``schema.walk``
+  converts to their Click command first.
 - :mod:`sprezzature_cli_gui.adapters.help_text`: the fallback that needs no
   parser object at all, reading a CLI's printed ``--help`` text instead
   (used through ``--from-help``, at lower fidelity than the other two).

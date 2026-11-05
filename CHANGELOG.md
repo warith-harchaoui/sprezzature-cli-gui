@@ -2,6 +2,19 @@
 
 ## [Unreleased]
 
+### Docs
+
+- LANDSCAPE and PAYSAGE said the emitted page obeys the three-Roboto rule; it
+  loads no font and uses the system stack (`ui-sans-serif, system-ui`).
+- EXAMPLES said `--from-help` turns every option into a text field; an option
+  with no value placeholder becomes a checkbox.
+- The page footer named `scripts/cli_to_gui.py` as its generator; it now says
+  `sprezzature-cli-gui`.
+- Docstrings and comments that still called Click optional (the Click adapter,
+  `adapters/__init__.py`, the loader, `schema.walk`), the loader's `Returns`
+  and `Raises` (argparse only, two exceptions missing), and the CI workflow and
+  pyproject comments that named the removed `api` and `mcp` extras.
+
 ## [1.4.0] — 2026-11-04: the documentation says what the code does, and the image serves /mcp
 
 ### Changed

@@ -3,9 +3,9 @@ sprezzature_cli_gui.adapters.click
 ===========================
 
 The `Click` adapter. `Click` is a popular third-party library for building
-command-line tools, an alternative to Python's built-in `argparse`; this
-adapter is only needed by callers who chose `Click`, so it is an optional
-dependency, not installed by default.
+command-line tools, an alternative to Python's built-in `argparse`. It is a
+base dependency of this package (its own commands are written in Click), so
+this adapter is always available.
 
 It walks a :class:`click.Command`, whether it is a single leaf command or a
 ``Group`` nesting sub-commands, into the same parser-tree dict shape the
@@ -15,10 +15,9 @@ not by themselves: a `Typer` app is not a `click.Command` and exposes no
 `.cli` attribute (that route was written here and does not exist on typer
 0.20). `schema.walk` converts it with typer's own ``get_command`` first, and
 what comes out is a Click command -- so from this adapter's point of view a
-Typer app just is a Click group, once somebody has converted it. Because this
-module is only imported when a caller has actually handed it a Click
-object, someone using nothing but plain `argparse` never needs Click
-installed at all.
+Typer app just is a Click group, once somebody has converted it. This module
+is still imported lazily, only when a caller has actually handed it a Click
+object.
 
 Author
 ------
@@ -62,7 +61,7 @@ def _click_param_kind(param: Any) -> str:
         return "int"
     # ``click.types.*`` are concrete instances on ``param.type``. We
     # inspect the type's ``name`` so we do not need to import the
-    # ``click.types`` symbols at module load (Click is optional).
+    # ``click.types`` symbols at module load.
     type_name: str = getattr(param.type, "name", "") or ""
     if type_name == "boolean":
         return "bool"

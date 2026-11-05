@@ -95,9 +95,8 @@ def walk(obj: Any, *, prog: str | None = None) -> dict[str, Any]:
         if prog is not None:
             tree["prog"] = prog
         return tree
-    # Click is optional; only attempt the isinstance check after a
-    # successful lazy import. Skipping the import on argparse-only
-    # users keeps the script stdlib-only at run time.
+    # Click is a base dependency, but the import stays lazy and guarded so
+    # the argparse path never pays for it and survives its removal by hand.
     try:
         import click  # noqa: WPS433
     except ImportError:

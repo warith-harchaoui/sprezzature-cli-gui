@@ -56,8 +56,10 @@ sprezzature-cli-gui --from-help "mytool --some-global-flag" --out gui.html
 # Runs `mytool --some-global-flag --help` as a subprocess and parses the
 # printed text instead of a live parser object. Works on Rust (clap), Go
 # (cobra), Node (commander) CLIs too, at lower fidelity than native
-# introspection: every option becomes a plain text field unless the help
-# line spells out a [default: …], a set of choices, or a recognised METAVAR.
+# introspection: an option with no value placeholder becomes a checkbox, and
+# one with a placeholder a plain text field, unless the help line spells out
+# a set of choices or a recognised METAVAR (INT, FLOAT, PATH, FILE...); a
+# [default: …] in the help line pre-fills the field.
 ```
 
 ## Inspecting the parser tree without rendering HTML

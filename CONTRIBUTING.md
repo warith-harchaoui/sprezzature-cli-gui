@@ -33,7 +33,7 @@ Follow [CODING.md](CODING.md): NumPy-style docstrings, full type annotations, no
 
 Every adapter reduces its framework's parser object to the same shape: `{"prog": str, "description": str, "actions": [...], "sub_commands": {...}}`. To add one:
 
-1. Write `sprezzature_cli_gui/adapters/<framework>.py` with a `walk_<framework>(obj) -> dict` function that produces that shape; look at `adapters/click.py` for the pattern of a framework whose import stays optional.
+1. Write `sprezzature_cli_gui/adapters/<framework>.py` with a `walk_<framework>(obj) -> dict` function that produces that shape; look at `adapters/click.py` for the pattern of a framework imported lazily, only when `schema.walk` is handed one of its objects.
 2. Wire the new framework's isinstance check into `schema.walk`, imported lazily inside the function body, the same way the argparse and Click checks are.
 3. If the framework's parser object is callable, add it to the "already a parser" check in `loader.load_parser_from_spec`, or the loader will call it and run the target tool. Click commands and Typer apps are both on that list for this reason.
 4. `renderer.py`, `audit.py` and `cli.py` need no change: they only ever see the shared dict shape.
