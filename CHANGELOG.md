@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.5.2] — 2026-11-05
+
 ### Fixed
 
 - `sprezzature-cli-gui` prefixed its error and its "wrote" message with
