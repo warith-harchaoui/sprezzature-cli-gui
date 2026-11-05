@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Changed
+
+- `sprezzature-cli-gui -V` prints the version, like `--version` and like every
+  other brick's front door.
+
 ## [1.5.0] — 2026-11-05
 
 ### Fixed

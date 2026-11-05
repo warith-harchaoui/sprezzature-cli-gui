@@ -52,7 +52,7 @@ Examples:
         "shell command line with --from-help."
     ),
 )
-@click.version_option(package_name="sprezzature-cli-gui")
+@click.version_option(None, "-V", "--version", package_name="sprezzature-cli-gui")
 @click.argument("spec")
 @click.option(
     "--from-help",

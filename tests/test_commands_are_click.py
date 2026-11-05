@@ -100,3 +100,17 @@ def test_the_allow_list_is_not_stale() -> None:
     """Every allow-listed module exists and still imports argparse."""
     for rel in sorted(_MAY_IMPORT_ARGPARSE):
         assert _imports_argparse(REPO_ROOT / rel), f"{rel} no longer needs its exemption"
+
+
+@pytest.mark.parametrize("flag", ["-V", "--version"])
+def test_the_front_door_answers_both_version_flags(flag: str) -> None:
+    """``-V`` as well as ``--version``, like every other brick's front door."""
+    from importlib.metadata import version
+
+    from click.testing import CliRunner
+
+    from sprezzature_cli_gui.cli import main
+
+    result = CliRunner().invoke(main, [flag])
+    assert result.exit_code == 0, result.output
+    assert version("sprezzature-cli-gui") in result.output
