@@ -74,6 +74,17 @@ def test_openapi_names_every_tool() -> None:
             assert "operationId" in spec, f"{verb.upper()} {path} has no operation_id"
 
 
+def test_the_mcp_server_announces_its_version_as_a_version() -> None:
+    """fastapi-mcp passes the description into the version slot."""
+    pytest.importorskip("fastapi_mcp")
+    from sprezzature_cli_gui import __version__
+    from sprezzature_cli_gui.mcp import mcp
+
+    options = mcp.server.create_initialization_options()
+    assert options.server_version == __version__
+    assert options.instructions == mcp.description
+
+
 def test_mcp_mounts_and_publishes_the_tools() -> None:
     """The MCP endpoint exists and carries the expected tool names."""
     pytest.importorskip("fastapi_mcp")
