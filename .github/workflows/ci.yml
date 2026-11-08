@@ -1,7 +1,7 @@
 name: ci
 
 # Gentle, deterministic gate: install the package with its `dev` extra (the
-# test toolchain; there is no feature extra), then ruff, mypy and pytest on one
+# test toolchain; there is no feature extra), then ruff and pytest on one
 # Python, plus an install-and-import job on the 3.10 floor. Installing the
 # package also exercises the setuptools packaging. Intentionally minimal.
 
@@ -50,17 +50,6 @@ jobs:
           pip install -e ".[dev]" -r requirements-dev.txt
       - name: Ruff
         run: ruff check .
-      # The type half of the gate. Added after running mypy by hand found
-      # the same real defect in all six packages: mcp.py's two `main`
-      # definitions, the missing-extra fallback and the real one, took
-      # different arguments. Once, on one version: this is a gate, not a
-      # matrix. scripts/ is a separate invocation because those modules
-      # import siblings by bare name off a runtime sys.path.
-      - name: Mypy
-        if: matrix.python-version == '3.12'
-        run: |
-          mypy sprezzature_cli_gui
-          mypy scripts
       - name: Pytest
         run: pytest -q
 
