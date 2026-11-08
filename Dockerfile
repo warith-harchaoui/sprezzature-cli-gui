@@ -13,6 +13,14 @@ COPY . .
 # 2026-11-01; there is no extra to ask for.
 RUN pip install --no-cache-dir "."
 
+# A page is compiled with Tailwind's standalone CLI, about 45 MB. In the image,
+# not on a container's first page: a `docker run --rm` has no cache to keep it
+# in, and would fetch it every time. Compiling one class here also proves the
+# binary runs on this base image, and a failed download stops the build instead
+# of shipping an image that needs GitHub at run time.
+ENV SPREZZATURE_CLI_GUI_CACHE=/opt/sprezzature-cli-gui/cache
+RUN python -c "from sprezzature_cli_gui.tailwind import stylesheet; print(stylesheet(['<p class=flex></p>']).version)"
+
 EXPOSE 8000
 
 # Serve what the image was built for: the MCP server, which is the same FastAPI

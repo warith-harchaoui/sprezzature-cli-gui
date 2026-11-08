@@ -23,6 +23,7 @@ from sprezzature_cli_gui.adapters.help_text import walk_from_help
 from sprezzature_cli_gui.loader import load_parser_from_spec
 from sprezzature_cli_gui.renderer import render_html
 from sprezzature_cli_gui.schema import walk
+from sprezzature_cli_gui.tailwind import TailwindUnavailable
 
 
 class GenerationError(RuntimeError):
@@ -63,7 +64,10 @@ def build_tree(spec: str, *, from_help: bool = False, prog: str | None = None) -
     """
     if from_help:
         try:
-            return walk_from_help(spec)
+            tree = walk_from_help(spec)
+            if prog is not None:
+                tree["prog"] = prog
+            return tree
         except (FileNotFoundError, OSError) as exc:
             raise GenerationError(f"--from-help failed: {exc}") from exc
     try:
@@ -76,11 +80,43 @@ def build_tree(spec: str, *, from_help: bool = False, prog: str | None = None) -
         raise GenerationError(str(exc)) from exc
 
 
-def render(tree: dict[str, Any], *, as_json: bool = False, title: str | None = None) -> str:
-    """Render a walked tree as the single-page GUI, or as JSON for debugging."""
+def render(
+    tree: dict[str, Any],
+    *,
+    as_json: bool = False,
+    title: str | None = None,
+    offline: bool = False,
+) -> str:
+    """
+    Render a walked tree as the single-page GUI, or as JSON for debugging.
+
+    Parameters
+    ----------
+    tree : dict
+        The walked parser.
+    as_json : bool
+        Return the tree as JSON instead of HTML.
+    title : str or None
+        Page ``<title>``; the program name when None.
+    offline : bool
+        Compile with the cached Tailwind release without asking the network.
+
+    Returns
+    -------
+    str
+        The page, or the JSON.
+
+    Raises
+    ------
+    GenerationError
+        When no Tailwind CLI can be downloaded and none is cached.
+    """
     if as_json:
         return json.dumps(tree, indent=2, ensure_ascii=False) + "\n"
-    return render_html(tree, title=title or tree["prog"])
+    try:
+        return render_html(tree, title=title or tree["prog"], offline=offline)
+    except TailwindUnavailable as exc:
+        raise GenerationError(str(exc)) from exc
 
 
 def write(output: str, out: Path | None) -> str | None:

@@ -13,7 +13,7 @@ On le pointe vers un parseur : l'objet qu'un CLI Python (*command-line interfac
 
 Exemple : un CLI avec une sous-commande `convert INPUT OUTPUT` qui prend aussi `--verbose` devient une page avec une section `convert` contenant deux champs de texte et une case à cocher. Les remplir puis cliquer sur « Build command » affiche la ligne exacte `mytool convert in.csv out.json --verbose`, prête à copier.
 
-Pas de cadre logiciel, pas d'étape de compilation : la page produite est un seul fichier HTML. Elle charge la version « Play » de Tailwind depuis un CDN (*content delivery network*, réseau de diffusion de contenu, ici `cdn.tailwindcss.com`) pour transformer les classes utilitaires en vrai CSS dans le navigateur ; la mise en forme demande donc une connexion internet. Les champs du formulaire et le bouton « Build command » fonctionnent sans elle, simplement sans mise en forme.
+Pas de cadre logiciel, pas d'étape de compilation de votre côté : la page produite est un seul fichier HTML qui ne charge rien. À chaque génération, le générateur demande au CDN (*content delivery network*, réseau de diffusion de contenu, ici `cdn.tailwindcss.com`) quelle version de Tailwind est courante, prend cette version complète (son CLI autonome, téléchargé une fois dans `~/.cache/sprezzature-cli-gui/tailwind/`, ou `SPREZZATURE_CLI_GUI_CACHE`) et en compile seulement les utilitaires que la page emploie, dans le `<style>` de la page : environ 10 ko. La version reste à jour, le navigateur du visiteur ne contacte jamais un tiers et la page se met en forme hors ligne. Sans réseau, la version la plus récente du cache sert ; `--offline` le fait exprès. La première exécution demande le réseau : le CLI pèse environ 45 Mo.
 
 ## Comment ça marche
 
@@ -62,10 +62,13 @@ sprezzature-cli-gui --from-help "mytool" --out gui.html
 | `--out PATH` | Écrire le HTML dans `PATH` plutôt que sur la sortie standard. |
 | `--title TEXT` | Le `<title>` de la page. Par défaut, le nom du programme. |
 | `--prog TEXT` | Remplacer le nom du programme dans la page et dans la ligne construite. Le nom que donne un groupe Click ou une application Typer (un nom de fonction, ou `cli` pour une application Typer à plusieurs commandes) est rarement celui de la commande installée. |
+| `--offline` | Compiler avec le Tailwind le plus récent déjà en cache, sans demander à `cdn.tailwindcss.com` quelle version est courante. Un cache vide sort avec le code 1. |
 | `--json` | Imprimer l'arbre du parseur en JSON plutôt que le HTML. |
-| `--version`, `-h`/`--help` | Version et aide. |
+| `-V`/`--version`, `-h`/`--help` | Version et aide. |
 
-Une spécification introuvable, non importable ou impossible à parcourir sort avec le code 1 et une phrase sur la sortie d'erreur.
+Une spécification introuvable, non importable ou impossible à parcourir sort avec le code 1 et une phrase sur la sortie d'erreur. Une page impossible à compiler aussi, et la phrase dit ce qui s'est passé : un statut HTTP d'un serveur qui a répondu (`HTTP 504` et l'URL), un réseau injoignable, ou `--offline` avec un cache vide sont trois phrases différentes.
+
+Deux variables d'environnement valent pour toutes les surfaces, API HTTP et serveur MCP compris : `SPREZZATURE_CLI_GUI_OFFLINE=1` fait ce que fait `--offline`, et `SPREZZATURE_CLI_GUI_CACHE` déplace le cache.
 
 La complétion du shell vient de Click :
 
@@ -106,7 +109,7 @@ for finding in audit(tree, html):         # une liste vide : la page couvre le C
     print(finding.rule, finding.subject, finding.message)
 ```
 
-`walk(obj, prog=None)` renvoie l'arbre canonique : `prog`, `description`, `actions`, `sub_commands`. Elle lève `TypeError` pour tout ce qui n'est pas l'un des trois types de parseur. `render_html(tree, title="CLI GUI")` renvoie la page complète. `audit(tree, page)` renvoie une liste d'objets `Finding` (`rule`, `subject`, `message`).
+`walk(obj, prog=None)` renvoie l'arbre canonique : `prog`, `description`, `actions`, `sub_commands`. Elle lève `TypeError` pour tout ce qui n'est pas l'un des trois types de parseur. `render_html(tree, title="CLI GUI", offline=False, extra_content=())` renvoie la page complète. `offline=True` équivaut à `--offline`. `extra_content` est une suite de textes dont les classes doivent aussi être compilées, par exemple un script que vous ajoutez à la page et qui crée des éléments à l'exécution : Tailwind ne garde que les utilitaires qu'il voit. Elle lève `sprezzature_cli_gui.tailwind.TailwindUnavailable` quand aucun CLI Tailwind n'est disponible. `audit(tree, page)` renvoie une liste d'objets `Finding` (`rule`, `subject`, `message`).
 
 ## API HTTP
 
@@ -118,7 +121,7 @@ uvicorn sprezzature_cli_gui.api:app --host 0.0.0.0 --port 8000
 |---|---|---|
 | `GET /health` | `health` | Sonde de vie : `{"status": "ok"}`. |
 | `GET /v1/example` | `get_example_schema` | Un arbre de schéma parcouru depuis un petit parseur de démonstration, pour en copier la forme. |
-| `POST /v1/render` | `render_gui` | Corps `{"tree": ..., "title": ...}` ; renvoie la page en HTML. Répond 400 quand l'arbre n'a pas `prog` ou `actions`. |
+| `POST /v1/render` | `render_gui` | Corps `{"tree": ..., "title": ...}` ; renvoie la page en HTML. Répond 400 quand l'arbre n'a pas `prog` ou `actions`, ou contient ce que le moteur de rendu ne sait pas lire, comme une action sans ses clés ; 503, avec la cause dans `detail`, quand aucun CLI Tailwind ne peut être téléchargé et qu'aucun n'est en cache. |
 | `POST /v1/audit` | `audit_gui` | Corps `{"schema": ..., "page": ...}` ; renvoie `{"findings_total": n, "findings": [...]}`. |
 
 La documentation interactive est servie sur `/docs` et `/redoc`.
@@ -130,6 +133,8 @@ docker compose run --rm api sprezzature-cli-gui mytool.cli:build_parser --out /w
 ```
 
 La commande par défaut de l'image est `sprezzature-cli-gui-mcp --host 0.0.0.0 --port 8000` : un seul conteneur sert les routes HTTP et le point d'accès MCP sur `/mcp`, sur le même port.
+
+L'image embarque le CLI Tailwind (environ 45 Mo, dans `/opt/sprezzature-cli-gui/cache`) : il est téléchargé et essayé à la construction de l'image, qui demande donc GitHub, et un conteneur neuf ne le repaie pas à sa première page. Un conteneur demande quand même au CDN quelle version est courante et ne télécharge que si Tailwind a publié depuis la construction ; `SPREZZATURE_CLI_GUI_OFFLINE=1` compile avec celui de l'image et ne sort jamais du conteneur.
 
 ## Serveur MCP
 
@@ -154,6 +159,7 @@ Chaque champ porte un attribut `data-cli-flag` qui nomme l'option qu'il construi
 - `adapters/` : un lecteur par source. `argparse.py` et `click.py` parcourent un objet parseur vivant ; une application Typer est convertie en sa commande Click et parcourue comme Click. `help_text.py` analyse le texte imprimé par `--help`.
 - `schema.py` : `walk`, l'aiguillage qui ramène chaque source au même arbre.
 - `renderer.py` : `render_html`, de l'arbre à la page autonome.
+- `tailwind.py` : la version courante de Tailwind, son CLI en cache et le CSS compilé de la page.
 - `loader.py` : résout une spécification `module:fabrique` ou `chemin.py:fabrique` jusqu'au parseur.
 - `audit.py` : les cinq règles ci-dessus.
 - `cli.py`, `audit_cli.py`, `_generate.py` : les deux commandes Click et le travail derrière le générateur.
@@ -168,6 +174,8 @@ pip install -e ".[dev]"
 ruff check .
 python -m pytest -q
 ```
+
+La suite compile les pages avec un faux CLI Tailwind : elle n'a pas besoin du réseau. Un fichier, `tests/test_the_real_tailwind_compiles_the_page.py`, lance le vrai : ici dès qu'une vraie génération l'a mis en cache (sinon il saute et le dit), et dans le job `real-tailwind` de la CI, où un CLI absent est un échec et non un saut.
 
 Voir [CONTRIBUTING.md](https://github.com/warith-harchaoui/sprezzature-cli-gui/blob/main/CONTRIBUTING.md) et, pour les voisins de ce paquet, [PAYSAGE.md](https://github.com/warith-harchaoui/sprezzature-cli-gui/blob/main/PAYSAGE.md).
 

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sprezzature-cli-gui"
-version = "1.5.2"
+version = "1.6.0"
 description = "Auto-generate a single-file HTML GUI from any Python CLI (argparse, Click, Typer)."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -89,3 +89,6 @@ testpaths = ["tests"]
 # carries it -- scripts/test_the_suite_runs_tests_the_same_way.py in the hub
 # checks that it still does.
 addopts = "-ra --strict-markers"
+markers = [
+    "real_tailwind: compiles a page with the real Tailwind CLI (skips, saying where it runs, when that CLI is not cached; fails instead in the real-tailwind CI job).",
+]

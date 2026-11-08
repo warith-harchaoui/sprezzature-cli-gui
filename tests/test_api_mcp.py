@@ -51,6 +51,30 @@ def test_malformed_tree_is_rejected() -> None:
     assert client.post("/v1/render", json={"tree": {"nope": 1}}).status_code == 400
 
 
+@pytest.mark.parametrize(
+    "tree",
+    [
+        {"prog": "x", "actions": [{"foo": 1}]},
+        {"prog": "x", "actions": 3},
+        {"prog": "x", "actions": [], "sub_commands": 3},
+    ],
+)
+def test_a_tree_malformed_inside_is_a_400_too(tree: dict) -> None:
+    """The top-level keys are there and the rest is not the walker's shape."""
+    response = client.post("/v1/render", json={"tree": tree})
+    assert response.status_code == 400
+    assert "/v1/example" in response.json()["detail"]
+
+
+def test_no_tailwind_to_compile_with_is_a_503(tmp_path, monkeypatch) -> None:
+    """An empty cache is the server's state, not the caller's mistake."""
+    monkeypatch.setenv("SPREZZATURE_CLI_GUI_CACHE", str(tmp_path))
+    tree = client.get("/v1/example").json()["tree"]
+    response = client.post("/v1/render", json={"tree": tree})
+    assert response.status_code == 503
+    assert str(tmp_path) in response.json()["detail"]
+
+
 def test_no_route_loads_arbitrary_modules() -> None:
     """
     No endpoint may accept a ``module:factory`` spec.

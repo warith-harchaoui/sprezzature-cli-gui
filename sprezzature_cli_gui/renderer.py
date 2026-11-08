@@ -31,7 +31,10 @@ from __future__ import annotations
 
 import html as html_lib
 import json
+from collections.abc import Sequence
 from typing import Any
+
+from sprezzature_cli_gui.tailwind import stylesheet
 
 
 def _e(text: str) -> str:
@@ -247,9 +250,49 @@ def _children_html(node: dict[str, Any], path: list[str]) -> str:
     return "".join(parts)
 
 
-def render_html(tree: dict[str, Any], title: str = "CLI GUI") -> str:
+def _tailwind_block(content: Sequence[str], *, offline: bool) -> str:
+    """
+    Write the page's Tailwind: only the utilities *content* uses.
+
+    Parameters
+    ----------
+    content : sequence of str
+        The markup and scripts whose classes must be styled.
+    offline : bool
+        Use the newest cached Tailwind without asking the network.
+
+    Returns
+    -------
+    str
+        ``<head>`` markup: one comment and one ``<style>``.
+
+    Raises
+    ------
+    TailwindUnavailable
+        When no Tailwind CLI can be had.
+    """
+    sheet = stylesheet(content, offline=offline)
+    return (
+        f"<!-- Tailwind {_e(sheet.version)}: only the utilities this page uses, "
+        "compiled when it was generated. -->\n"
+        f"<style>\n{sheet.css}\n</style>\n"
+    )
+
+
+def render_html(
+    tree: dict[str, Any],
+    title: str = "CLI GUI",
+    *,
+    offline: bool = False,
+    extra_content: Sequence[str] = (),
+) -> str:
     """
     Compose the full HTML document from a walked parser tree.
+
+    The page carries its Tailwind and loads nothing when it opens:
+    :func:`sprezzature_cli_gui.tailwind.stylesheet` takes the full current
+    release (fetched once, cached locally) and compiles from it only the
+    utilities the page uses, about 10 kB.
 
     Parameters
     ----------
@@ -258,11 +301,21 @@ def render_html(tree: dict[str, Any], title: str = "CLI GUI") -> str:
     title : str, default "CLI GUI"
         Page ``<title>``. The prog name appears in the visible header
         block regardless.
+    offline : bool, default False
+        Use the newest cached Tailwind without asking the network.
+    extra_content : sequence of str
+        Text whose class names must be styled too, such as a script the
+        caller adds to the page that creates elements at run time.
 
     Returns
     -------
     str
         A complete, single-file HTML document. ``\n``-terminated.
+
+    Raises
+    ------
+    TailwindUnavailable
+        When no Tailwind CLI can be downloaded and none is cached.
     """
     root_form: str = _form_html(tree, []) if tree["actions"] else ""
     sub_html: str = _children_html(tree, [])
@@ -341,47 +394,15 @@ document.querySelectorAll('[data-cli-build]').forEach((btn) => {
 });
 """.replace("<<PROG>>", _js_string(tree["prog"]))
 
-    return (
+    head_open: str = (
         "<!doctype html>\n"
         '<html lang="en" data-color-scheme="auto">\n'
         "<head>\n"
         '<meta charset="utf-8">\n'
         '<meta name="viewport" content="width=device-width, initial-scale=1">\n'
         f"<title>{_e(title)}</title>\n"
-        '<script src="https://cdn.tailwindcss.com"></script>\n'
-        "<script>\n"
-        "  // The markup below uses the sprezzature-ui semantic color tokens\n"
-        "  // (brand-blue, label-primary/secondary, surface-secondary,\n"
-        "  // separator). Tailwind's Play CDN only knows its own default\n"
-        "  // palette until told otherwise, so without this block every one\n"
-        "  // of those utility classes compiles to nothing: no card\n"
-        "  // background, no border, and critically, a 'Build command'\n"
-        "  // button rendered as white text on a transparent background\n"
-        "  // (invisible, though still present and clickable in the DOM).\n"
-        "  // Values match sprezzature-ui's stack-tailwind.md so a page\n"
-        "  // generated here looks consistent with the rest of the stack.\n"
-        "  tailwind.config = {\n"
-        "    theme: {\n"
-        "      extend: {\n"
-        "        colors: {\n"
-        "          brand: {\n"
-        "            blue: { DEFAULT: '#007AFF', dark: '#0A84FF' },\n"
-        "            red: { DEFAULT: '#FF3B30', dark: '#FF453A' },\n"
-        "          },\n"
-        "          label: {\n"
-        "            primary: '#000000', 'primary-dark': '#FFFFFF',\n"
-        "            secondary: 'rgba(60,60,67,0.6)', "
-        "'secondary-dark': 'rgba(235,235,245,0.6)',\n"
-        "          },\n"
-        "          surface: {\n"
-        "            secondary: '#F2F2F7', 'secondary-dark': '#1C1C1E',\n"
-        "          },\n"
-        "          separator: 'rgba(60,60,67,0.36)',\n"
-        "        },\n"
-        "      },\n"
-        "    },\n"
-        "  };\n"
-        "</script>\n"
+    )
+    head_close: str = (
         "<style>\n"
         "  :root { color-scheme: light dark; }\n"
         "  html, body { font-family: ui-sans-serif, system-ui, sans-serif; "
@@ -392,6 +413,8 @@ document.querySelectorAll('[data-cli-build]').forEach((btn) => {
         "  *:focus { outline: none; }\n"
         "</style>\n"
         "</head>\n"
+    )
+    body: str = (
         '<body class="min-h-screen bg-white text-black dark:bg-black dark:text-white">\n'
         '<main class="mx-auto max-w-3xl px-4 py-8">\n'
         f'<header class="mb-6"><h1 class="text-[28px] font-semibold">{_e(tree["prog"])}</h1>{desc}</header>\n'
@@ -417,3 +440,5 @@ document.querySelectorAll('[data-cli-build]').forEach((btn) => {
         "</body>\n"
         "</html>\n"
     )
+    styling = _tailwind_block([body, *extra_content], offline=offline)
+    return head_open + styling + head_close + body

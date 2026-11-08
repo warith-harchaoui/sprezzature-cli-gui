@@ -2,6 +2,44 @@
 
 ## [Unreleased]
 
+## [1.6.0] — 2026-11-08
+
+### Changed
+
+- A generated page no longer loads Tailwind from `cdn.tailwindcss.com`. On
+  each run the generator asks the CDN which release is current (one request
+  per process), takes that release in full (its standalone CLI, downloaded
+  once into `~/.cache/sprezzature-cli-gui/tailwind/` or
+  `SPREZZATURE_CLI_GUI_CACHE`) and compiles only the utilities the page uses
+  into its `<style>`: about 10 kB, and the page loads nothing.
+  `render_html(..., extra_content=[...])` names classes a caller's script adds
+  later. Without a network, the newest cached release is used; `--offline`
+  (`render_html(..., offline=True)`, `SPREZZATURE_CLI_GUI_OFFLINE=1`) asks for
+  that. An empty cache is an error naming the cache and the cause;
+  `POST /v1/render` answers 503. A server that answers with an error
+  (`HTTP 504` and the URL) is reported apart from an absent network.
+  `sprezzature_cli_gui.tailwind`;
+  `tests/test_the_page_loads_nothing_from_a_cdn.py`, and
+  `tests/test_the_real_tailwind_compiles_the_page.py` for the real binary
+  (the `real-tailwind` CI job, where a missing binary fails).
+- The Docker image downloads and tries the Tailwind CLI when it is built, so a
+  fresh container does not fetch 45 MB on its first page.
+
+### Fixed
+
+- `sprezzature-cli-gui-audit` printed a traceback on a bad SPEC; it now says
+  one sentence like the generator. On both commands, a target that raises at
+  import or in its factory is one sentence too. `--from-help` refuses an
+  unbalanced quote, a `--help` that never answers, and a command that prints
+  nothing (it used to write an empty page).
+- The MCP server announced its description as its version
+  (`serverInfo.version`): fastapi-mcp 0.4 passes the description into
+  `Server`'s version slot. It now announces the package version, and the
+  description goes to `instructions`.
+- `--from-help` ignored `--prog`: the page kept the name the help text gave.
+- `POST /v1/render` answered 500 on a tree whose `prog` and `actions` were
+  present but malformed (an action `{"foo": 1}`); it now answers 400.
+
 ## [1.5.2] — 2026-11-05
 
 ### Fixed

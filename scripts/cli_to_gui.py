@@ -86,10 +86,9 @@ Outputs
 A single HTML file: printed to standard output by default, or written to
 disk when ``--out PATH`` is given. It contains:
 
-- Tailwind loaded from its "Play" CDN build (a version meant for quick
-  prototypes, fetched straight from a public URL with no local build step).
-  This is the page's one runtime network dependency; the form fields still
-  work, unstyled, if that request fails.
+- Tailwind compiled when the page is generated: the current release, cut
+  down to the utilities the page uses, inside its ``<style>``. The page loads
+  nothing when it opens.
 - A header showing the parser's program name and description.
 - One collapsed ``<details>`` block per sub-command, or a single form when
   the CLI has none, with a field for every flag.

@@ -82,6 +82,15 @@ Examples:
     ),
 )
 @click.option(
+    "--offline",
+    is_flag=True,
+    default=False,
+    help=(
+        "Compile with the newest Tailwind already cached instead of asking "
+        "cdn.tailwindcss.com for the current release."
+    ),
+)
+@click.option(
     "--json",
     "json_",
     is_flag=True,
@@ -94,12 +103,13 @@ def main(
     out: Path | None,
     title: str | None,
     prog: str | None,
+    offline: bool,
     json_: bool,
 ) -> None:
     """Walk SPEC and write its GUI."""
     try:
         tree = build_tree(spec, from_help=from_help, prog=prog)
-        output = render(tree, as_json=json_, title=title)
+        output = render(tree, as_json=json_, title=title, offline=offline)
         written = write(output, out)
     except GenerationError as exc:
         # One sentence and stop. The four exception types the two front doors

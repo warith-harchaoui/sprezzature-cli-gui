@@ -33,11 +33,16 @@ For example: a CLI with a `convert INPUT OUTPUT` sub-command that also takes
 checkbox. Filling them in and pressing "Build command" prints the exact line
 `mytool convert in.csv out.json --verbose` for the visitor to copy.
 
-No framework, no build step: the emitted page is one static HTML file. It does load
-Tailwind's "Play" build from a CDN (content delivery network, here
-`cdn.tailwindcss.com`) to turn the utility classes into real CSS in the visitor's
-browser, so the styling needs an internet connection. The form fields and the
-"Build command" button still work, unstyled, without one.
+No framework, no build step on your side: the emitted page is one static HTML file
+that loads nothing. Each time a page is generated, the generator asks the CDN
+(content delivery network, here `cdn.tailwindcss.com`) which Tailwind release is
+current, takes that release in full (its standalone CLI, downloaded once into
+`~/.cache/sprezzature-cli-gui/tailwind/`, or `SPREZZATURE_CLI_GUI_CACHE`), and
+compiles from it only the utilities the page uses into the page's `<style>`, about
+10 kB. The release stays current; the visitor's browser never contacts a third
+party and the page styles itself offline. Without a network, the newest cached
+release is used; `--offline` does that on purpose. The first run needs a network:
+the CLI is about 45 MB.
 
 ## How it works
 
@@ -94,11 +99,18 @@ is and never calls it, because calling a Click command or a Typer app runs it.
 | `--out PATH` | Write the HTML to `PATH` instead of stdout. |
 | `--title TEXT` | The page `<title>`. Defaults to the program name. |
 | `--prog TEXT` | Override the program name in the page and in the built command line. The name a Click group or a Typer app reports (a function name, or `cli` for a multi-command Typer app) is rarely the installed command name. |
+| `--offline` | Compile with the newest Tailwind already cached, without asking `cdn.tailwindcss.com` which release is current. An empty cache exits with status 1. |
 | `--json` | Print the walked parser tree as JSON instead of HTML. |
-| `--version`, `-h`/`--help` | Version and help. |
+| `-V`/`--version`, `-h`/`--help` | Version and help. |
 
 A spec that cannot be found, imported or walked exits with status 1 and one sentence on
-stderr.
+stderr. So does a page that cannot be compiled, and the sentence says what happened: an
+HTTP status from a server that answered (`HTTP 504` and the URL), an unreachable
+network, or `--offline` with an empty cache are three different sentences.
+
+Two environment variables apply to every surface, the HTTP API and the MCP server
+included: `SPREZZATURE_CLI_GUI_OFFLINE=1` does what `--offline` does, and
+`SPREZZATURE_CLI_GUI_CACHE` moves the cache.
 
 Shell completion comes from Click:
 
@@ -144,7 +156,11 @@ for finding in audit(tree, html):         # an empty list means the page covers 
 
 `walk(obj, prog=None)` returns the canonical tree: `prog`, `description`, `actions`,
 `sub_commands`. It raises `TypeError` for anything that is not one of the three parser
-types. `render_html(tree, title="CLI GUI")` returns the complete page.
+types. `render_html(tree, title="CLI GUI", offline=False, extra_content=())` returns the
+complete page. `offline=True` is `--offline`. `extra_content` is a sequence of texts
+whose classes must be compiled too, such as a script you add to the page that creates
+elements at run time: Tailwind only keeps the utilities it can see. It raises
+`sprezzature_cli_gui.tailwind.TailwindUnavailable` when no Tailwind CLI can be had.
 `audit(tree, page)` returns a list of `Finding` objects (`rule`, `subject`, `message`).
 
 ## HTTP API
@@ -157,7 +173,7 @@ uvicorn sprezzature_cli_gui.api:app --host 0.0.0.0 --port 8000
 |---|---|---|
 | `GET /health` | `health` | Liveness probe: `{"status": "ok"}`. |
 | `GET /v1/example` | `get_example_schema` | A schema tree walked from a small demo parser, to copy the shape from. |
-| `POST /v1/render` | `render_gui` | Body `{"tree": ..., "title": ...}`; returns the page as HTML. Answers 400 when the tree lacks `prog` or `actions`. |
+| `POST /v1/render` | `render_gui` | Body `{"tree": ..., "title": ...}`; returns the page as HTML. Answers 400 when the tree lacks `prog` or `actions`, or holds something the renderer cannot read, such as an action without its keys; 503, with the cause in `detail`, when no Tailwind CLI can be downloaded and none is cached. |
 | `POST /v1/audit` | `audit_gui` | Body `{"schema": ..., "page": ...}`; returns `{"findings_total": n, "findings": [...]}`. |
 
 Interactive documentation is served at `/docs` and `/redoc`.
@@ -172,6 +188,13 @@ docker compose run --rm api sprezzature-cli-gui mytool.cli:build_parser --out /w
 
 The image's default command is `sprezzature-cli-gui-mcp --host 0.0.0.0 --port 8000`,
 so one container serves the HTTP routes and the MCP endpoint at `/mcp` on the same port.
+
+The image carries the Tailwind CLI (about 45 MB, in `/opt/sprezzature-cli-gui/cache`):
+it is downloaded and tried when the image is built, so building needs GitHub, and a
+fresh container does not pay for it again on its first page. A container still asks the
+CDN which release is current and downloads only if Tailwind has released since the
+build; set `SPREZZATURE_CLI_GUI_OFFLINE=1` to compile with the one in the image and
+never leave the container.
 
 ## MCP server
 
@@ -215,6 +238,7 @@ what the audit reads. Wiring examples for Tauri and Server-Sent Events are in
   `help_text.py` parses printed `--help` text.
 - `schema.py`: `walk`, the dispatcher that reduces every source to the same tree.
 - `renderer.py`: `render_html`, the tree to the self-contained page.
+- `tailwind.py`: the current Tailwind release, its cached CLI, and the page's compiled CSS.
 - `loader.py`: resolves a `module:factory` or `path.py:factory` spec to the parser.
 - `audit.py`: the five rules above.
 - `cli.py`, `audit_cli.py`, `_generate.py`: the two Click commands and the work behind
@@ -230,6 +254,11 @@ pip install -e ".[dev]"
 ruff check .
 python -m pytest -q
 ```
+
+The suite compiles pages with a stand-in Tailwind CLI, so it needs no network. One file,
+`tests/test_the_real_tailwind_compiles_the_page.py`, runs the real one: here as soon as
+a real generation has cached it (it skips and says so otherwise), and in the
+`real-tailwind` job of CI, where a missing CLI is a failure and not a skip.
 
 See
 [CONTRIBUTING.md](https://github.com/warith-harchaoui/sprezzature-cli-gui/blob/main/CONTRIBUTING.md)

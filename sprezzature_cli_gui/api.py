@@ -73,6 +73,7 @@ from pydantic import BaseModel, Field
 from . import __version__ as _VERSION
 from .renderer import render_html
 from .schema import walk
+from .tailwind import TailwindUnavailable
 
 app = FastAPI(
     title="Sprezzature CLI-GUI API",
@@ -198,9 +199,11 @@ def render(request: RenderRequest) -> HTMLResponse:
     Raises
     ------
     fastapi.HTTPException
-        400 when the tree is missing the keys the renderer needs. Rendering
+        400 when the tree is missing the keys the renderer needs, or holds
+        an action or a sub-command the renderer cannot read. Rendering
         a malformed tree would produce a plausible-looking but wrong form,
-        which is worse than refusing.
+        which is worse than refusing. 503 when the server can neither
+        download nor find in its cache a Tailwind CLI to compile the page with.
     """
     missing = [k for k in ("prog", "actions") if k not in request.tree]
     if missing:
@@ -208,7 +211,17 @@ def render(request: RenderRequest) -> HTMLResponse:
             status_code=400,
             detail=f"schema tree is missing {missing}; see GET /v1/example for the shape",
         )
-    return HTMLResponse(render_html(request.tree, title=request.title))
+    try:
+        return HTMLResponse(render_html(request.tree, title=request.title))
+    except TailwindUnavailable as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except (KeyError, TypeError, AttributeError) as exc:
+        # The two top-level keys are present but something inside them is not
+        # the walker's shape. The caller's mistake, so not a 500.
+        raise HTTPException(
+            status_code=400,
+            detail=f"schema tree is malformed ({exc!r}); see GET /v1/example for the shape",
+        ) from exc
 
 
 @app.get("/docs-redirect", include_in_schema=False)

@@ -226,6 +226,19 @@ def test_parse_commands_section() -> None:
     ]
 
 
+def test_from_help_honours_prog(monkeypatch: pytest.MonkeyPatch) -> None:
+    """--prog renames a --from-help page exactly as it renames a walked one."""
+    from sprezzature_cli_gui import _generate
+
+    monkeypatch.setattr(
+        _generate,
+        "walk_from_help",
+        lambda spec: {"prog": "from-the-help", "actions": [], "sub_commands": {}},
+    )
+    assert _generate.build_tree("tool", from_help=True)["prog"] == "from-the-help"
+    assert _generate.build_tree("tool", from_help=True, prog="mytool")["prog"] == "mytool"
+
+
 def test_walk_from_help_uses_the_injected_help_text(monkeypatch: pytest.MonkeyPatch) -> None:
     """walk_from_help builds the canonical tree from a stubbed --help transcript."""
     canned = textwrap.dedent("""\
@@ -411,19 +424,34 @@ def test_render_html_includes_prog_title_and_fields() -> None:
 def test_render_html_defines_every_custom_color_token_it_uses() -> None:
     """Every semantic Tailwind color class the page emits (brand-blue,
     label-primary/secondary, surface-secondary, separator) must be defined
-    in an inline tailwind.config block, or the Play CDN silently drops the
-    utility and the field renders unstyled. Concretely this was the
+    in the theme the stylesheet is compiled with, or Tailwind silently drops
+    the utility and the field renders unstyled. Concretely this was the
     'Build command' button rendering as invisible white-on-white: it uses
     bg-brand-blue and text-white, and an undefined bg-brand-blue produced no
     background at all."""
-    tree = {"prog": "demo", "description": "", "actions": [], "sub_commands": {}}
+    from sprezzature_cli_gui.tailwind import THEME
+
+    colors = THEME["extend"]["colors"]  # type: ignore[index]
+    tree = {
+        "prog": "demo",
+        "description": "",
+        "actions": [
+            {
+                "dest": "name",
+                "flags": ["--name"],
+                "kind": "text",
+                "default": "world",
+                "required": False,
+                "help": "Who to greet",
+                "choices": None,
+            }
+        ],
+        "sub_commands": {},
+    }
     html = renderer.render_html(tree)
-    assert "tailwind.config" in html
     for token in ("brand", "label", "surface", "separator"):
-        assert f"{token}:" in html or f"'{token}'" in html
-    # tailwind.config must appear after the CDN <script> tag loads the
-    # `tailwind` global; setting it before that point would throw.
-    assert html.index("cdn.tailwindcss.com") < html.index("tailwind.config")
+        assert token in colors
+        assert f"-{token}" in html
 
 
 def test_field_html_never_references_the_undefined_separator_dark_token() -> None:
