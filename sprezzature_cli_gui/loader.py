@@ -27,8 +27,35 @@ import argparse
 import importlib
 import importlib.util
 import sys
+from collections.abc import Iterator
+from contextlib import contextmanager
 from pathlib import Path
 from typing import Any
+
+
+@contextmanager
+def _inside_the_target(doing: str) -> Iterator[None]:
+    """
+    Report a crash in the target's own code as one ``ImportError``.
+
+    Importing the module and calling the factory run somebody else's code,
+    which can raise anything: a ``SyntaxError``, a ``RuntimeError`` at import
+    time, a missing file its own top level opens. Both front doors catch a
+    fixed list of exception types to say one sentence and stop, so anything
+    off the list used to arrive as a traceback through this package, as though
+    the package had crashed.
+
+    Parameters
+    ----------
+    doing : str
+        What was being attempted, for the message.
+    """
+    try:
+        yield
+    except ImportError:
+        raise
+    except Exception as exc:
+        raise ImportError(f"{doing} failed: {type(exc).__name__}: {exc}") from exc
 
 
 def load_parser_from_spec(spec: str) -> Any:
@@ -74,6 +101,8 @@ def load_parser_from_spec(spec: str) -> Any:
         If the module part is a file path that does not exist.
     AttributeError
         If the module has no attribute named after the colon.
+    ImportError
+        If the module cannot be imported, or its code or the factory raises.
     """
     if ":" not in spec:
         raise ValueError(
@@ -95,9 +124,11 @@ def load_parser_from_spec(spec: str) -> Any:
         parent: str = str(mod_path.parent)
         if parent not in sys.path:
             sys.path.insert(0, parent)
-        spec_obj.loader.exec_module(mod)
+        with _inside_the_target(f"importing {mod_path}"):
+            spec_obj.loader.exec_module(mod)
     else:
-        mod = importlib.import_module(mod_part)
+        with _inside_the_target(f"importing '{mod_part}'"):
+            mod = importlib.import_module(mod_part)
     factory = getattr(mod, factory_name, None)
     if factory is None:
         raise AttributeError(f"Module '{mod_part}' has no attribute '{factory_name}'.")
@@ -136,7 +167,8 @@ def load_parser_from_spec(spec: str) -> Any:
     ):
         parser_obj = factory
     else:
-        parser_obj = factory()
+        with _inside_the_target(f"calling '{spec}'"):
+            parser_obj = factory()
 
     # Adapter dispatch (see :func:`walk`): an argparse.ArgumentParser
     # or any Click Command counts. Anything else is rejected with an

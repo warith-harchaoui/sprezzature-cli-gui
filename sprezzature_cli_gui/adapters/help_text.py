@@ -2,8 +2,9 @@
 sprezzature_cli_gui.adapters.help_text
 ===============================
 
-The fallback adapter: reads a CLI's printed ``--help`` text instead of its
-parser object, so it works even when no parser object is reachable at all.
+The adapter behind ``--from-help``: reads a CLI's printed ``--help`` text
+instead of its parser object, so it works even when no parser object is
+reachable at all. Nothing falls back to it; it is asked for explicitly.
 
 The other adapters need a live Python object to read (an
 ``ArgumentParser`` or a ``Click`` command); this one needs only a command
@@ -15,12 +16,12 @@ the usual help-text conventions.
 
 The trade-off is precision: help text is meant for a person to read, not a
 program to parse, so this adapter recovers less detail than reading a real
-parser object would. Every flag becomes a plain text field by default;
-only when the help line spells out a default value (``[default: …]``), a
-fixed set of choices (``[choices]``), or a recognisable placeholder name
-(a METAVAR, the capitalised word standing in for the argument's value, such
-as ``FILE`` in ``--input FILE``) does the adapter recover that extra
-structure. The regular expressions in this module exist to recognise the
+parser object would. A flag with no value placeholder becomes a checkbox and
+one with a placeholder a plain text field; only when the help line spells out
+a default value (``[default: …]``), a fixed set of choices (``[choices]``), or
+a recognised placeholder name (a METAVAR, the capitalised word standing in for
+the argument's value, such as ``FILE`` in ``--input FILE``) does the adapter
+recover that extra structure. The regular expressions in this module exist to recognise the
 section headings and line shapes that argparse, Click, and their peers
 converge on in practice.
 
@@ -128,21 +129,28 @@ def _run_help(cmdline: str) -> str:
     ------
     FileNotFoundError
         If the command does not resolve on ``$PATH``.
-    subprocess.TimeoutExpired
-        If ``--help`` does not return within
-        :data:`HELP_TIMEOUT_S` seconds.
+    OSError
+        If *cmdline* cannot be split into words (an unbalanced quote), or
+        ``--help`` does not return within :data:`HELP_TIMEOUT_S` seconds.
+        One type, because that is what ``--from-help`` reports as one sentence.
     """
     import shlex
     import subprocess as sp
 
-    parts: list[str] = shlex.split(cmdline) + ["--help"]
-    proc = sp.run(
-        parts,
-        capture_output=True,
-        text=True,
-        timeout=HELP_TIMEOUT_S,
-        check=False,
-    )
+    try:
+        parts: list[str] = shlex.split(cmdline) + ["--help"]
+    except ValueError as exc:
+        raise OSError(f"cannot split {cmdline!r} into a command: {exc}") from exc
+    try:
+        proc = sp.run(
+            parts,
+            capture_output=True,
+            text=True,
+            timeout=HELP_TIMEOUT_S,
+            check=False,
+        )
+    except sp.TimeoutExpired as exc:
+        raise OSError(f"'{cmdline} --help' did not answer in {HELP_TIMEOUT_S:g} s") from exc
     # Many CLIs exit non-zero on ``--help`` (notably tools that
     # treat help as "no real command was named"). Trust the output,
     # not the exit code.
@@ -448,13 +456,13 @@ def walk_from_help(
     argparse, Click, Typer, clap (Rust), cobra (Go), commander
     (Node), even hand-rolled shell scripts that follow the
     standard sections. Lower fidelity than native introspection
-    (everything maps to ``"text"`` unless a ``[default: …]``,
-    ``[choices]`` or recognised METAVAR is visible).
+    (a flag with no placeholder maps to ``"bool"``, any other to ``"text"``
+    unless a ``[choices]`` or recognised METAVAR is visible).
 
     Parameters
     ----------
     cmdline : str
-        The command to introspect (passed through :mod:`shlex.split`
+        The command to introspect, passed through :func:`shlex.split`
         (never via the shell, to keep the injection surface narrow).
     _depth : int, default 0
         Internal: current recursion depth into sub-commands.
@@ -467,8 +475,17 @@ def walk_from_help(
     -------
     dict
         Canonical parser tree.
+
+    Raises
+    ------
+    OSError
+        If the command cannot be run, or the top-level ``--help`` printed
+        nothing: a page with no field is not a reading of the CLI. A
+        sub-command that prints nothing keeps its empty section.
     """
     help_text: str = _run_help(cmdline)
+    if _depth == 0 and not help_text.strip():
+        raise OSError(f"'{cmdline} --help' printed nothing")
     description: str = ""
     usage_match = RE_USAGE_HEADER.search(help_text)
     if usage_match:

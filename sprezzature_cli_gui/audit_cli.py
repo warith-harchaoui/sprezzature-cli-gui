@@ -19,9 +19,8 @@ from pathlib import Path
 
 import click
 
+from sprezzature_cli_gui._generate import GenerationError, build_tree
 from sprezzature_cli_gui.audit import audit
-from sprezzature_cli_gui.loader import load_parser_from_spec
-from sprezzature_cli_gui.schema import walk
 
 
 @click.command(
@@ -67,7 +66,12 @@ def main(spec: str, page: Path, prog: str | None, fmt: str) -> None:
         # message on stderr is what tells "no such file" from "the page disagrees".
         raise SystemExit(f"{page}: no such file")
 
-    tree = walk(load_parser_from_spec(spec), prog=prog)
+    try:
+        tree = build_tree(spec, prog=prog)
+    except GenerationError as exc:
+        # Status 1 here as well, so what tells a bad spec from a drifted page
+        # is the message on stderr: one sentence, as the generator says it.
+        raise SystemExit(f"sprezzature-cli-gui-audit: {exc}") from exc
     findings = audit(tree, page.read_text(encoding="utf-8"))
 
     if fmt == "json":
