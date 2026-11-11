@@ -7,9 +7,9 @@
 
 Transformer un outil en ligne de commande en formulaire cliquable, automatiquement. Un outil en ligne de commande se pilote en tapant du texte (« fais ceci, avec ces options ») plutôt qu'en cliquant sur des boutons et des champs ; ce paquet lit la définition que l'outil se donne déjà de ses commandes et de ses options et construit une page web avec un champ pour chacune, pour qu'une personne qui n'a jamais ouvert de terminal puisse quand même s'en servir.
 
-On le pointe vers un parseur : l'objet qu'un CLI Python (*command-line interface*, interface en ligne de commande) construit pour lire et valider ce que l'utilisateur tape. `argparse` (dans la bibliothèque standard de Python), `Click` et `Typer` sont les trois façons courantes d'en construire un ; les trois sont importés et parcourus directement. Un CLI écrit avec autre chose, comme `cobra` en Go ou `clap` en Rust, passe par `--from-help`, qui lance le `--help` de l'outil dans un sous-processus et en lit le texte. Ça marche sur n'importe quel CLI, avec moins de fidélité : un texte d'aide en dit moins qu'un parseur.
+On le pointe vers un parseur : l'objet qu'un CLI (*command-line interface*, un programme qu'on pilote en tapant une ligne comme `git status` dans un terminal) écrit en Python construit pour lire et valider ce que l'utilisateur tape. `argparse` (dans la bibliothèque standard de Python), `Click` et `Typer` sont les trois façons courantes d'en construire un ; les trois sont importés et parcourus directement. Un CLI écrit avec autre chose, comme `cobra` en Go ou `clap` en Rust, passe par `--from-help`, qui lance le `--help` de l'outil dans un sous-processus et en lit le texte. Ça marche sur n'importe quel CLI, avec moins de fidélité : un texte d'aide en dit moins qu'un parseur.
 
-À partir de ce parseur, le paquet produit une seule page autonome, écrite en JavaScript pur et mise en forme avec Tailwind (un cadre CSS qui fournit des classes de style prêtes à l'emploi plutôt que du CSS écrit à la main). Chaque sous-commande devient une section repliable avec son propre formulaire, et chaque drapeau (une option comme `--verbose`) un champ. La page n'exécute jamais la commande. Elle assemble la ligne de commande exacte sous forme de texte, dans le navigateur de la personne qui la visite, prête à copier-coller, à transmettre à une application de bureau par un appel `Tauri` `invoke` (`Tauri` habille une page web en application de bureau native ; `invoke` est le pont par lequel la page rappelle l'application), ou à envoyer à un serveur qui l'exécute.
+À partir de ce parseur, le paquet produit une seule page autonome, écrite en JavaScript pur et mise en forme avec Tailwind, un cadre pour CSS (*Cascading Style Sheets*, les règles qui fixent couleurs, polices et marges d'une page web, comme « tous les titres en bleu ») qui fournit des classes de style prêtes à l'emploi plutôt que du CSS écrit à la main. Chaque sous-commande devient une section repliable avec son propre formulaire, et chaque drapeau (une option comme `--verbose`) un champ. La page n'exécute jamais la commande. Elle assemble la ligne de commande exacte sous forme de texte, dans le navigateur de la personne qui la visite, prête à copier-coller, à transmettre à une application de bureau par un appel `Tauri` `invoke` (`Tauri` habille une page web en application de bureau native ; `invoke` est le pont par lequel la page rappelle l'application), ou à envoyer à un serveur qui l'exécute.
 
 Exemple : un CLI avec une sous-commande `convert INPUT OUTPUT` qui prend aussi `--verbose` devient une page avec une section `convert` contenant deux champs de texte et une case à cocher. Les remplir puis cliquer sur « Build command » affiche la ligne exacte `mytool convert in.csv out.json --verbose`, prête à copier.
 
@@ -25,7 +25,7 @@ Pas de cadre logiciel, pas d'étape de compilation de votre côté : la page pr
 pip install sprezzature-cli-gui
 ```
 
-Une seule installation apporte tout : les lecteurs argparse, Click et Typer, le lecteur `--from-help`, l'audit, l'API HTTP et le serveur MCP. Il n'y a aucun extra de fonctionnalité. Le seul extra, `[dev]`, est l'outillage de test (pytest, ruff, mypy, httpx2).
+Une seule installation apporte tout : les lecteurs argparse, Click et Typer, le lecteur `--from-help`, l'audit, l'API (*Application Programming Interface*, des adresses web auxquelles un autre programme envoie une requête et dont il reçoit une réponse) HTTP (*HyperText Transfer Protocol*, l'échange question-réponse qu'un navigateur fait pour chaque page qu'il charge) et le serveur MCP (Model Context Protocol, le protocole par lequel les agents IA appellent des outils en français). Il n'y a aucun extra de fonctionnalité. Le seul extra, `[dev]`, est l'outillage de test (pytest, ruff, mypy, httpx2).
 
 ## Cinq surfaces
 
@@ -63,7 +63,7 @@ sprezzature-cli-gui --from-help "mytool" --out gui.html
 | `--title TEXT` | Le `<title>` de la page. Par défaut, le nom du programme. |
 | `--prog TEXT` | Remplacer le nom du programme dans la page et dans la ligne construite. Le nom que donne un groupe Click ou une application Typer (un nom de fonction, ou `cli` pour une application Typer à plusieurs commandes) est rarement celui de la commande installée. |
 | `--offline` | Compiler avec le Tailwind le plus récent déjà en cache, sans demander à `cdn.tailwindcss.com` quelle version est courante. Un cache vide sort avec le code 1. |
-| `--json` | Imprimer l'arbre du parseur en JSON plutôt que le HTML. |
+| `--json` | Imprimer l'arbre du parseur en JSON (*JavaScript Object Notation*, un format texte où les programmes rangent des données en champs nommés, comme {"nom": "Ada"}) plutôt que le HTML. |
 | `-V`/`--version`, `-h`/`--help` | Version et aide. |
 
 Une spécification introuvable, non importable ou impossible à parcourir sort avec le code 1 et une phrase sur la sortie d'erreur. Une page impossible à compiler aussi, et la phrase dit ce qui s'est passé : un statut HTTP d'un serveur qui a répondu (`HTTP 504` et l'URL), un réseau injoignable, ou `--offline` avec un cache vide sont trois phrases différentes.
@@ -175,10 +175,10 @@ ruff check .
 python -m pytest -q
 ```
 
-La suite compile les pages avec un faux CLI Tailwind : elle n'a pas besoin du réseau. Un fichier, `tests/test_the_real_tailwind_compiles_the_page.py`, lance le vrai : ici dès qu'une vraie génération l'a mis en cache (sinon il saute et le dit), et dans le job `real-tailwind` de la CI, où un CLI absent est un échec et non un saut.
+La suite compile les pages avec un faux CLI Tailwind : elle n'a pas besoin du réseau. Un fichier, `tests/test_the_real_tailwind_compiles_the_page.py`, lance le vrai : ici dès qu'une vraie génération l'a mis en cache (sinon il saute et le dit), et dans le job `real-tailwind` de la CI (*continuous integration*, un serveur qui relance tous les tests à chaque envoi de code et signale ceux qui échouent), où un CLI absent est un échec et non un saut.
 
 Voir [CONTRIBUTING.md](https://github.com/warith-harchaoui/sprezzature-cli-gui/blob/main/CONTRIBUTING.md) et, pour les voisins de ce paquet, [PAYSAGE.md](https://github.com/warith-harchaoui/sprezzature-cli-gui/blob/main/PAYSAGE.md).
 
 ## Licence
 
-BSD à 3 clauses © Warith HARCHAOUI. Fait partie de la boîte à outils [sprezzature](https://sprezzature.ai/).
+BSD (*Berkeley Software Distribution*, une licence permissive : chacun peut utiliser, modifier et revendre le code s'il garde la mention du copyright) à 3 clauses © Warith HARCHAOUI. Fait partie de la boîte à outils [sprezzature](https://sprezzature.ai/).

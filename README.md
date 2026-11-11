@@ -11,7 +11,7 @@ this package reads the tool's own definition of its commands and options and bui
 web page with a field for each one, so a person who has never opened a terminal can
 still use it.
 
-Point it at a parser: the object inside a Python CLI (command-line interface) that
+Point it at a parser: the object inside a Python CLI (command-line interface, a program you drive by typing a line such as `git status` in a terminal) that
 reads and validates the typed command. `argparse` (in Python's standard library),
 `Click` and `Typer` are the three common ways to build one; all three are imported and
 walked directly. A CLI written in anything else, such as Go's `cobra` or Rust's `clap`,
@@ -20,8 +20,8 @@ reads the text. That works on any CLI at all, at lower fidelity: help text says 
 than a parser knows.
 
 From that parser, the package emits a single self-contained page written in plain
-JavaScript and styled with Tailwind (a CSS framework that ships pre-made style classes
-instead of hand-written CSS). Every sub-command becomes a collapsible section with its
+JavaScript and styled with Tailwind, a framework for CSS (Cascading Style Sheets, the rules that set a web page's colors, fonts and spacing,
+such as "every heading in blue") that ships pre-made style classes instead of hand-written CSS. Every sub-command becomes a collapsible section with its
 own form, and every flag a field. The page never runs the command. It assembles the
 exact command line as text, in the visitor's own browser, ready to copy and paste, to
 hand to a desktop app through a `Tauri` `invoke` call (`Tauri` wraps a web page as a
@@ -55,8 +55,11 @@ pip install sprezzature-cli-gui
 ```
 
 One install brings everything: the argparse, Click and Typer readers, the
-`--from-help` reader, the audit, the HTTP API and the MCP server. There is no feature
-extra. The only extra, `[dev]`, is the test toolchain (pytest, ruff, mypy, httpx2).
+`--from-help` reader, the audit, the HTTP (HyperText Transfer Protocol, the request-and-reply exchange a browser makes each time it loads a page) API
+(Application Programming Interface, web addresses another program sends a request to
+and gets an answer from) and the
+MCP (Model Context Protocol, the protocol through which AI agents call tools in English)
+server. There is no feature extra. The only extra, `[dev]`, is the test toolchain (pytest, ruff, mypy, httpx2).
 
 ## Five surfaces
 
@@ -100,7 +103,7 @@ is and never calls it, because calling a Click command or a Typer app runs it.
 | `--title TEXT` | The page `<title>`. Defaults to the program name. |
 | `--prog TEXT` | Override the program name in the page and in the built command line. The name a Click group or a Typer app reports (a function name, or `cli` for a multi-command Typer app) is rarely the installed command name. |
 | `--offline` | Compile with the newest Tailwind already cached, without asking `cdn.tailwindcss.com` which release is current. An empty cache exits with status 1. |
-| `--json` | Print the walked parser tree as JSON instead of HTML. |
+| `--json` | Print the walked parser tree as JSON (JavaScript Object Notation, a text format in which programs store data as named fields, like {"name": "Ada"}) instead of HTML. |
 | `-V`/`--version`, `-h`/`--help` | Version and help. |
 
 A spec that cannot be found, imported or walked exits with status 1 and one sentence on
@@ -258,7 +261,7 @@ python -m pytest -q
 The suite compiles pages with a stand-in Tailwind CLI, so it needs no network. One file,
 `tests/test_the_real_tailwind_compiles_the_page.py`, runs the real one: here as soon as
 a real generation has cached it (it skips and says so otherwise), and in the
-`real-tailwind` job of CI, where a missing CLI is a failure and not a skip.
+`real-tailwind` job of CI (continuous integration, a server that reruns all the tests every time code is pushed and flags any that fail), where a missing CLI is a failure and not a skip.
 
 See
 [CONTRIBUTING.md](https://github.com/warith-harchaoui/sprezzature-cli-gui/blob/main/CONTRIBUTING.md)
@@ -267,4 +270,4 @@ and, for the neighbours of this package,
 
 ## License
 
-BSD-3-Clause © Warith HARCHAOUI. Part of the [sprezzature](https://sprezzature.ai/) toolkit.
+Berkeley Software Distribution licence, three-clause version (BSD-3-Clause, a permissive licence: anyone may use, change and resell the code if they keep the copyright notice) © Warith HARCHAOUI. Part of the [sprezzature](https://sprezzature.ai/) toolkit.
