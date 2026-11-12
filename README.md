@@ -59,7 +59,7 @@ One install brings everything: the argparse, Click and Typer readers, the
 (Application Programming Interface, web addresses another program sends a request to
 and gets an answer from) and the
 MCP (Model Context Protocol, the protocol through which AI agents call tools in English)
-server. There is no feature extra. The only extra, `[dev]`, is the test toolchain (pytest, ruff, mypy, httpx2).
+server, and the skill an agent reads, which ships inside the package. There is no feature extra. The only extra, `[dev]`, is the test toolchain (pytest, ruff, mypy, httpx2).
 
 ## Five surfaces
 
@@ -69,7 +69,7 @@ server. There is no feature extra. The only extra, `[dev]`, is the test toolchai
 | CLI | `sprezzature-cli-gui`, `sprezzature-cli-gui-audit` | The same two jobs from a shell. Both are Click commands. |
 | HTTP API | `uvicorn sprezzature_cli_gui.api:app`, or `docker compose up` | FastAPI routes: a schema tree in, the page out; a page and a tree in, the findings out. |
 | MCP | `sprezzature-cli-gui-mcp` | The same routes as MCP (Model Context Protocol) tools for an agent host. |
-| Skill | `sprezzature-cli-gui` in the [sprezzature hub](https://github.com/warith-harchaoui/sprezzature/tree/main/sprezzature-cli-gui) | The `SKILL.md` an agent such as Claude Code reads to know when to route here. |
+| Skill | `sprezzature-cli-gui-skill`, `sprezzature_cli_gui.skill_path()` | The `SKILL.md` an agent such as Claude Code reads to know when to route here. It ships inside the package, in `sprezzature_cli_gui/skill/`; the command copies it where the agent looks. |
 
 The CLI and the library import your module. The HTTP API and the MCP server never do:
 they take the schema tree that `walk` produces, not a `module:factory` spec. Importing
@@ -165,6 +165,7 @@ whose classes must be compiled too, such as a script you add to the page that cr
 elements at run time: Tailwind only keeps the utilities it can see. It raises
 `sprezzature_cli_gui.tailwind.TailwindUnavailable` when no Tailwind CLI can be had.
 `audit(tree, page)` returns a list of `Finding` objects (`rule`, `subject`, `message`).
+`skill_path()` returns the folder of the skill the package ships.
 
 ## HTTP API
 
@@ -212,6 +213,27 @@ are set. Each tool name is the route's `operation_id`: `health`, `get_example_sc
 `render_gui`, `audit_gui`. Agent routing is described in
 [TRIGGERS.md](https://github.com/warith-harchaoui/sprezzature-cli-gui/blob/main/TRIGGERS.md).
 
+## Skill
+
+The skill is the folder an agent reads to know when to reach for this package: a
+`SKILL.md`, its `references/` (the trigger catalogue and the hardening notes for a host
+that runs the built command) and a worked demo in `assets/examples/cli-gui-demo/`. It
+ships inside the package, so `pip install` brings it with the four other surfaces;
+`sprezzature_cli_gui.skill_path()` returns its folder.
+
+```bash
+sprezzature-cli-gui-skill                          # is the installed copy in step?
+sprezzature-cli-gui-skill --install                # copy it into ~/.claude/skills
+sprezzature-cli-gui-skill --install --agent opencode   # or into ~/.opencode/skills
+sprezzature-cli-gui-skill --path                   # where pip put it
+```
+
+Without `--install` it only reports, and exits 0. With `--install` it copies the shipped
+skill to `~/.claude/skills/sprezzature-cli-gui/` (Claude Code) or
+`~/.opencode/skills/sprezzature-cli-gui/` (OpenCode); a previous copy is moved aside to
+`skills-superseded/`, beside the skills folder rather than inside it, where it would
+still be read as a skill.
+
 ## What the page contains
 
 - A root form for the top-level options, then one collapsible `<details>` section per
@@ -247,6 +269,8 @@ what the audit reads. Wiring examples for Tauri and Server-Sent Events are in
 - `cli.py`, `audit_cli.py`, `_generate.py`: the two Click commands and the work behind
   the generator.
 - `api.py`, `mcp.py`: the HTTP and MCP surfaces.
+- `skill/`, `_skill.py`: the skill an agent reads, and the `sprezzature-cli-gui-skill`
+  command that reports on it and installs it.
 
 `scripts/cli_to_gui.py` re-exports the package for use from a clone.
 

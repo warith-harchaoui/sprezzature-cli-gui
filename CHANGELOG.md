@@ -2,6 +2,44 @@
 
 ## [Unreleased]
 
+### Added
+
+- The skill an agent reads now ships inside the package, in
+  `sprezzature_cli_gui/skill/` (`SKILL.md`, `references/`, the worked demo in
+  `assets/examples/cli-gui-demo/`). Until now it lived only in the
+  `sprezzature` hub, so `pip install sprezzature-cli-gui` gave four of the
+  five surfaces (library, command line, HTTP (HyperText Transfer Protocol, the
+  request-and-reply exchange of the web) API (Application Programming
+  Interface, the addresses another program calls) and MCP (Model Context Protocol, the protocol through
+  which AI agents call tools in English) server) and nothing an agent could
+  read. `sprezzature-cli-gui-skill` reports whether the copy under
+  `~/.claude/skills` is in step; `--install` copies it there (`--agent
+  opencode` for `~/.opencode/skills`), moving a previous copy to
+  `skills-superseded/`; `--path` prints the folder, which
+  `sprezzature_cli_gui.skill_path()` also returns.
+
+### Fixed
+
+- A Typer 0.29 app raised `AttributeError` when walked: Typer now carries its
+  own copy of Click and describes an option's type with `type_descriptor`
+  rather than `.type`. The adapter maps that descriptor back to Click's type
+  names; checked with Typer 0.20 and 0.29.1.
+
+### Docs
+
+- `README.md`, `LISEZMOI.md` and `TRIGGERS.md` placed the skill in the hub; they now
+  document `sprezzature-cli-gui-skill`, `skill_path()` and the `skill/`
+  folder. `EXAMPLES.md` gained a skill example.
+- The skill's demo runbook told the reader to `cd
+  sprezzature-cli-gui/assets/examples/cli-gui-demo`, a path that exists in
+  no install; it now uses `sprezzature-cli-gui-skill --path`. It also listed
+  a `README.md` the folder does not have and counted ~700 lines for ~1,070.
+- `CONTRIBUTING.md` said the continuous-integration workflow runs mypy; it runs
+  ruff and pytest, the `real-tailwind` job and the Python 3.10 install
+  check, and mypy runs in the pre-push hook.
+- `LANDSCAPE.md` and `PAYSAGE.md` said `sprezzature-figures` has 167 chart types; it
+  has 168.
+
 ## [1.6.0] — 2026-11-08
 
 ### Changed

@@ -1,6 +1,6 @@
 # Examples: sprezzature-cli-gui
 
-Each block below is a complete, runnable command followed by what it writes to disk or prints to the terminal. Read [README.md](README.md) first for what the tool does in one line; this file is for copying a working invocation rather than reading a full explanation.
+Each block below is a complete, runnable command followed by what it writes to disk or prints to the terminal. Read [README.md](README.md) first for what the tool does in one line; this file is for copying a working invocation rather than reading a full explanation. The tool being wrapped is a CLI (command-line interface, a program driven by typing a line in a terminal); the examples drive this package from the shell, and the last ones over its HTTP (HyperText Transfer Protocol, the request-and-reply exchange a browser makes for each page) API (Application Programming Interface, web addresses another program sends a request to and gets an answer from) and through the skill an agent reads.
 
 ## An argparse CLI, piped to stdout
 
@@ -107,4 +107,18 @@ python -c "import json; print(json.dumps({'tree': json.load(open('tree.json')), 
   | curl -s -X POST localhost:8000/v1/render -H 'content-type: application/json' -d @- > gui.html
 # The server takes the tree, never a module:factory spec: importing a module
 # named by a remote caller would be remote code execution.
+```
+
+## The skill an agent reads
+
+```sh
+sprezzature-cli-gui-skill
+# sprezzature-cli-gui: differs: SKILL.md (/home/you/.claude/skills/sprezzature-cli-gui)
+# Pass --install to copy the shipped skill there.
+sprezzature-cli-gui-skill --install
+# Copies sprezzature_cli_gui/skill/ (shipped in the wheel) to
+# ~/.claude/skills/sprezzature-cli-gui/, moving any previous copy to
+# ~/.claude/skills-superseded/. --agent opencode targets ~/.opencode/skills.
+sprezzature-cli-gui-skill --path
+# Prints the folder pip installed, the same as sprezzature_cli_gui.skill_path().
 ```

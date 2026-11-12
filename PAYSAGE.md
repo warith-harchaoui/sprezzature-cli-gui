@@ -11,7 +11,7 @@ suite sprezzature
 ├── sprezzature-accessibility  (20 règles qui auditent la page ensuite)
 ├── sprezzature-ux-laws        (30 lois de l'attention, 8 décidables depuis le HTML)
 ├── sprezzature-colors         (contraste, daltonisme, jetons de couleur)
-├── sprezzature-figures        (167 types de graphiques, la boucle Ralph Eyeball)
+├── sprezzature-figures        (168 types de graphiques, la boucle Ralph Eyeball)
 ├── sprezzature-maps           (les mêmes nombres attachés à de vrais lieux)
 ├── sprezzature-publish        (du Markdown à un site trouvable, narration comprise)
 ├── sprezzature-audio          (la parole en texte, le texte en parole)

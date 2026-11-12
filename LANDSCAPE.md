@@ -11,7 +11,7 @@ sprezzature suite
 ├── sprezzature-accessibility  (20 rules that audit the page afterwards)
 ├── sprezzature-ux-laws        (30 laws of attention, 8 decidable from the HTML)
 ├── sprezzature-colors         (contrast, colour-vision deficiency, tokens)
-├── sprezzature-figures        (167 chart types, the Ralph Eyeball Loop)
+├── sprezzature-figures        (168 chart types, the Ralph Eyeball Loop)
 ├── sprezzature-maps           (the same numbers attached to real places)
 ├── sprezzature-publish        (Markdown to a findable site, narration included)
 ├── sprezzature-audio          (speech to text, text to speech)

@@ -31,7 +31,7 @@ metadata:
   version: 1.8.4
 ---
 
-> The deterministic tools below now ship as the standalone package [`sprezzature-cli-gui`](https://github.com/warith-harchaoui/sprezzature-cli-gui) (`pip install`), invoked as `sprezzature-cli-gui …`. The `scripts/` folder has moved out of this monorepo; the SKILL.md here stays as the agentic contract.
+> This skill ships inside the package [`sprezzature-cli-gui`](https://github.com/warith-harchaoui/sprezzature-cli-gui) (`pip install sprezzature-cli-gui`), in `sprezzature_cli_gui/skill/`, beside the deterministic tools it routes to (`sprezzature-cli-gui …`). `sprezzature-cli-gui-skill` says whether the copy an agent reads is in step with the installed package; `--install` copies it into `~/.claude/skills` (`--agent opencode` for `~/.opencode/skills`).
 
 # sprezzature-cli-gui — CLI (command-line interface, a program you run by typing a command in a terminal) → web GUI (graphical user interface, windows, buttons and forms you click instead of typing commands)
 
@@ -82,7 +82,7 @@ gates on the emitted HTML.
 | CLI | `sprezzature-cli-gui`, `sprezzature-cli-gui-audit` | Click commands; shell completion through `_SPREZZATURE_CLI_GUI_COMPLETE`. |
 | HTTP | `uvicorn sprezzature_cli_gui.api:app`, or `docker compose up` in the package repository (the image runs `sprezzature-cli-gui-mcp`, so one container answers the routes and `/mcp` on port 8000) | `GET /health`, `GET /v1/example`, `POST /v1/render` (tree in, HTML out), `POST /v1/audit` (`schema` + `page` in, findings out). |
 | MCP (Model Context Protocol, the protocol through which AI agents call tools in English) | `sprezzature-cli-gui-mcp [--host H] [--port P]` | Endpoint `/mcp`. Tools = `operation_id`: `health`, `get_example_schema`, `render_gui`, `audit_gui`. |
-| Skill | this file | Routing; the catalogue is in `references/triggers.md`. |
+| Skill | this file; `sprezzature-cli-gui-skill [--install] [--agent claude\|opencode] [--path]`; `sprezzature_cli_gui.skill_path()` | Routing; the catalogue is in `references/triggers.md`. Ships in the wheel, in `sprezzature_cli_gui/skill/`; the command reports whether the installed copy is in step and `--install` refreshes it. |
 
 The HTTP and MCP surfaces take a schema tree, never a `module:factory` spec: importing a module named by a remote caller would be remote code execution. To render over MCP, walk the parser locally (`sprezzature-cli-gui SPEC --json`) or call `get_example_schema` and copy its shape.
 
@@ -98,7 +98,8 @@ script. Don't re-derive the workflow if the user just wants the HTML.
 # such an object directly, which is then never called. `sprezzature-cli-gui`
 # is the console script the package installs (pip install sprezzature-cli-gui).
 # Options: --out PATH, --title TEXT, --prog TEXT (the installed command name,
-# when Click or Typer reports a function name), --json (the tree, no HTML).
+# when Click or Typer reports a function name), --json (the tree, no HTML),
+# --offline (compile with the cached Tailwind, no network).
 sprezzature-cli-gui <spec> --out path/to/index.html
 
 # Examples:
@@ -168,7 +169,7 @@ When the user points to an existing CLI project and asks for a GUI:
 
 ## Stack rules (inherited)
 
-Output follows the sprezzature-ui stack rules. If sprezzature-ui is not installed in the same agent, apply these directly:
+Output follows the sprezzature-ui stack rules. If sprezzature-ui is not installed in the same agent, apply these directly. One exception: the page `sprezzature-cli-gui` generates loads no font at all and uses the system font stack (`ui-sans-serif, system-ui, sans-serif`); the three-Roboto rule below is for the bespoke workflow and the worked demo.
 
 - **Vanilla JS** (ES modules), no framework.
 - **Tailwind utility classes**, semantic tokens, dark-mode peer on every styled element.
@@ -237,7 +238,7 @@ all generate the introspectable `--help` the inventory step expects.
 Launch:
 
 ```bash
-cd sprezzature-cli-gui/assets/examples/cli-gui-demo
+cd "$(sprezzature-cli-gui-skill --path)/assets/examples/cli-gui-demo"
 python server.py
 # open http://localhost:8787
 ```

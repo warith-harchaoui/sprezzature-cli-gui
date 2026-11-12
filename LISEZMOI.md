@@ -25,7 +25,7 @@ Pas de cadre logiciel, pas d'étape de compilation de votre côté : la page pr
 pip install sprezzature-cli-gui
 ```
 
-Une seule installation apporte tout : les lecteurs argparse, Click et Typer, le lecteur `--from-help`, l'audit, l'API (*Application Programming Interface*, des adresses web auxquelles un autre programme envoie une requête et dont il reçoit une réponse) HTTP (*HyperText Transfer Protocol*, l'échange question-réponse qu'un navigateur fait pour chaque page qu'il charge) et le serveur MCP (Model Context Protocol, le protocole par lequel les agents IA appellent des outils en français). Il n'y a aucun extra de fonctionnalité. Le seul extra, `[dev]`, est l'outillage de test (pytest, ruff, mypy, httpx2).
+Une seule installation apporte tout : les lecteurs argparse, Click et Typer, le lecteur `--from-help`, l'audit, l'API (*Application Programming Interface*, des adresses web auxquelles un autre programme envoie une requête et dont il reçoit une réponse) HTTP (*HyperText Transfer Protocol*, l'échange question-réponse qu'un navigateur fait pour chaque page qu'il charge) et le serveur MCP (Model Context Protocol, le protocole par lequel les agents IA appellent des outils en français), ainsi que le skill qu'un agent lit, qui voyage dans le paquet. Il n'y a aucun extra de fonctionnalité. Le seul extra, `[dev]`, est l'outillage de test (pytest, ruff, mypy, httpx2).
 
 ## Cinq surfaces
 
@@ -35,7 +35,7 @@ Une seule installation apporte tout : les lecteurs argparse, Click et Typer, le
 | CLI | `sprezzature-cli-gui`, `sprezzature-cli-gui-audit` | Les deux mêmes travaux depuis un terminal. Ce sont deux commandes Click. |
 | API HTTP | `uvicorn sprezzature_cli_gui.api:app`, ou `docker compose up` | Des routes FastAPI : un arbre de schéma en entrée, la page en sortie ; une page et un arbre en entrée, les constats en sortie. |
 | MCP | `sprezzature-cli-gui-mcp` | Les mêmes routes, en outils MCP (*Model Context Protocol*) pour un hôte d'agent. |
-| Skill | `sprezzature-cli-gui` dans le [hub sprezzature](https://github.com/warith-harchaoui/sprezzature/tree/main/sprezzature-cli-gui) | Le `SKILL.md` qu'un agent comme Claude Code lit pour savoir quand router ici. |
+| Skill | `sprezzature-cli-gui-skill`, `sprezzature_cli_gui.skill_path()` | Le `SKILL.md` qu'un agent comme Claude Code lit pour savoir quand router ici. Il voyage dans le paquet, dans `sprezzature_cli_gui/skill/` ; la commande le copie là où l'agent regarde. |
 
 Le CLI et la bibliothèque importent votre module. L'API HTTP et le serveur MCP ne le font jamais : ils prennent l'arbre de schéma que `walk` produit, pas une spécification `module:fabrique`. Importer un module arbitraire nommé par un appelant non authentifié serait une exécution de code à distance ; cette étape reste donc sur votre machine.
 
@@ -109,7 +109,7 @@ for finding in audit(tree, html):         # une liste vide : la page couvre le C
     print(finding.rule, finding.subject, finding.message)
 ```
 
-`walk(obj, prog=None)` renvoie l'arbre canonique : `prog`, `description`, `actions`, `sub_commands`. Elle lève `TypeError` pour tout ce qui n'est pas l'un des trois types de parseur. `render_html(tree, title="CLI GUI", offline=False, extra_content=())` renvoie la page complète. `offline=True` équivaut à `--offline`. `extra_content` est une suite de textes dont les classes doivent aussi être compilées, par exemple un script que vous ajoutez à la page et qui crée des éléments à l'exécution : Tailwind ne garde que les utilitaires qu'il voit. Elle lève `sprezzature_cli_gui.tailwind.TailwindUnavailable` quand aucun CLI Tailwind n'est disponible. `audit(tree, page)` renvoie une liste d'objets `Finding` (`rule`, `subject`, `message`).
+`walk(obj, prog=None)` renvoie l'arbre canonique : `prog`, `description`, `actions`, `sub_commands`. Elle lève `TypeError` pour tout ce qui n'est pas l'un des trois types de parseur. `render_html(tree, title="CLI GUI", offline=False, extra_content=())` renvoie la page complète. `offline=True` équivaut à `--offline`. `extra_content` est une suite de textes dont les classes doivent aussi être compilées, par exemple un script que vous ajoutez à la page et qui crée des éléments à l'exécution : Tailwind ne garde que les utilitaires qu'il voit. Elle lève `sprezzature_cli_gui.tailwind.TailwindUnavailable` quand aucun CLI Tailwind n'est disponible. `audit(tree, page)` renvoie une liste d'objets `Finding` (`rule`, `subject`, `message`). `skill_path()` renvoie le dossier du skill que le paquet livre.
 
 ## API HTTP
 
@@ -145,6 +145,19 @@ sprezzature-cli-gui-mcp --host 0.0.0.0 --port 9000
 
 Il sert la même application FastAPI, avec un point d'accès MCP monté sur `/mcp`, en HTTP. Les valeurs par défaut viennent de `SPREZZATURE_CLI_GUI_HOST` et `SPREZZATURE_CLI_GUI_PORT` quand elles sont définies. Le nom de chaque outil est l'`operation_id` de sa route : `health`, `get_example_schema`, `render_gui`, `audit_gui`. Le routage des agents est décrit dans [TRIGGERS.md](https://github.com/warith-harchaoui/sprezzature-cli-gui/blob/main/TRIGGERS.md).
 
+## Skill
+
+Le skill est le dossier qu'un agent lit pour savoir quand se servir de ce paquet : un `SKILL.md`, ses `references/` (le catalogue des déclencheurs et les notes de durcissement pour un hôte qui exécute la ligne construite) et une démonstration complète dans `assets/examples/cli-gui-demo/`. Il voyage dans le paquet : `pip install` l'apporte avec les quatre autres surfaces, et `sprezzature_cli_gui.skill_path()` renvoie son dossier.
+
+```bash
+sprezzature-cli-gui-skill                          # la copie installée est-elle à jour ?
+sprezzature-cli-gui-skill --install                # la copier dans ~/.claude/skills
+sprezzature-cli-gui-skill --install --agent opencode   # ou dans ~/.opencode/skills
+sprezzature-cli-gui-skill --path                   # où pip l'a mis
+```
+
+Sans `--install`, la commande ne fait que constater, et sort avec 0. Avec `--install`, elle copie le skill livré dans `~/.claude/skills/sprezzature-cli-gui/` (Claude Code) ou `~/.opencode/skills/sprezzature-cli-gui/` (OpenCode) ; une copie précédente est mise de côté dans `skills-superseded/`, à côté du dossier des skills et non dedans, où elle serait encore lue comme un skill.
+
 ## Ce que contient la page
 
 - Un formulaire racine pour les options de premier niveau, puis une section repliable `<details>` par sous-commande, imbriquée aussi profond que le parseur.
@@ -164,6 +177,7 @@ Chaque champ porte un attribut `data-cli-flag` qui nomme l'option qu'il construi
 - `audit.py` : les cinq règles ci-dessus.
 - `cli.py`, `audit_cli.py`, `_generate.py` : les deux commandes Click et le travail derrière le générateur.
 - `api.py`, `mcp.py` : les surfaces HTTP et MCP.
+- `skill/`, `_skill.py` : le skill qu'un agent lit, et la commande `sprezzature-cli-gui-skill` qui en rend compte et l'installe.
 
 `scripts/cli_to_gui.py` réexporte le paquet pour un usage depuis un clone.
 

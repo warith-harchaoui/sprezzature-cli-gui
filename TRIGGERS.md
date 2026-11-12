@@ -3,8 +3,8 @@
 When someone needs a face on a command-line tool, or wants to know whether an existing
 face still matches the tool, and what to call.
 
-This file is written for an agent: a Claude Code skill, an MCP (Model Context Protocol)
-host, anything choosing a tool on someone's behalf. Humans are welcome, but the routing
+This file is written for an agent: a Claude Code skill, an MCP (Model Context Protocol,
+the protocol through which AI agents call tools in English) host, anything choosing a tool on someone's behalf. Humans are welcome, but the routing
 rules below are the point.
 
 ---
@@ -15,9 +15,11 @@ rules below are the point.
 > domain has a closed vocabulary, and a request belongs here when it pairs one word
 > from each list:
 >
-> - **the tool**: CLI, command line, command-line tool, script, parser, argparse,
+> - **the tool**: CLI (command-line interface, a program driven by typing a line in a
+>   terminal), command line, command-line tool, script, parser, argparse,
 >   Click, Typer, `--help`, flags, options, sub-commands, arguments, cobra, clap;
-> - **the face**: GUI, form, web form, interface, page, UI, fields, "fill in", "click".
+> - **the face**: GUI (graphical user interface, windows, buttons and fields you click),
+>   form, web form, interface, page, UI (user interface, whatever screen a person uses), fields, "fill in", "click".
 >
 > A third word turns a making request into a checking one: **still, stale, drift,
 > out of date, missing flag, covers, matches, audit** about a page already generated.
@@ -47,10 +49,11 @@ the command line.
 | `sprezzature-cli-gui SPEC --json` | CLI | "Show me what was read from this parser": the schema tree, without HTML. |
 | `sprezzature-cli-gui-audit SPEC PAGE` | CLI | "Does this generated page still cover the CLI?": five rules, exit 1 on any finding. |
 | `walk`, `render_html`, `audit` | Library | The same three jobs from Python, in the caller's process. |
-| `health` | MCP / HTTP `GET /health` | "Is the server up?" Only for diagnosing a connection. |
+| `health` | MCP / HTTP (HyperText Transfer Protocol, the request-and-reply exchange a browser makes for each page) `GET /health` | "Is the server up?" Only for diagnosing a connection. |
 | `get_example_schema` | MCP / HTTP `GET /v1/example` | "What does a schema tree look like?" Call it before `render_gui` when the shape is unknown. |
 | `render_gui` | MCP / HTTP `POST /v1/render` | "Turn this schema tree into a page." Tree in, one self-contained HTML page out. |
 | `audit_gui` | MCP / HTTP `POST /v1/audit` | "Does this page still match this schema tree?" Returns `findings_total` and the findings. |
+| `sprezzature-cli-gui-skill [--install] [--agent opencode]` | Skill | "Is the skill my agent reads in step with this package?": reports, and with `--install` copies it into `~/.claude/skills` (or `~/.opencode/skills`). |
 
 ---
 
@@ -70,7 +73,9 @@ The gap is deliberate. Reading a parser means importing the user's code, and rea
 request. The HTTP and MCP surfaces take the schema tree instead.
 
 The MCP tools are served by `sprezzature-cli-gui-mcp` (endpoint `/mcp`). The skill
-named `sprezzature-cli-gui` lives in the sprezzature hub and points at the same tools.
+named `sprezzature-cli-gui` ships inside the package, in `sprezzature_cli_gui/skill/`
+(`sprezzature_cli_gui.skill_path()`), and points at the same tools;
+`sprezzature-cli-gui-skill --install` puts it where Claude Code or OpenCode reads it.
 
 ---
 
