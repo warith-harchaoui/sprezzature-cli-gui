@@ -31,6 +31,40 @@ from typing import Any
 from sprezzature_cli_gui.schema import _safe_default
 
 
+def _param_type_name(param: Any) -> str:
+    """The Click type name of a parameter, whichever Typer built it.
+
+    Click and Typer up to 0.2x put a ``click.types`` instance on
+    ``param.type``. Typer 0.29 vendors its own Click and gives its options a
+    ``type_descriptor`` instead, with no ``type`` at all: read as before,
+    every Typer app raised ``AttributeError`` (CI, 2026-11-11). The
+    descriptor is mapped onto the names Click uses, so the rest of this
+    adapter does not branch on the framework.
+    """
+    if hasattr(param, "type"):
+        return getattr(param.type, "name", "") or ""
+    td = getattr(param, "type_descriptor", None)
+    if td is None:
+        return ""
+    if getattr(td, "is_choice", False):
+        return "choice"
+    if getattr(td, "is_file", False) or getattr(td, "is_path", False):
+        return "path"
+    return {"int": "integer", "float": "float", "bool": "boolean"}.get(
+        str(getattr(td, "ranged_type_name", "")), ""
+    )
+
+
+def _param_choices(param: Any) -> Any:
+    """The raw choices of a choice parameter, from Click or from Typer 0.29."""
+    if hasattr(param, "type"):
+        return getattr(param.type, "choices", None)
+    choices = getattr(getattr(param, "type_descriptor", None), "choices", None)
+    if choices is None:
+        return None
+    return [getattr(c, "value", c) for c in choices]
+
+
 def _click_param_kind(param: Any) -> str:
     """
     Map a :class:`click.Parameter` to a form-field kind string.
@@ -62,7 +96,7 @@ def _click_param_kind(param: Any) -> str:
     # ``click.types.*`` are concrete instances on ``param.type``. We
     # inspect the type's ``name`` so we do not need to import the
     # ``click.types`` symbols at module load.
-    type_name: str = getattr(param.type, "name", "") or ""
+    type_name: str = _param_type_name(param)
     if type_name == "boolean":
         return "bool"
     if type_name in ("integer", "integer range"):
@@ -78,10 +112,10 @@ def _click_param_kind(param: Any) -> str:
 
 def _click_param_choices(param: Any) -> list[str] | None:
     """Extract the choices list from a ``click.Choice`` param if present."""
-    type_name: str = getattr(param.type, "name", "") or ""
+    type_name: str = _param_type_name(param)
     if type_name != "choice":
         return None
-    choices: Any = getattr(param.type, "choices", None)
+    choices: Any = _param_choices(param)
     if choices is None:
         return None
     return [str(c) for c in choices]
