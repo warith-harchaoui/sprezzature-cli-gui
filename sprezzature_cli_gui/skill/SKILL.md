@@ -28,7 +28,7 @@ compatibility: >-
   Python standard library.
 metadata:
   author: Warith HARCHAOUI
-  version: 1.8.4
+  version: 1.9.0
 ---
 
 > This skill ships inside the package [`sprezzature-cli-gui`](https://github.com/warith-harchaoui/sprezzature-cli-gui) (`pip install sprezzature-cli-gui`), in `sprezzature_cli_gui/skill/`, beside the deterministic tools it routes to, invoked as `sprezzature-cli-gui …`. `sprezzature-cli-gui-skill` says whether the copy an agent reads is in step with the installed package; `--install` copies it into `~/.claude/skills` (`--agent opencode` for `~/.opencode/skills`).

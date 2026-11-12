@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.7.0] — 2026-11-12
+
 ### Added
 
 - The skill an agent reads now ships inside the package, in
