@@ -57,6 +57,7 @@ dependencies = [
 dev = ["pytest>=8.0", "ruff", "mypy", "httpx2>=2.0.0"]
 
 [project.scripts]
+sprezzature-cli-gui-skill = "sprezzature_cli_gui._skill:main"
 sprezzature-cli-gui-mcp = "sprezzature_cli_gui.mcp:main"
 sprezzature-cli-gui = "sprezzature_cli_gui.cli:main"
 # The audit half. This brick promises the page covers the CLI; this is what
@@ -92,3 +93,9 @@ addopts = "-ra --strict-markers"
 markers = [
     "real_tailwind: compiles a page with the real Tailwind CLI (skips, saying where it runs, when that CLI is not cached; fails instead in the real-tailwind CI job).",
 ]
+
+[tool.setuptools.package-data]
+# The skill an agent reads ships inside the package, so `pip install`
+# carries all five surfaces; `sprezzature-cli-gui-skill --install` puts it
+# where Claude Code or OpenCode looks.
+"sprezzature_cli_gui" = ["skill/**/*"]

@@ -48,7 +48,10 @@ from sprezzature_cli_gui.audit import Finding, audit
 from sprezzature_cli_gui.renderer import render_html
 from sprezzature_cli_gui.schema import walk
 
+from sprezzature_cli_gui._skill import skill_path  # noqa: E402
+
 __all__ = [
+    "skill_path",
     # the two halves of the job
     "walk",
     "render_html",
