@@ -44,7 +44,6 @@ import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
-
 # ── Configuration ────────────────────────────────────────────────────────────
 
 #: Port the server listens on.
@@ -246,8 +245,8 @@ class DemoHandler(BaseHTTPRequestHandler):
         """
         body = payload if isinstance(payload, str) else json.dumps(payload)
         try:
-            self.wfile.write(f"event: {event}\n".encode("utf-8"))
-            self.wfile.write(f"data: {body}\n\n".encode("utf-8"))
+            self.wfile.write(f"event: {event}\n".encode())
+            self.wfile.write(f"data: {body}\n\n".encode())
             self.wfile.flush()
         except (BrokenPipeError, ConnectionResetError):
             # The client closed the tab; nothing to do.

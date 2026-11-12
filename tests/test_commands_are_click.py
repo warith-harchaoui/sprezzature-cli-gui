@@ -39,6 +39,9 @@ _MAY_IMPORT_ARGPARSE = {
     "sprezzature_cli_gui/loader.py",
     # Builds the small demonstration parser behind GET /v1/example.
     "sprezzature_cli_gui/api.py",
+    # The worked demo the skill ships: an argparse program for the GUI to
+    # wrap, which is the input this brick exists to read, not a parser of its own.
+    "sprezzature_cli_gui/skill/assets/examples/cli-gui-demo/cli/imgconvert.py",
 }
 
 

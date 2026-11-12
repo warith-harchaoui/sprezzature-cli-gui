@@ -31,7 +31,7 @@ metadata:
   version: 1.8.4
 ---
 
-> This skill ships inside the package [`sprezzature-cli-gui`](https://github.com/warith-harchaoui/sprezzature-cli-gui) (`pip install sprezzature-cli-gui`), in `sprezzature_cli_gui/skill/`, beside the deterministic tools it routes to (`sprezzature-cli-gui …`). `sprezzature-cli-gui-skill` says whether the copy an agent reads is in step with the installed package; `--install` copies it into `~/.claude/skills` (`--agent opencode` for `~/.opencode/skills`).
+> This skill ships inside the package [`sprezzature-cli-gui`](https://github.com/warith-harchaoui/sprezzature-cli-gui) (`pip install sprezzature-cli-gui`), in `sprezzature_cli_gui/skill/`, beside the deterministic tools it routes to, invoked as `sprezzature-cli-gui …`. `sprezzature-cli-gui-skill` says whether the copy an agent reads is in step with the installed package; `--install` copies it into `~/.claude/skills` (`--agent opencode` for `~/.opencode/skills`).
 
 # sprezzature-cli-gui — CLI (command-line interface, a program you run by typing a command in a terminal) → web GUI (graphical user interface, windows, buttons and forms you click instead of typing commands)
 

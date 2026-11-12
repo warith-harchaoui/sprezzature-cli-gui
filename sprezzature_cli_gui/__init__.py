@@ -44,11 +44,10 @@ __author__ = "Warith HARCHAOUI"
 __email__ = "warithmetics@deraison.ai"
 __license__ = "BSD-3-Clause"
 
+from sprezzature_cli_gui._skill import skill_path  # noqa: E402
 from sprezzature_cli_gui.audit import Finding, audit
 from sprezzature_cli_gui.renderer import render_html
 from sprezzature_cli_gui.schema import walk
-
-from sprezzature_cli_gui._skill import skill_path  # noqa: E402
 
 __all__ = [
     "skill_path",
