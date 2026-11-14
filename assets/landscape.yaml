@@ -68,7 +68,7 @@ approaches:
     axis_1: 3.0375
     axis_2: 3.6575
   role: best
-  color: '#FF3B30'
+  color: '#FF383C'
   attributes:
     Zero setup in the wrapped tool: 5.0
     Static hostable output: 5.0
@@ -420,7 +420,7 @@ approaches:
     axis_1: -2.7626
     axis_2: -1.2907
   role: worst
-  color: '#A52A2A'
+  color: '#AC7F5E'
   attributes:
     Zero setup in the wrapped tool: 1.0
     Static hostable output: 1.0
@@ -530,7 +530,7 @@ approaches:
     axis_1: -0.9789
     axis_2: 3.6575
   role: top
-  color: '#AF52DE'
+  color: '#CB30E0'
   attributes:
     Zero setup in the wrapped tool: 2.0
     Static hostable output: 5.0
@@ -596,7 +596,7 @@ approaches:
     axis_1: 3.0375
     axis_2: -2.1244
   role: right
-  color: '#007AFF'
+  color: '#0088FF'
   attributes:
     Zero setup in the wrapped tool: 5.0
     Static hostable output: 1.0

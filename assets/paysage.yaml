@@ -68,7 +68,7 @@ approaches:
     axis_1: 3.0375
     axis_2: 3.6575
   role: best
-  color: '#FF3B30'
+  color: '#FF383C'
   attributes:
     Zéro configuration dans l'outil enveloppé: 5.0
     Sortie statique hébergeable: 5.0
@@ -420,7 +420,7 @@ approaches:
     axis_1: -2.7626
     axis_2: -1.2907
   role: worst
-  color: '#A52A2A'
+  color: '#AC7F5E'
   attributes:
     Zéro configuration dans l'outil enveloppé: 1.0
     Sortie statique hébergeable: 1.0
@@ -530,7 +530,7 @@ approaches:
     axis_1: -0.9789
     axis_2: 3.6575
   role: top
-  color: '#AF52DE'
+  color: '#CB30E0'
   attributes:
     Zéro configuration dans l'outil enveloppé: 2.0
     Sortie statique hébergeable: 5.0
@@ -596,7 +596,7 @@ approaches:
     axis_1: 3.0375
     axis_2: -2.1244
   role: right
-  color: '#007AFF'
+  color: '#0088FF'
   attributes:
     Zéro configuration dans l'outil enveloppé: 5.0
     Sortie statique hébergeable: 1.0
