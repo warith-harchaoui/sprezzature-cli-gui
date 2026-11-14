@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+### Changed
+
+- The `brand-blue` and `brand-red` tokens of the generated page, and the
+  demo, follow the corporate palette of
+  [deraison.ai/colors](https://deraison.ai/colors/), the source of truth
+  for every colour in the suite: `#0088FF` and `#FF383C` (were `#007AFF`
+  and `#FF3B30`), dark `#0091FF` and `#FF4245`. The "how it works" diagram
+  is redrawn in the same colours.
+
 ## [1.7.0] — 2026-11-12
 
 ### Added

@@ -77,8 +77,8 @@ THEME: dict[str, object] = {
     "extend": {
         "colors": {
             "brand": {
-                "blue": {"DEFAULT": "#007AFF", "dark": "#0A84FF"},
-                "red": {"DEFAULT": "#FF3B30", "dark": "#FF453A"},
+                "blue": {"DEFAULT": "#0088FF", "dark": "#0091FF"},
+                "red": {"DEFAULT": "#FF383C", "dark": "#FF4245"},
             },
             "label": {
                 "primary": "#000000",

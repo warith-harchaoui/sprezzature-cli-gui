@@ -176,7 +176,7 @@ def test_every_class_on_the_page_has_a_rule() -> None:
 @pytest.mark.parametrize(
     ("name", "value"),
     [
-        ("bg-brand-blue", "rgb(0 122 255"),
+        ("bg-brand-blue", "rgb(0 136 255"),
         ("text-label-secondary", "rgba(60,60,67,.6)"),
         ("border-separator", "rgba(60,60,67,.36)"),
         ("dark:bg-surface-secondary-dark", "rgb(28 28 30"),
