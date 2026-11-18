@@ -257,4 +257,4 @@ python server.py
 | W3C (World Wide Web Consortium, the body that writes the web's standards) alt text for the wrapping page's images (local Ollama vision) | `sprezzature-accessibility` |
 | Captions for any embedded `<video>` / `<audio>` (local whisper.cpp) | `sprezzature-audio` |
 | Favicon / meta / docs site for the wrapping page | `sprezzature-publish` |
-| Screenshot the emitted GUI, look at it, and refine the markup (the Ralph Eyeball Loop) | `sprezzature-figures` (`sprezzature-figures/references/ralph-eyeball-loop.md`) |
+| Screenshot the emitted GUI, look at it, and refine the markup | a headless browser screenshot, read by eye |
