@@ -89,7 +89,7 @@ else:
         app,
         name="sprezzature-cli-gui",
         description=(
-            "Sprezzature CLI-GUI MCP tools: turn a command-line parser schema "
+            "sprezzature CLI-GUI MCP tools: turn a command-line parser schema "
             "into a working web form. Schema in, HTML out — never a module path."
         ),
         include_tags=["meta", "actions"],

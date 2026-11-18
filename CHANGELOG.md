@@ -4,6 +4,7 @@
 
 ### Changed
 
+- The project name is written `sprezzature`, all lowercase, even at the start of a sentence, in every displayed string and document (API title, MCP server description, comments, examples). Code identifiers such as `SprezzatureCommand` and `SPREZZATURE_*` do not change.
 - The `brand-blue` and `brand-red` tokens of the generated page, and the
   demo, follow the corporate palette of
   [deraison.ai/colors](https://deraison.ai/colors/), the source of truth

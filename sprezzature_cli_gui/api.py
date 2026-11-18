@@ -76,7 +76,7 @@ from .schema import walk
 from .tailwind import TailwindUnavailable
 
 app = FastAPI(
-    title="Sprezzature CLI-GUI API",
+    title="sprezzature CLI-GUI API",
     description=(
         "HTTP surface for sprezzature-cli-gui: turn a command-line parser's "
         "schema into a working web form. Schema in, HTML out."
