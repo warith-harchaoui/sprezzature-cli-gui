@@ -294,4 +294,4 @@ and, for the neighbours of this package,
 
 ## License
 
-Berkeley Software Distribution licence, three-clause version (BSD-3-Clause, a permissive licence: anyone may use, change and resell the code if they keep the copyright notice) © Warith HARCHAOUI. Part of the [sprezzature](https://sprezzature.ai/) toolkit.
+Berkeley Software Distribution licence, three-clause version (BSD-3-Clause, a permissive licence: anyone may use, change and resell the code if they keep the copyright notice) © Warith Harchaoui. Part of the [sprezzature](https://sprezzature.ai/) toolkit.

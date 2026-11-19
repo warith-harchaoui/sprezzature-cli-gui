@@ -2,8 +2,12 @@
 
 ## [Unreleased]
 
+## [1.7.1] — 2026-11-19
+
+
 ### Changed
 
+- The licence line reads `Copyright (c) 2026, Warith Harchaoui` in LICENSE, README.md and LISEZMOI.md; the licence is unchanged, BSD 3-Clause.
 - The project name is written `sprezzature`, all lowercase, even at the start of a sentence, in every displayed string and document (API title, MCP server description, comments, examples). Code identifiers such as `SprezzatureCommand` and `SPREZZATURE_*` do not change.
 - The `brand-blue` and `brand-red` tokens of the generated page, and the
   demo, follow the corporate palette of

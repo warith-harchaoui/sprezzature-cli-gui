@@ -195,4 +195,4 @@ Voir [CONTRIBUTING.md](https://github.com/warith-harchaoui/sprezzature-cli-gui/b
 
 ## Licence
 
-BSD (*Berkeley Software Distribution*, une licence permissive : chacun peut utiliser, modifier et revendre le code s'il garde la mention du copyright) à 3 clauses © Warith HARCHAOUI. Fait partie de la boîte à outils [sprezzature](https://sprezzature.ai/).
+BSD (*Berkeley Software Distribution*, une licence permissive : chacun peut utiliser, modifier et revendre le code s'il garde la mention du copyright) à 3 clauses © Warith Harchaoui. Fait partie de la boîte à outils [sprezzature](https://sprezzature.ai/).
