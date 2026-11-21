@@ -11,6 +11,8 @@ this package reads the tool's own definition of its commands and options and bui
 web page with a field for each one, so a person who has never opened a terminal can
 still use it.
 
+Drop a [⭐️](https://github.com/warith-harchaoui/sprezzature-cli-gui) on GitHub if my help deserves it.
+
 Point it at a parser: the object inside a Python CLI (command-line interface, a program you drive by typing a line such as `git status` in a terminal) that
 reads and validates the typed command. `argparse` (in Python's standard library),
 `Click` and `Typer` are the three common ways to build one; all three are imported and

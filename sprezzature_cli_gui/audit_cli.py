@@ -36,7 +36,8 @@ from sprezzature_cli_gui.audit import audit
         "  sprezzature-cli-gui-audit mytool.cli:build_parser gui.html\n"
         "  sprezzature-cli-gui-audit pkg.mod:factory gui.html --format json\n\n"
         "Exits 1 when the page and the parser disagree, so it gates a build "
-        "the way the lint half of every other brick does."
+        "the way the lint half of every other brick does.\n\n"
+        "⭐️ on GitHub: https://github.com/warith-harchaoui/sprezzature-cli-gui"
     ),
 )
 @click.version_option(package_name="sprezzature-cli-gui")

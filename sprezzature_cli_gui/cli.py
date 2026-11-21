@@ -40,6 +40,8 @@ Examples:
   \b
   sprezzature-cli-gui mytool.cli:build_parser --out gui.html
   sprezzature-cli-gui --from-help ffmpeg --out ffmpeg.html   # runs: ffmpeg --help
+
+⭐️ on GitHub: https://github.com/warith-harchaoui/sprezzature-cli-gui
 """
 
 
